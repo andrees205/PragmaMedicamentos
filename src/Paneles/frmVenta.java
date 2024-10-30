@@ -119,7 +119,7 @@ public class frmVenta extends javax.swing.JPanel {
         jLabel1.setText("Producto");
         add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 140, 120, -1));
 
-        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Elementos.Venta/Venta.png"))); // NOI18N
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Elementos/Venta/FondoLabel.png"))); // NOI18N
         add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1110, 720));
     }// </editor-fold>//GEN-END:initComponents
 
