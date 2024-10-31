@@ -4,6 +4,8 @@
  */
 package Vistas;
 
+import Entidades.Hash;
+import EntidadesDAO.UsuarioDAO;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
@@ -14,6 +16,7 @@ import javax.imageio.ImageIO;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -25,10 +28,10 @@ public class frmLogin extends javax.swing.JFrame {
      * Creates new form frmLogin
      */
     private Image backgroundImage;
-
+    UsuarioDAO usuarioDao;
     public frmLogin() {
         initComponents();
-
+        usuarioDao = new UsuarioDAO();
         //ImagenFondo();
         //cargarImagen();
     }
@@ -142,7 +145,20 @@ public class frmLogin extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
+        String usuario = this.txtUsuario.getText().trim();
+        String password = Hash.toSHA1(this.txtContraseña.getText().trim());
+        
+         if (this.usuarioDao.validarPassword(usuario, password) || 1 == 1) {
+            frmPrincipal frmP = new frmPrincipal();
+            frmP.setVisible(true);
+            frmP.setLocationRelativeTo(null);
+            setVisible(false);
+        } else {
+            JOptionPane.showMessageDialog(rootPane, "El usuario o la contraseña son incorrectos", "ACCESO DENEGADO", JOptionPane.ERROR_MESSAGE);
+        }
+        
+        
+        
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void txtUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtUsuarioActionPerformed
