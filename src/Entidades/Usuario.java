@@ -17,8 +17,7 @@ public class Usuario {
     public Usuario() {
     }
 
-    public Usuario(int idusuario, String nombre, String contraseña, String rol) {
-        this.idusuario = idusuario;
+    public Usuario(String nombre, String contraseña, String rol) {
         this.nombre = nombre;
         this.contraseña = contraseña;
         this.rol = rol;

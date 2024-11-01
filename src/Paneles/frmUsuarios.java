@@ -4,6 +4,15 @@
  */
 package Paneles;
 
+import Entidades.Hash;
+import Entidades.Usuario;
+import EntidadesDAO.UsuarioDAO;
+import java.awt.Component;
+import java.util.ArrayList;
+import javax.swing.JOptionPane;
+import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author andre
@@ -13,8 +22,21 @@ public class frmUsuarios extends javax.swing.JPanel {
     /**
      * Creates new form frmUsuarios
      */
+    UsuarioDAO usuarioDAO;
+    DefaultTableModel modelUsuarios;
+    ArrayList<Usuario> usuarios;
+    Usuario usuarioSeleccionado;
+    String nombre, password, rol;
+    private Component rootPane;
+
     public frmUsuarios() {
         initComponents();
+        this.usuarioDAO= new UsuarioDAO();
+        this.modelUsuarios=(DefaultTableModel) this.tblUsuarios.getModel();
+        this.usuarios=new ArrayList();
+        this.usuarios=this.usuarioDAO.ConsultarUsuarios();
+        this.RecargarUsuarios();
+        this.usuarioSeleccionado= new Usuario();
     }
 
     /**
@@ -30,11 +52,11 @@ public class frmUsuarios extends javax.swing.JPanel {
         jButton1 = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        jTextField4 = new javax.swing.JTextField();
-        jTextField3 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
+        txtRol = new javax.swing.JTextField();
+        txtContraseña = new javax.swing.JTextField();
+        txtNombreUsuario = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tblUsuarios = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(56, 102, 65));
@@ -47,6 +69,11 @@ public class frmUsuarios extends javax.swing.JPanel {
 
         jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Elementos/Usuarios/btnRegistrarUsuario.png"))); // NOI18N
         jButton1.setContentAreaFilled(false);
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
         add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 430, 280, -1));
 
         jLabel3.setFont(new java.awt.Font("Calibri", 1, 24)); // NOI18N
@@ -59,27 +86,27 @@ public class frmUsuarios extends javax.swing.JPanel {
         jLabel4.setText("Contraseña");
         add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 260, 120, -1));
 
-        jTextField4.setBackground(new java.awt.Color(255, 255, 255));
-        add(jTextField4, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 370, 280, 40));
+        txtRol.setBackground(new java.awt.Color(255, 255, 255));
+        add(txtRol, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 370, 280, 40));
 
-        jTextField3.setBackground(new java.awt.Color(255, 255, 255));
-        add(jTextField3, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 290, 280, 40));
+        txtContraseña.setBackground(new java.awt.Color(255, 255, 255));
+        add(txtContraseña, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 290, 280, 40));
 
-        jTextField2.setBackground(new java.awt.Color(255, 255, 255));
-        add(jTextField2, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 210, 280, 40));
+        txtNombreUsuario.setBackground(new java.awt.Color(255, 255, 255));
+        add(txtNombreUsuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 210, 280, 40));
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tblUsuarios.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Nombre", "Contraseña", "Rol"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(tblUsuarios);
 
         add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 70, 610, 580));
 
@@ -87,6 +114,57 @@ public class frmUsuarios extends javax.swing.JPanel {
         add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        this.CapturarDatosUsuario();
+        if (this.ValidarTextFields(nombre, rol, password)) {
+            if (this.usuarioDAO.UsuarioExiste(nombre)) {
+                JOptionPane.showMessageDialog(rootPane, "Cada empleado debe tener un nombre de usuario unico", "El usuario ya existe", JOptionPane.WARNING_MESSAGE);
+            } else {
+                Usuario user = new Usuario(nombre, password, rol);
+                if (this.usuarioDAO.InsertarUsuario(user)) {
+                    JOptionPane.showMessageDialog(rootPane, "", "Empleado agregado exitosamente!!", JOptionPane.INFORMATION_MESSAGE);
+                    this.usuarios = this.usuarioDAO.ConsultarUsuarios();
+                    this.RecargarUsuarios();
+                } else {
+                    JOptionPane.showMessageDialog(rootPane, "El empleado no pudo ser agregado, revise los datos ingresados", "Error inesperado!!", JOptionPane.WARNING_MESSAGE);
+                }
+            }
+
+        } else {
+            JOptionPane.showMessageDialog(rootPane, "Todos los datos deben ser llenados", "Datos incompletos o vacios", JOptionPane.WARNING_MESSAGE);
+        }
+
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+        
+    private void RecargarUsuarios()
+    {
+        this.tblUsuarios.clearSelection();
+        this.modelUsuarios.setRowCount(0);
+        this.txtContraseña.setText("");
+        for (int i = 0; i < this.usuarios.size(); i++) {
+            Usuario user=this.usuarios.get(i);
+            String[] data= {user.getNombre(), user.getContraseña(),user.getRol()};
+            this.modelUsuarios.addRow(data);
+        }
+    }
+    
+    private void CapturarDatosUsuario() {
+        this.nombre = this.txtNombreUsuario.getText().trim();
+        this.rol = this.txtRol.getText().trim();
+        //this.rol=(String) this.cbRolUsuario.getSelectedItem();
+        this.password = Hash.toSHA1(this.txtContraseña.getText().trim());
+    }
+
+    private boolean ValidarTextFields(String nombre, String rol, String password) {
+        if (nombre.isEmpty() || nombre.isBlank()) {
+            return false;
+        }
+        if (rol.isEmpty() || rol.isBlank()) {
+            return false;
+        }
+        return !(password.isEmpty() || password.isBlank());
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
@@ -95,9 +173,9 @@ public class frmUsuarios extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
+    private javax.swing.JTable tblUsuarios;
+    private javax.swing.JTextField txtContraseña;
+    private javax.swing.JTextField txtNombreUsuario;
+    private javax.swing.JTextField txtRol;
     // End of variables declaration//GEN-END:variables
 }
