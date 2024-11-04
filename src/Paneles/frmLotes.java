@@ -28,8 +28,8 @@ public class frmLotes extends javax.swing.JPanel {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
+        jDateChooser1 = new com.toedter.calendar.JDateChooser();
         jLabel1 = new javax.swing.JLabel();
-        jTextField6 = new javax.swing.JTextField();
         jSpinner2 = new javax.swing.JSpinner();
         jLabel4 = new javax.swing.JLabel();
         jSpinner1 = new javax.swing.JSpinner();
@@ -67,14 +67,12 @@ public class frmLotes extends javax.swing.JPanel {
         jScrollPane1.setViewportView(jTable1);
 
         add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 70, 600, 580));
+        add(jDateChooser1, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 450, 270, 40));
 
         jLabel1.setFont(new java.awt.Font("Calibri", 1, 24)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("Límite stock");
         add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(900, 190, 120, 30));
-
-        jTextField6.setBackground(new java.awt.Color(255, 255, 255));
-        add(jTextField6, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 440, 270, 40));
         add(jSpinner2, new org.netbeans.lib.awtextra.AbsoluteConstraints(900, 218, 120, -1));
 
         jLabel4.setFont(new java.awt.Font("Calibri", 1, 18)); // NOI18N
@@ -120,8 +118,8 @@ public class frmLotes extends javax.swing.JPanel {
 
         jLabel9.setFont(new java.awt.Font("Calibri", 1, 24)); // NOI18N
         jLabel9.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel9.setText("Fecha");
-        add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 410, 80, 40));
+        jLabel9.setText("Fecha caducidad");
+        add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 410, 200, 40));
 
         jTextField3.setBackground(new java.awt.Color(255, 255, 255));
         add(jTextField3, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 360, 80, 40));
@@ -154,6 +152,7 @@ public class frmLotes extends javax.swing.JPanel {
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
+    private com.toedter.calendar.JDateChooser jDateChooser1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
@@ -173,6 +172,5 @@ public class frmLotes extends javax.swing.JPanel {
     private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;
     private javax.swing.JTextField jTextField5;
-    private javax.swing.JTextField jTextField6;
     // End of variables declaration//GEN-END:variables
 }
