@@ -163,7 +163,7 @@ public class frmUsuarios extends javax.swing.JPanel {
         int fila=this.tblUsuarios.getSelectedRow();
         this.usuarioSeleccionado=this.usuarios.get(fila);
         
-        int opc=JOptionPane.showConfirmDialog(rootPane,"Seguro que desea eliminar el empleado?", "Advertencia!", JOptionPane.YES_NO_OPTION);
+        int opc=JOptionPane.showConfirmDialog(rootPane,"Seguro que desea eliminar el usuario?", "Advertencia!", JOptionPane.YES_NO_OPTION);
         if (opc==JOptionPane.OK_OPTION) {
             if (this.usuarioDAO.EliminarUsuario(this.usuarioSeleccionado.getIdusuario())) {
                 JOptionPane.showMessageDialog(rootPane, "", "Empleado eliminado exitosamente!!", JOptionPane.INFORMATION_MESSAGE);
@@ -172,7 +172,7 @@ public class frmUsuarios extends javax.swing.JPanel {
             }
             else
             {
-                JOptionPane.showMessageDialog(rootPane, "El empleado no pudo ser eliminado, intente nuevamente", "Error inesperado!!", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(rootPane, "El usuario no pudo ser eliminado, intente nuevamente", "Error inesperado!!", JOptionPane.ERROR_MESSAGE);
                 this.RecargarUsuarios();
             }
         }
@@ -201,7 +201,6 @@ public class frmUsuarios extends javax.swing.JPanel {
     private void CapturarDatosUsuario() {
         this.nombre = this.txtNombreUsuario.getText().trim();
         this.rol = this.txtRol.getText().trim();
-        //this.rol=(String) this.cbRolUsuario.getSelectedItem();
         this.password = Hash.toSHA1(this.txtContraseña.getText().trim());
     }
 

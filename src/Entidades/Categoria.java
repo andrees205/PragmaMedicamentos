@@ -10,13 +10,13 @@ package Entidades;
  */
 public class Categoria {
     private int idcategoria;
-    private int nombreCategoria;
+    private String nombreCategoria;
     private String descripcion;
 
     public Categoria() {
     }
 
-    public Categoria(int idcategoria, int nombreCategoria, String descripcion) {
+    public Categoria(int idcategoria, String nombreCategoria, String descripcion) {
         this.idcategoria = idcategoria;
         this.nombreCategoria = nombreCategoria;
         this.descripcion = descripcion;
@@ -26,7 +26,7 @@ public class Categoria {
         return idcategoria;
     }
 
-    public int getNombreCategoria() {
+    public String getNombreCategoria() {
         return nombreCategoria;
     }
 
@@ -38,7 +38,7 @@ public class Categoria {
         this.idcategoria = idcategoria;
     }
 
-    public void setNombreCategoria(int nombreCategoria) {
+    public void setNombreCategoria(String nombreCategoria) {
         this.nombreCategoria = nombreCategoria;
     }
 

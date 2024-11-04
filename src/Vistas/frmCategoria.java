@@ -4,6 +4,16 @@
  */
 package Vistas;
 
+import Entidades.Categoria;
+import Entidades.Usuario;
+import EntidadesDAO.CategoriaDAO;
+import EntidadesDAO.UsuarioDAO;
+import java.awt.Component;
+import java.util.ArrayList;
+import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author andre
@@ -13,8 +23,31 @@ public class frmCategoria extends javax.swing.JInternalFrame {
     /**
      * Creates new form frmCategoria
      */
+    CategoriaDAO categoriaDAO;
+    DefaultTableModel modelCategoria;
+    ArrayList<Categoria> categorias;
+    Categoria catSeleccionada;
+    String Categoria, descripcion;
+    private Component rootPane;
     public frmCategoria() {
         initComponents();
+        this.categoriaDAO= new CategoriaDAO();
+        this.modelCategoria=(DefaultTableModel) this.tblCategoria.getModel();
+        this.categorias=new ArrayList();
+        this.categorias=this.categoriaDAO.ConsultarCategorias();
+        this.RecargarCategorias();
+        this.catSeleccionada= new Categoria();
+    }
+    
+        private void RecargarCategorias()
+    {
+        this.tblCategoria.clearSelection();
+        this.modelCategoria.setRowCount(0);
+        for (int i = 0; i < this.categorias.size(); i++) {
+            Categoria cat=this.categorias.get(i);
+            String[] data= {cat.getNombreCategoria(), cat.getDescripcion()};
+            this.modelCategoria.addRow(data);
+        }
     }
 
     /**
@@ -26,32 +59,74 @@ public class frmCategoria extends javax.swing.JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPopupMenu1 = new javax.swing.JPopupMenu();
+        menuEditar = new javax.swing.JMenuItem();
+        menuBorrar = new javax.swing.JMenuItem();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        txtDescripcion = new javax.swing.JTextPane();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tblCategoria = new javax.swing.JTable();
         jButton4 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
+        txtCategoria = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
+
+        menuEditar.setText("Editar");
+        menuEditar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuEditarActionPerformed(evt);
+            }
+        });
+        jPopupMenu1.add(menuEditar);
+
+        menuBorrar.setText("Borrar");
+        menuBorrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuBorrarActionPerformed(evt);
+            }
+        });
+        jPopupMenu1.add(menuBorrar);
 
         setClosable(true);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        jScrollPane3.setViewportView(txtDescripcion);
+
+        getContentPane().add(jScrollPane3, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 230, 160, 290));
+
+        tblCategoria = new JTable(){
+            public boolean isCellEditable(int row, int column){
+                for (int i = 0; i < tblCategoria.getRowCount(); i++)
+                {
+                    if (row == i)
+                    {
+                        return false;
+                    }
+                }
+                return true;
+            }
+        };
+        tblCategoria.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Nombre", "Descripción"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        tblCategoria.setComponentPopupMenu(jPopupMenu1);
+        tblCategoria.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblCategoriaMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tblCategoria);
 
         getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 70, 360, 420));
 
@@ -68,19 +143,22 @@ public class frmCategoria extends javax.swing.JInternalFrame {
         jLabel2.setText("Categoría");
         getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 120, 120, -1));
 
-        jTextField2.setBackground(new java.awt.Color(255, 255, 255));
-        getContentPane().add(jTextField2, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 150, 160, 40));
+        txtCategoria.setBackground(new java.awt.Color(255, 255, 255));
+        txtCategoria.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
+        getContentPane().add(txtCategoria, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 150, 160, 40));
 
         jLabel3.setFont(new java.awt.Font("Calibri", 1, 18)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText("Descripción");
         getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 200, 120, 30));
 
-        jTextField1.setBackground(new java.awt.Color(255, 255, 255));
-        getContentPane().add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 230, 160, 180));
-
         jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Elementos/Categoria/btnRegistrarCat.png"))); // NOI18N
         jButton1.setContentAreaFilled(false);
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
         getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 500, 280, 40));
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Elementos/Categoria/lblFondoPequeño (2).png"))); // NOI18N
@@ -88,6 +166,59 @@ public class frmCategoria extends javax.swing.JInternalFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void tblCategoriaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblCategoriaMouseClicked
+        if (evt.getClickCount()==2){
+            int registro = tblCategoria.getSelectedRow();
+            this.txtCategoria.setText(this.tblCategoria.getValueAt(registro, 0).toString());
+            this.txtDescripcion.setText(this.tblCategoria.getValueAt(registro, 1).toString());
+        }
+    }//GEN-LAST:event_tblCategoriaMouseClicked
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        
+            Categoria categoria = new Categoria();
+            try {
+                categoria.setNombreCategoria(this.txtCategoria.getText());
+                categoria.setDescripcion(this.txtDescripcion.getText());
+
+
+                this.categoriaDAO.InsertarCategoria(categoria);
+
+                this.txtCategoria.setText("");
+                this.txtDescripcion.setText("");
+                
+                JOptionPane.showMessageDialog(this, "Categoria Agregada");
+            } catch (Exception e) {
+                System.out.println("Error al agregar la categoria: " + e.getMessage());
+                JOptionPane.showMessageDialog(this, "Error al agregar la categoria");
+            }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void menuEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuEditarActionPerformed
+        int registro = this.tblCategoria.getSelectedRow();
+        this.txtCategoria.setText(tblCategoria.getValueAt(registro, 0).toString());
+        this.txtDescripcion.setText(tblCategoria.getValueAt(registro, 1).toString());
+    }//GEN-LAST:event_menuEditarActionPerformed
+
+    private void menuBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuBorrarActionPerformed
+        int fila=this.tblCategoria.getSelectedRow();
+        this.catSeleccionada=this.categorias.get(fila);
+        
+        int opc=JOptionPane.showConfirmDialog(rootPane,"Seguro que desea eliminar la categoria?", "Advertencia!", JOptionPane.YES_NO_OPTION);
+        if (opc==JOptionPane.OK_OPTION) {
+            if (this.categoriaDAO.EliminarCategoria(this.catSeleccionada.getIdcategoria())) {
+                JOptionPane.showMessageDialog(rootPane, "", "Empleado eliminado exitosamente!!", JOptionPane.INFORMATION_MESSAGE);
+                this.categorias=this.categoriaDAO.ConsultarCategorias();
+                this.RecargarCategorias();
+            }
+            else
+            {
+                JOptionPane.showMessageDialog(rootPane, "La categoria no pudo ser eliminada, intente nuevamente", "Error inesperado!!", JOptionPane.ERROR_MESSAGE);
+                this.RecargarCategorias();
+            }
+        }
+    }//GEN-LAST:event_menuBorrarActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -97,9 +228,13 @@ public class frmCategoria extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JMenuItem menuBorrar;
+    private javax.swing.JMenuItem menuEditar;
+    private javax.swing.JTable tblCategoria;
+    private javax.swing.JTextField txtCategoria;
+    private javax.swing.JTextPane txtDescripcion;
     // End of variables declaration//GEN-END:variables
 }
