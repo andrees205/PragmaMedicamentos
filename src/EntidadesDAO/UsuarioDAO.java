@@ -114,4 +114,19 @@ public class UsuarioDAO {
         }
         return false;
     }
+        
+        
+        public boolean EliminarUsuario(int idEmpleado) {
+        String sSQL = "CALL eliminar_usuario(?)";
+
+        try {
+            CallableStatement cs = CN.getConexion().prepareCall(sSQL);
+            cs.setInt(1, idEmpleado);
+            cs.executeUpdate();
+            return true;
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+    }
 }

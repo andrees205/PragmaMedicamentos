@@ -48,6 +48,9 @@ public class frmUsuarios extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPopupMenu1 = new javax.swing.JPopupMenu();
+        menuEditar = new javax.swing.JMenuItem();
+        menuBorrar = new javax.swing.JMenuItem();
         jLabel2 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
@@ -58,6 +61,22 @@ public class frmUsuarios extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         tblUsuarios = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
+
+        menuEditar.setText("Editar");
+        menuEditar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuEditarActionPerformed(evt);
+            }
+        });
+        jPopupMenu1.add(menuEditar);
+
+        menuBorrar.setText("Borrar");
+        menuBorrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuBorrarActionPerformed(evt);
+            }
+        });
+        jPopupMenu1.add(menuBorrar);
 
         setBackground(new java.awt.Color(56, 102, 65));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -87,12 +106,15 @@ public class frmUsuarios extends javax.swing.JPanel {
         add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 260, 120, -1));
 
         txtRol.setBackground(new java.awt.Color(255, 255, 255));
+        txtRol.setFont(new java.awt.Font("Calibri", 1, 18)); // NOI18N
         add(txtRol, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 370, 280, 40));
 
         txtContraseña.setBackground(new java.awt.Color(255, 255, 255));
+        txtContraseña.setFont(new java.awt.Font("Calibri", 1, 18)); // NOI18N
         add(txtContraseña, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 290, 280, 40));
 
         txtNombreUsuario.setBackground(new java.awt.Color(255, 255, 255));
+        txtNombreUsuario.setFont(new java.awt.Font("Calibri", 1, 18)); // NOI18N
         add(txtNombreUsuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 210, 280, 40));
 
         tblUsuarios.setModel(new javax.swing.table.DefaultTableModel(
@@ -106,6 +128,7 @@ public class frmUsuarios extends javax.swing.JPanel {
                 "Nombre", "Contraseña", "Rol"
             }
         ));
+        tblUsuarios.setComponentPopupMenu(jPopupMenu1);
         jScrollPane1.setViewportView(tblUsuarios);
 
         add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 70, 610, 580));
@@ -135,6 +158,32 @@ public class frmUsuarios extends javax.swing.JPanel {
         }
 
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void menuBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuBorrarActionPerformed
+        int fila=this.tblUsuarios.getSelectedRow();
+        this.usuarioSeleccionado=this.usuarios.get(fila);
+        
+        int opc=JOptionPane.showConfirmDialog(rootPane,"Seguro que desea eliminar el empleado?", "Advertencia!", JOptionPane.YES_NO_OPTION);
+        if (opc==JOptionPane.OK_OPTION) {
+            if (this.usuarioDAO.EliminarUsuario(this.usuarioSeleccionado.getIdusuario())) {
+                JOptionPane.showMessageDialog(rootPane, "", "Empleado eliminado exitosamente!!", JOptionPane.INFORMATION_MESSAGE);
+                this.usuarios=this.usuarioDAO.ConsultarUsuarios();
+                this.RecargarUsuarios();
+            }
+            else
+            {
+                JOptionPane.showMessageDialog(rootPane, "El empleado no pudo ser eliminado, intente nuevamente", "Error inesperado!!", JOptionPane.ERROR_MESSAGE);
+                this.RecargarUsuarios();
+            }
+        }
+    }//GEN-LAST:event_menuBorrarActionPerformed
+
+    private void menuEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuEditarActionPerformed
+        int registro = this.tblUsuarios.getSelectedRow();
+        this.txtNombreUsuario.setText(tblUsuarios.getValueAt(registro, 0).toString());
+        this.txtContraseña.setText(tblUsuarios.getValueAt(registro, 1).toString());
+        this.txtRol.setText(tblUsuarios.getValueAt(registro, 2).toString());
+    }//GEN-LAST:event_menuEditarActionPerformed
 
         
     private void RecargarUsuarios()
@@ -172,7 +221,10 @@ public class frmUsuarios extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JMenuItem menuBorrar;
+    private javax.swing.JMenuItem menuEditar;
     private javax.swing.JTable tblUsuarios;
     private javax.swing.JTextField txtContraseña;
     private javax.swing.JTextField txtNombreUsuario;
