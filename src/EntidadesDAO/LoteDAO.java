@@ -7,6 +7,7 @@ package EntidadesDAO;
 import Entidades.Lote;
 import db.cn;
 import java.sql.CallableStatement;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -59,6 +60,64 @@ public class LoteDAO {
         return listaLotes;
     }
     
+    public boolean InsertarLote(Lote lote) {
+        String sSQL = "{CALL insertar_lote(?,?,?,?,?,?,?,?,?)}";
+        
+        try {
+            CallableStatement cs = this.CN.getConexion().prepareCall(sSQL);
+            
+            cs.setInt(1, lote.getIdMedicamento());
+            cs.setInt(2,  lote.getCantidad());
+            cs.setInt(3, lote.getIdProveedor());
+            cs.setInt(4, lote.getIdUsuario());
+            cs.setDouble(5, lote.getPrecioCosto());
+            cs.setDouble(6, lote.getPrecioMayoreo());
+            cs.setDouble(7, lote.getPrecioMayoreo());
+            cs.setDate(8, (Date) lote.getFecha());
+            cs.setString(9, lote.getUbicacion());
+            cs.executeUpdate();
+            return true;
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e.getMessage(), "¡¡ERROR!!", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+    }
     
+    public boolean ActualizarLote(Lote lote) {
+        String sSQL = "CALL actualizar_lote(?,?,?,?,?,?,?,?,?,?)";
+
+        try {
+            CallableStatement cs = CN.getConexion().prepareCall(sSQL);
+            cs.setInt(1, lote.getIdLote());
+            cs.setInt(2, lote.getIdMedicamento());
+            cs.setInt(3,  lote.getCantidad());
+            cs.setInt(4, lote.getIdProveedor());
+            cs.setInt(5, lote.getIdUsuario());
+            cs.setDouble(6, lote.getPrecioCosto());
+            cs.setDouble(7, lote.getPrecioMayoreo());
+            cs.setDouble(8, lote.getPrecioMayoreo());
+            cs.setDate(9, (Date) lote.getFecha());
+            cs.setString(10, lote.getUbicacion());
+            cs.executeUpdate();
+            return true;
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+    }
+    
+    public boolean EliminarLote(int idLote) {
+        String sSQL = "CALL eliminar_lote(?)";
+
+        try {
+            CallableStatement cs = CN.getConexion().prepareCall(sSQL);
+            cs.setInt(1, idLote);
+            cs.executeUpdate();
+            return true;
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+    }
     
 }

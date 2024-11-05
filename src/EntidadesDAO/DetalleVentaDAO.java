@@ -4,63 +4,65 @@
  */
 package EntidadesDAO;
 
-import Entidades.Medicamento;
+import Entidades.DetalleVenta;
 import db.cn;
 import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
-import java.util.Date;
-
 /**
  *
  * @author kater
  */
-public class MedicamentoDAO {
+public class DetalleVentaDAO {
     
     private cn CN;
     private ResultSet rs;
 
-    public MedicamentoDAO() {
+    public DetalleVentaDAO() {
         this.CN = new cn();
     }
     
-    public ArrayList<Medicamento> ConsultarMedicamento() {
-        ArrayList<Medicamento> listaMedicamentos = new ArrayList<Medicamento>();
-        String sSQL = "{CALL ObtenerMedicamentos()};";
+    public ArrayList<DetalleVenta> ConsultarDetalles() {
+        ArrayList<DetalleVenta> listaDetalles = new ArrayList<DetalleVenta>();
+        String sSQL = "{CALL ObtenerDetallesVentas()};";
 
         try {
             CallableStatement cs = this.CN.getConexion().prepareCall(sSQL);
 
             rs = cs.executeQuery();
             while (rs.next()) {
-                Medicamento med = new Medicamento();
+                DetalleVenta detalle = new DetalleVenta();
                 
-                med.setIdMedicamento(rs.getInt(1));
-                med.setNombre(rs.getString(2));
-                med.setPresentacion(rs.getString(3));
-                med.setIdCategoria(rs.getInt(4));
+                //El mismo error puede que de aqui al obetener los valores por los resultados
+                //que da el procedimiento
+                detalle.setIdDetalleVenta(rs.getInt(1));
+                detalle.setIdVenta(rs.getInt(2));
+                detalle.setIdMedicamento(rs.getInt(3));
+                detalle.setCantidad(rs.getInt(4));
+                detalle.setPrecioVendido(rs.getDouble(5));
                 
-                listaMedicamentos.add(med);
+                listaDetalles.add(detalle);
             }
 
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, ex.getMessage(), "¡¡ERROR!!", JOptionPane.ERROR_MESSAGE);
         }
 
-        return listaMedicamentos;
+        return listaDetalles;
     }
     
-    public boolean InsertarMedicamento(Medicamento med) {
-        String sSQL = "{CALL insertar_medicamento(?,?,?)}";
+    public boolean InsertarDetalle(DetalleVenta detalle) {
+        String sSQL = "{CALL insertar_detalleventa(?,?,?,?)}";
         
         try {
             CallableStatement cs = this.CN.getConexion().prepareCall(sSQL);
             
-            cs.setInt(1, med.getIdCategoria());
-            cs.setString(2,  med.getPresentacion());
-            cs.setString(3, med.getNombre());
+            cs.setInt(1, detalle.getIdVenta());
+            cs.setInt(2,  detalle.getIdMedicamento());
+            cs.setInt(3, detalle.getCantidad());
+            cs.setDouble(4, detalle.getPrecioVendido());
             cs.executeUpdate();
             return true;
         } catch (Exception e) {
@@ -69,14 +71,16 @@ public class MedicamentoDAO {
         }
     }
     
-    public boolean ActualizarMedicamento(Medicamento med) {
-        String sSQL = "CALL actualizar_medicamento(?,?,?)";
+    public boolean ActualizarDetalleVenta(DetalleVenta detalle) {
+        String sSQL = "CALL actualizar_detalleventa(?,?,?,?,?)";
 
         try {
             CallableStatement cs = CN.getConexion().prepareCall(sSQL);
-            cs.setInt(1, med.getIdMedicamento());
-            cs.setString(2, med.getPresentacion());
-            cs.setString(3, med.getNombre());
+            cs.setInt(1, detalle.getIdDetalleVenta());
+            cs.setInt(2, detalle.getIdVenta());
+            cs.setInt(3,  detalle.getIdMedicamento());
+            cs.setInt(4, detalle.getCantidad());
+            cs.setDouble(5, detalle.getPrecioVendido());
             cs.executeUpdate();
             return true;
         } catch (Exception e) {
@@ -85,12 +89,12 @@ public class MedicamentoDAO {
         }
     }
     
-    public boolean EliminarMedicamento(int idMed) {
-        String sSQL = "CALL eliminar_medicamento(?)";
+    public boolean EliminarDetalleVenta(int idDetalle) {
+        String sSQL = "CALL eliminar_detalleventa(?)";
 
         try {
             CallableStatement cs = CN.getConexion().prepareCall(sSQL);
-            cs.setInt(1, idMed);
+            cs.setInt(1, idDetalle);
             cs.executeUpdate();
             return true;
         } catch (Exception e) {
@@ -98,5 +102,6 @@ public class MedicamentoDAO {
             return false;
         }
     }
+    
     
 }
