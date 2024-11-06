@@ -35,13 +35,12 @@ public class DetalleVentaDAO {
             while (rs.next()) {
                 DetalleVenta detalle = new DetalleVenta();
                 
-                //El mismo error puede que de aqui al obetener los valores por los resultados
-                //que da el procedimiento
                 detalle.setIdDetalleVenta(rs.getInt(1));
                 detalle.setIdVenta(rs.getInt(2));
                 detalle.setIdMedicamento(rs.getInt(3));
-                detalle.setCantidad(rs.getInt(4));
-                detalle.setPrecioVendido(rs.getDouble(5));
+                detalle.setNombreMedicamento(rs.getString(4));
+                detalle.setCantidad(rs.getInt(5));
+                detalle.setPrecioVendido(rs.getDouble(6));
                 
                 listaDetalles.add(detalle);
             }

@@ -4,17 +4,55 @@
  */
 package Paneles;
 
+import Entidades.Venta;
+import EntidadesDAO.VentaDAO;
+import java.util.ArrayList;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author andre
  */
 public class frmVenta extends javax.swing.JPanel {
 
+    private ArrayList<Venta> listaVentas;
+    private DefaultTableModel tablaVentas;
+    private VentaDAO ventaDAO;
+    private Venta venta;
     /**
      * Creates new form frmCarrito
      */
     public frmVenta() {
         initComponents();
+        listaVentas = new ArrayList<>();
+        tablaVentas = (DefaultTableModel) this.jTable1.getModel();
+//        this.oCon= new cn();
+        ventaDAO = new VentaDAO();
+        CargarTablaVentas();
+    }
+    
+    private void CargarTablaVentas() {
+        this.tablaVentas.setRowCount(0);
+        this.listaVentas = this.ventaDAO.ConsultarVentas();
+        
+        for(int i=0; i<this.listaVentas.size(); i++)
+        {
+            try{
+               String[] registroVentas={
+                Integer.toString(this.listaVentas.get(i).getIdVenta()),
+                this.listaVentas.get(i).getNombreUsuario(),
+                this.listaVentas.get(i).getNombreCliente(),
+                Double.toString(this.listaVentas.get(i).getMontoTotal())
+            };
+            
+            this.tablaVentas.addRow(registroVentas);
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace(); // Mostrar el error en consola
+            }
+            
+        }
     }
 
     /**
@@ -51,13 +89,10 @@ public class frmVenta extends javax.swing.JPanel {
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "ID", "USUARIO", "CLIENTE", "MONTO TOTAL"
             }
         ));
         jScrollPane1.setViewportView(jTable1);

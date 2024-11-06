@@ -11,7 +11,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
-import java.util.Date;
 /**
  *
  * @author kater
@@ -39,7 +38,10 @@ public class VentaDAO {
                 venta.setIdVenta(rs.getInt(1));
                 venta.setFechaVenta(rs.getDate(2));
                 venta.setIdUsuario(rs.getInt(3));
-                venta.setMontoTotal(rs.getDouble(4));
+                venta.setNombreUsuario(rs.getString(4));
+                venta.setIdCliente(rs.getInt(5));
+                venta.setNombreCliente(rs.getString(6));
+                venta.setMontoTotal(rs.getDouble(7));
                 
                 listaVentas.add(venta);
             }
@@ -52,7 +54,7 @@ public class VentaDAO {
     }
     
     public boolean InsertarVenta(Venta venta) {
-        String sSQL = "{CALL insertar_venta(?,?,?)}";
+        String sSQL = "{CALL insertar_venta(?,?,?,?)}";
         
         try {
             CallableStatement cs = this.CN.getConexion().prepareCall(sSQL);
@@ -60,6 +62,7 @@ public class VentaDAO {
             cs.setDouble(1, venta.getMontoTotal());
             cs.setDate(2, (java.sql.Date) venta.getFechaVenta());
             cs.setInt(3, venta.getIdUsuario());
+            cs.setInt(4, venta.getIdCliente());
             cs.executeUpdate();
             return true;
         } catch (Exception e) {
@@ -69,7 +72,7 @@ public class VentaDAO {
     }
     
     public boolean ActualizarVenta(Venta venta) {
-        String sSQL = "CALL actualizar_venta(?,?,?,?)";
+        String sSQL = "CALL actualizar_venta(?,?,?,?,?)";
 
         try {
             CallableStatement cs = CN.getConexion().prepareCall(sSQL);
@@ -77,6 +80,7 @@ public class VentaDAO {
             cs.setDouble(2, venta.getMontoTotal());
             cs.setDate(3, (java.sql.Date) venta.getFechaVenta());
             cs.setInt(4, venta.getIdUsuario());
+            cs.setInt(5, venta.getIdCliente());
             cs.executeUpdate();
             return true;
         } catch (Exception e) {

@@ -12,12 +12,33 @@ public class DetalleVenta {
     private int idDetalleVenta;
     private int idVenta;
     private int idMedicamento;
+    private String nombreMedicamento;
     private int Cantidad;
     private double precioVendido;
 
     public DetalleVenta() {
     }
 
+    public DetalleVenta(int idDetalleVenta, int idVenta, int idMedicamento, String nombreMedicamento, int Cantidad, double precioVendido) {
+        this.idDetalleVenta = idDetalleVenta;
+        this.idVenta = idVenta;
+        this.idMedicamento = idMedicamento;
+        this.nombreMedicamento = nombreMedicamento;
+        this.Cantidad = Cantidad;
+        this.precioVendido = precioVendido;
+    }
+    
+    
+
+    public String getNombreMedicamento() {
+        return nombreMedicamento;
+    }
+
+    public void setNombreMedicamento(String nombreMedicamento) {
+        this.nombreMedicamento = nombreMedicamento;
+    }
+
+    
     public int getIdDetalleVenta() {
         return idDetalleVenta;
     }
