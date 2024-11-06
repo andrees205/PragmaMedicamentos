@@ -4,8 +4,10 @@
  */
 package Paneles;
 
+import Entidades.Medicamento;
 import Entidades.Usuario;
 import Entidades.Venta;
+import EntidadesDAO.MedicamentoDAO;
 import EntidadesDAO.VentaDAO;
 import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
@@ -21,6 +23,8 @@ public class frmVenta extends javax.swing.JPanel {
     private VentaDAO ventaDAO;
     private Venta venta;
     private Usuario userSesion;
+    private ArrayList<Medicamento> listaMedicamentos;
+    private MedicamentoDAO medDAO;
     /**
      * Creates new form frmCarrito
      */
@@ -30,6 +34,8 @@ public class frmVenta extends javax.swing.JPanel {
         tablaVentas = (DefaultTableModel) this.jTable1.getModel();
 //        this.oCon= new cn();
         ventaDAO = new VentaDAO();
+        listaMedicamentos = new ArrayList<>();
+        medDAO = new MedicamentoDAO();
         CargarTablaVentas();
     }
     
@@ -40,6 +46,8 @@ public class frmVenta extends javax.swing.JPanel {
         tablaVentas = (DefaultTableModel) this.jTable1.getModel();
 //        this.oCon= new cn();
         ventaDAO = new VentaDAO();
+        listaMedicamentos = new ArrayList<>();
+        medDAO = new MedicamentoDAO();
         CargarTablaVentas();
     }
     
@@ -66,6 +74,17 @@ public class frmVenta extends javax.swing.JPanel {
             
         }
     }
+    
+//    private void CargarMedicamentos()
+//    {
+//        this.listaMedicamentos = this.medDAO.ConsultarMedicamento();
+//        
+//        this.jComboBox1.removeAllItems();
+//        for (int i=0; i<this.listaMedicamentos.size(); i++)
+//        {
+//            this.jComboBox1.addItem(this.listaMedicamentos.get(i).getNombre());
+//        }
+//    }
 
     /**
      * This method is called from within the constructor to initialize the form.
