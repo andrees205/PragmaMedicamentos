@@ -111,7 +111,7 @@ public class frmLotes extends javax.swing.JPanel {
         ));
         jScrollPane1.setViewportView(jTable1);
 
-        add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 70, 600, 580));
+        add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 70, 630, 580));
         add(jDateChooser1, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 450, 270, 40));
 
         jLabel1.setFont(new java.awt.Font("Calibri", 1, 24)); // NOI18N
