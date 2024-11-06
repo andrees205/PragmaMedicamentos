@@ -113,6 +113,11 @@ public class frmVenta extends javax.swing.JPanel {
 
         jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Elementos/Venta/btnAgregar.png"))); // NOI18N
         jButton1.setContentAreaFilled(false);
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
         add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 500, 270, 40));
 
         jTextField2.setBackground(new java.awt.Color(255, 255, 255));
@@ -169,6 +174,10 @@ public class frmVenta extends javax.swing.JPanel {
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Elementos/Venta/FondoLabel.png"))); // NOI18N
         add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1110, 720));
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        
+    }//GEN-LAST:event_jButton1ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

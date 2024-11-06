@@ -11,18 +11,29 @@ package Entidades;
 public class Medicamento {
     private int idMedicamento;
     private int idCategoria;
+    private String nombreCategoria;
     private String presentacion;
     private String nombre;
 
     public Medicamento() {
     }
 
-    public Medicamento(int idMedicamento, int idCategoria, String presentacion, String nombre) {
+    public Medicamento(int idMedicamento, int idCategoria, String nombreCategoria, String presentacion, String nombre) {
         this.idMedicamento = idMedicamento;
         this.idCategoria = idCategoria;
+        this.nombreCategoria = nombreCategoria;
         this.presentacion = presentacion;
         this.nombre = nombre;
     }
+    
+    public String getNombreCategoria() {
+        return nombreCategoria;
+    }
+
+    public void setNombreCategoria(String nombreCategoria) {
+        this.nombreCategoria = nombreCategoria;
+    }
+    
 
     public int getIdMedicamento() {
         return idMedicamento;
