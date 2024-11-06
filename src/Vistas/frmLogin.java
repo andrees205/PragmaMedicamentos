@@ -5,6 +5,7 @@
 package Vistas;
 
 import Entidades.Hash;
+import Entidades.Usuario;
 import EntidadesDAO.UsuarioDAO;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -149,10 +150,26 @@ public class frmLogin extends javax.swing.JFrame {
         String password = Hash.toSHA1(this.txtContraseña.getText().trim());
         
          if (this.usuarioDao.validarPassword(usuario, password) || 1 == 1) {
-            frmPrincipal frmP = new frmPrincipal();
-            frmP.setVisible(true);
-            frmP.setLocationRelativeTo(null);
-            setVisible(false);
+            Usuario user = this.usuarioDao.ObtenerUsuarioSesion(usuario, password);
+
+            try {
+                switch (user.getRol()) {
+                    case "Administrador":
+                        frmAdministrador frmAdmin = new frmAdministrador(user);
+                        frmAdmin.setVisible(true);
+                        frmAdmin.setLocationRelativeTo(null);
+                        setVisible(false);
+                        break;
+                    case "Vendedor":
+                        frmVendedor frm = new frmVendedor(user);
+                        frm.setVisible(true);
+                        frm.setLocationRelativeTo(null);
+                        setVisible(false);
+                        break;
+                }
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, e.getMessage());
+            }
         } else {
             JOptionPane.showMessageDialog(rootPane, "El usuario o la contraseña son incorrectos", "ACCESO DENEGADO", JOptionPane.ERROR_MESSAGE);
         }
