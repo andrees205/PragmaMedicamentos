@@ -26,6 +26,7 @@ public class ClienteDAO {
     
     public ArrayList<Cliente> ConsultarClientes() {
         ArrayList<Cliente> listaClientes = new ArrayList<Cliente>();
+        
         String sSQL = "{CALL ObtenerClientes()};";
 
         try {
