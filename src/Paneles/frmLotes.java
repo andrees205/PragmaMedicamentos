@@ -5,6 +5,8 @@
 package Paneles;
 
 import Entidades.Lote;
+import Entidades.Usuario;
+import com.toedter.calendar.JDateChooser;
 import EntidadesDAO.LoteDAO;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -20,6 +22,7 @@ public class frmLotes extends javax.swing.JPanel {
     private DefaultTableModel tablaLotes;
     private LoteDAO loteDAO;
     private Lote lote;
+    private Usuario userSesion;
     private SimpleDateFormat formatoFecha = new SimpleDateFormat("yyyy-mm-dd");
     
     /**
@@ -32,7 +35,17 @@ public class frmLotes extends javax.swing.JPanel {
 //        this.oCon= new cn();
         loteDAO = new LoteDAO();
         CargarTablaLotes();
-        
+        this.jDateChooser1.getDateEditor().setEnabled(false);
+    }
+        public frmLotes(Usuario userFrmPrincipal) {
+        initComponents();
+        this.userSesion = userFrmPrincipal;
+        listaLotes = new ArrayList<>();
+        tablaLotes = (DefaultTableModel) this.jTable1.getModel();
+//        this.oCon= new cn();
+        loteDAO = new LoteDAO();
+        CargarTablaLotes();
+        this.jDateChooser1.getDateEditor().setEnabled(false);
     }
 
     private void CargarTablaLotes() {
@@ -74,6 +87,7 @@ public class frmLotes extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jProgressBar1 = new javax.swing.JProgressBar();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jDateChooser1 = new com.toedter.calendar.JDateChooser();
@@ -217,6 +231,7 @@ public class frmLotes extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
+    private javax.swing.JProgressBar jProgressBar1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSpinner jSpinner1;
     private javax.swing.JSpinner jSpinner2;

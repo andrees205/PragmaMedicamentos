@@ -5,11 +5,12 @@
 package Paneles;
 
 import Entidades.Lote;
+import Entidades.Usuario;
 import EntidadesDAO.LoteDAO;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
-
+import Vistas.frmAdministrador;
 /**
  *
  * @author andre
@@ -19,6 +20,8 @@ public class frmInventario extends javax.swing.JPanel {
     /**
      * Creates new form frmInventario
      */
+    
+    private Usuario userSesion;
     private ArrayList<Lote> listaLotes;
     private DefaultTableModel tablaLotes;
     private LoteDAO loteDAO;
@@ -26,11 +29,23 @@ public class frmInventario extends javax.swing.JPanel {
     private SimpleDateFormat formatoFecha = new SimpleDateFormat("yyyy-mm-dd");
     public frmInventario() {
         initComponents();
+        
         listaLotes = new ArrayList<>();
         tablaLotes = (DefaultTableModel) this.jTable1.getModel();
         loteDAO = new LoteDAO();
         CargarTablaLotes();
     }
+    
+    public frmInventario(Usuario userFrmPrincipal) {
+        initComponents();
+        this.userSesion = userFrmPrincipal;
+        this.jLabel1.setText(this.userSesion.getNombre());
+        listaLotes = new ArrayList<>();
+        tablaLotes = (DefaultTableModel) this.jTable1.getModel();
+        loteDAO = new LoteDAO();
+        CargarTablaLotes();
+    }
+
         private void CargarTablaLotes() {
         this.tablaLotes.setRowCount(0);
         this.listaLotes = this.loteDAO.ConsultarLote();
@@ -75,6 +90,7 @@ public class frmInventario extends javax.swing.JPanel {
         jTable1 = new javax.swing.JTable();
         jTextField1 = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
 
         jPanel2.setBackground(new java.awt.Color(56, 102, 65));
         jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -97,6 +113,9 @@ public class frmInventario extends javax.swing.JPanel {
 
         jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Elementos/Inventario/Circulo.png"))); // NOI18N
         jPanel2.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
+
+        jLabel1.setText("jLabel1");
+        jPanel2.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 40, 110, 60));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -122,6 +141,7 @@ public class frmInventario extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;

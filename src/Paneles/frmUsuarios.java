@@ -27,10 +27,22 @@ public class frmUsuarios extends javax.swing.JPanel {
     ArrayList<Usuario> usuarios;
     Usuario usuarioSeleccionado;
     String nombre, password, rol;
+    private Usuario userSesion;
     private Component rootPane;
 
     public frmUsuarios() {
         initComponents();
+        this.usuarioDAO= new UsuarioDAO();
+        this.modelUsuarios=(DefaultTableModel) this.tblUsuarios.getModel();
+        this.usuarios=new ArrayList();
+        this.usuarios=this.usuarioDAO.ConsultarUsuarios();
+        this.RecargarUsuarios();
+        this.usuarioSeleccionado= new Usuario();
+    }
+    
+        public frmUsuarios(Usuario userFrmPrincipal) {
+        initComponents();
+        this.userSesion = userFrmPrincipal;
         this.usuarioDAO= new UsuarioDAO();
         this.modelUsuarios=(DefaultTableModel) this.tblUsuarios.getModel();
         this.usuarios=new ArrayList();

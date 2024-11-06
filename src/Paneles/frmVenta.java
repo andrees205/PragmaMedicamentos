@@ -4,6 +4,7 @@
  */
 package Paneles;
 
+import Entidades.Usuario;
 import Entidades.Venta;
 import EntidadesDAO.VentaDAO;
 import java.util.ArrayList;
@@ -19,11 +20,22 @@ public class frmVenta extends javax.swing.JPanel {
     private DefaultTableModel tablaVentas;
     private VentaDAO ventaDAO;
     private Venta venta;
+    private Usuario userSesion;
     /**
      * Creates new form frmCarrito
      */
     public frmVenta() {
         initComponents();
+        listaVentas = new ArrayList<>();
+        tablaVentas = (DefaultTableModel) this.jTable1.getModel();
+//        this.oCon= new cn();
+        ventaDAO = new VentaDAO();
+        CargarTablaVentas();
+    }
+    
+        public frmVenta(Usuario userFrmPrincipal) {
+        initComponents();
+        this.userSesion = userFrmPrincipal;
         listaVentas = new ArrayList<>();
         tablaVentas = (DefaultTableModel) this.jTable1.getModel();
 //        this.oCon= new cn();
