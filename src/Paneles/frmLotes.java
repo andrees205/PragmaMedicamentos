@@ -4,19 +4,67 @@
  */
 package Paneles;
 
+import Entidades.Lote;
+import EntidadesDAO.LoteDAO;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import javax.swing.table.DefaultTableModel;
 /**
  *
  * @author andre
  */
 public class frmLotes extends javax.swing.JPanel {
-
+    
+//    private cn oCon;
+    private ArrayList<Lote> listaLotes;
+    private DefaultTableModel tablaLotes;
+    private LoteDAO loteDAO;
+    private Lote lote;
+    private SimpleDateFormat formatoFecha = new SimpleDateFormat("yyyy-mm-dd");
+    
     /**
      * Creates new form frmLotes
      */
     public frmLotes() {
         initComponents();
+        listaLotes = new ArrayList<>();
+        tablaLotes = (DefaultTableModel) this.jTable1.getModel();
+//        this.oCon= new cn();
+        loteDAO = new LoteDAO();
+        CargarTablaLotes();
+        
     }
 
+    private void CargarTablaLotes() {
+        this.tablaLotes.setRowCount(0);
+        this.listaLotes = this.loteDAO.ConsultarLote();
+        
+        for(int i=0; i<this.listaLotes.size(); i++)
+        {
+            try{
+               String[] registroLotes={
+                Integer.toString(this.listaLotes.get(i).getIdLote()),
+                this.listaLotes.get(i).getNombreMedicamento(),
+                Integer.toString(this.listaLotes.get(i).getCantidad()),
+                this.listaLotes.get(i).getNombreProveedor(),
+                this.listaLotes.get(i).getNombreUsuario(),
+                Double.toString(this.listaLotes.get(i).getPrecioCosto()),
+                Double.toString(this.listaLotes.get(i).getPrecioUnitario()),
+                Double.toString(this.listaLotes.get(i).getPrecioMayoreo()),
+                formatoFecha.format(this.listaLotes.get(i).getFecha()),
+                this.listaLotes.get(i).getUbicacion()
+            };
+            
+            this.tablaLotes.addRow(registroLotes);
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace(); // Mostrar el error en consola
+            }
+            
+        }
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -55,13 +103,10 @@ public class frmLotes extends javax.swing.JPanel {
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "ID", "MEDICAMENTO", "CANTIDAD", "PROVEEDOR", "USUARIO", "PRECIO", "PRECIO U", "PRECIO M", "CADUCIDAD", "UBICACION"
             }
         ));
         jScrollPane1.setViewportView(jTable1);

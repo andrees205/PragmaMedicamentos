@@ -12,9 +12,12 @@ import java.util.Date;
 public class Lote {
     private int idLote;
     private int idMedicamento;
+    private String nombreMedicamento;
     private int Cantidad;
     private int idProveedor;
+    private String nombreProveedor;
     private int idUsuario;
+    private String nombreUsuario;
     private double precioCosto;
     private double precioUnitario;
     private double precioMayoreo;
@@ -24,17 +27,44 @@ public class Lote {
     public Lote() {
     }
 
-    public Lote(int idLote, int idMedicamento, int Cantidad, int idProveedor, int idUsuario, double precioCosto, double precioUnitario, double precioMayoreo, Date fecha, String ubicacion) {
+    public Lote(int idLote, int idMedicamento, String nombreMedicamento, int Cantidad, int idProveedor, String nombreProveedor, int idUsuario, String nombreUsuario, double precioCosto, double precioUnitario, double precioMayoreo, Date fecha, String ubicacion) {
         this.idLote = idLote;
         this.idMedicamento = idMedicamento;
+        this.nombreMedicamento = nombreMedicamento;
         this.Cantidad = Cantidad;
         this.idProveedor = idProveedor;
+        this.nombreProveedor = nombreProveedor;
         this.idUsuario = idUsuario;
+        this.nombreUsuario = nombreUsuario;
         this.precioCosto = precioCosto;
         this.precioUnitario = precioUnitario;
         this.precioMayoreo = precioMayoreo;
         this.fecha = fecha;
         this.ubicacion = ubicacion;
+    }
+
+    public String getNombreMedicamento() {
+        return nombreMedicamento;
+    }
+
+    public void setNombreMedicamento(String nombreMedicamento) {
+        this.nombreMedicamento = nombreMedicamento;
+    }
+
+    public String getNombreProveedor() {
+        return nombreProveedor;
+    }
+
+    public void setNombreProveedor(String nombreProveedor) {
+        this.nombreProveedor = nombreProveedor;
+    }
+
+    public String getNombreUsuario() {
+        return nombreUsuario;
+    }
+
+    public void setNombreUsuario(String nombreUsuario) {
+        this.nombreUsuario = nombreUsuario;
     }
 
     public int getIdLote() {

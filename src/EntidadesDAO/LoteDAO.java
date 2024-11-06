@@ -36,19 +36,19 @@ public class LoteDAO {
             while (rs.next()) {
                 Lote lote = new Lote();
                 
-                //ACA CREO QUE DA ERROR PORQUE LOTE PIDE EL ID DEL MEDICAMENTO TIPO INT Y EN LA CONSULTA
-                //DEL PROCEDIMIENTO SE DEUVELVE UN STRING QUE ES EL NOMBRE DEL MEDICMANTO
-                //PARA ARREGLARLO SOLO SE TENDRIA QUE CAMBIAR LOS IDMEDICAMENTO, IDPROVEEDOR, ETC A TIPO STRING
                 lote.setIdLote(rs.getInt(1));
                 lote.setIdMedicamento(rs.getInt(2));
-                lote.setCantidad(rs.getInt(3));
-                lote.setIdProveedor(rs.getInt(4));
-                lote.setIdUsuario(rs.getInt(5));
-                lote.setPrecioCosto(rs.getDouble(6));
-                lote.setPrecioUnitario(rs.getDouble(7));
-                lote.setPrecioMayoreo(rs.getDouble(8));
-                lote.setFecha(rs.getDate(9));
-                lote.setUbicacion(rs.getString(10));
+                lote.setNombreMedicamento(rs.getString(3));
+                lote.setCantidad(rs.getInt(4));
+                lote.setIdProveedor(rs.getInt(5));
+                lote.setNombreProveedor(rs.getString(6));
+                lote.setIdUsuario(rs.getInt(7));
+                lote.setNombreUsuario(rs.getString(8));
+                lote.setPrecioCosto(rs.getDouble(9));
+                lote.setPrecioUnitario(rs.getDouble(10));
+                lote.setPrecioMayoreo(rs.getDouble(11));
+                lote.setFecha(rs.getDate(12));
+                lote.setUbicacion(rs.getString(13));
                 
                 listaLotes.add(lote);
             }
