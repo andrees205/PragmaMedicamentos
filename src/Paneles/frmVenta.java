@@ -191,7 +191,7 @@ public class frmVenta extends javax.swing.JPanel {
         jLabel7.setFont(new java.awt.Font("Calibri", 1, 24)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(255, 255, 255));
         jLabel7.setText("A");
-        add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 370, 50, -1));
+        add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 370, 40, -1));
 
         jLabel5.setFont(new java.awt.Font("Calibri", 1, 24)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(255, 255, 255));
