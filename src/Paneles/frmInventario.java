@@ -133,32 +133,13 @@ public class frmInventario extends javax.swing.JPanel {
     private void initComponents() {
 
         jPanel2 = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
-        jTextField1 = new javax.swing.JTextField();
         tablaCustom1 = new Clases.tablaCustom();
         jLabel3 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
 
         jPanel2.setBackground(new java.awt.Color(56, 102, 65));
         jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        jTable1.setFont(new java.awt.Font("Calibri", 0, 14)); // NOI18N
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "ID", "MEDICAMENTO", "CANTIDAD", "PROVEEDOR", "USUARIO", "PRECIO", "PRECIO U", "PRECIO M", "CADUCIDAD", "UBICACION"
-            }
-        ));
-        jScrollPane1.setViewportView(jTable1);
-
-        jPanel2.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 110, 1020, 200));
-
-        jTextField1.setText("Buscar...");
-        jPanel2.add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(840, 60, 210, 40));
-        jPanel2.add(tablaCustom1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 330, 1020, 270));
+        jPanel2.add(tablaCustom1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 110, 1020, 500));
 
         jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Elementos/Inventario/Circulo.png"))); // NOI18N
         jPanel2.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
@@ -193,9 +174,6 @@ public class frmInventario extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
     private Clases.tablaCustom tablaCustom1;
     // End of variables declaration//GEN-END:variables
 }
