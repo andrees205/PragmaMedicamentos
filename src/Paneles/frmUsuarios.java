@@ -141,6 +141,11 @@ public class frmUsuarios extends javax.swing.JPanel {
             }
         ));
         tblUsuarios.setComponentPopupMenu(jPopupMenu1);
+        tblUsuarios.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblUsuariosMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tblUsuarios);
 
         add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 70, 610, 580));
@@ -196,6 +201,10 @@ public class frmUsuarios extends javax.swing.JPanel {
         this.txtContraseña.setText(tblUsuarios.getValueAt(registro, 1).toString());
         this.txtRol.setText(tblUsuarios.getValueAt(registro, 2).toString());
     }//GEN-LAST:event_menuEditarActionPerformed
+
+    private void tblUsuariosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblUsuariosMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tblUsuariosMouseClicked
 
         
     private void RecargarUsuarios()
