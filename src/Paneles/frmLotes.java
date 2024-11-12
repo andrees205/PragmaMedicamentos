@@ -39,12 +39,13 @@ public class frmLotes extends javax.swing.JPanel {
     }
         public frmLotes(Usuario userFrmPrincipal) {
         initComponents();
+        
         this.userSesion = userFrmPrincipal;
-        listaLotes = new ArrayList<>();
+        //listaLotes = new ArrayList<>();
         tablaLotes = (DefaultTableModel) this.jTable1.getModel();
 //        this.oCon= new cn();
-        loteDAO = new LoteDAO();
-        CargarTablaLotes();
+        //loteDAO = new LoteDAO();
+        //CargarTablaLotes();
         this.jDateChooser1.getDateEditor().setEnabled(false);
     }
 
@@ -87,12 +88,13 @@ public class frmLotes extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jProgressBar1 = new javax.swing.JProgressBar();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jDateChooser1 = new com.toedter.calendar.JDateChooser();
         jLabel1 = new javax.swing.JLabel();
+        jButton4 = new javax.swing.JButton();
         jSpinner2 = new javax.swing.JSpinner();
+        txtEmpleado = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jSpinner1 = new javax.swing.JSpinner();
         jLabel5 = new javax.swing.JLabel();
@@ -102,11 +104,9 @@ public class frmLotes extends javax.swing.JPanel {
         jTextField2 = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
-        jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         jTextField3 = new javax.swing.JTextField();
         jTextField4 = new javax.swing.JTextField();
-        jTextField5 = new javax.swing.JTextField();
         jLabel10 = new javax.swing.JLabel();
         jButton3 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
@@ -120,7 +120,7 @@ public class frmLotes extends javax.swing.JPanel {
 
             },
             new String [] {
-                "ID", "MEDICAMENTO", "CANTIDAD", "PROVEEDOR", "USUARIO", "PRECIO", "PRECIO U", "PRECIO M", "CADUCIDAD", "UBICACION"
+                "MEDICAMENTO", "CANTIDAD", "PROVEEDOR", "COSTO", "MAYOREO", "Title 6"
             }
         ));
         jScrollPane1.setViewportView(jTable1);
@@ -132,12 +132,20 @@ public class frmLotes extends javax.swing.JPanel {
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("Límite stock");
         add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(900, 190, 120, 30));
+
+        jButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Elementos/Venta/btnAgregar.png"))); // NOI18N
+        jButton4.setContentAreaFilled(false);
+        add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 500, 270, 40));
         add(jSpinner2, new org.netbeans.lib.awtextra.AbsoluteConstraints(900, 218, 120, -1));
+
+        txtEmpleado.setFont(new java.awt.Font("Calibri", 1, 18)); // NOI18N
+        txtEmpleado.setForeground(new java.awt.Color(204, 255, 204));
+        add(txtEmpleado, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 13, 270, 40));
 
         jLabel4.setFont(new java.awt.Font("Calibri", 1, 18)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel4.setText("Precio B");
-        add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(840, 330, 80, 30));
+        jLabel4.setText("Precio unitario");
+        add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(890, 330, 130, 30));
         add(jSpinner1, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 218, 110, -1));
 
         jLabel5.setFont(new java.awt.Font("Calibri", 1, 24)); // NOI18N
@@ -173,12 +181,7 @@ public class frmLotes extends javax.swing.JPanel {
                 jButton1ActionPerformed(evt);
             }
         });
-        add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 503, 270, 50));
-
-        jLabel8.setFont(new java.awt.Font("Calibri", 1, 18)); // NOI18N
-        jLabel8.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel8.setText("Precio C");
-        add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(930, 330, 80, 30));
+        add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 550, 270, 50));
 
         jLabel9.setFont(new java.awt.Font("Calibri", 1, 24)); // NOI18N
         jLabel9.setForeground(new java.awt.Color(255, 255, 255));
@@ -186,18 +189,15 @@ public class frmLotes extends javax.swing.JPanel {
         add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 410, 200, 40));
 
         jTextField3.setBackground(new java.awt.Color(255, 255, 255));
-        add(jTextField3, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 360, 80, 40));
+        add(jTextField3, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 360, 140, 40));
 
         jTextField4.setBackground(new java.awt.Color(255, 255, 255));
-        add(jTextField4, new org.netbeans.lib.awtextra.AbsoluteConstraints(830, 360, 90, 40));
-
-        jTextField5.setBackground(new java.awt.Color(255, 255, 255));
-        add(jTextField5, new org.netbeans.lib.awtextra.AbsoluteConstraints(931, 360, 80, 40));
+        add(jTextField4, new org.netbeans.lib.awtextra.AbsoluteConstraints(890, 360, 140, 40));
 
         jLabel10.setFont(new java.awt.Font("Calibri", 1, 18)); // NOI18N
         jLabel10.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel10.setText("Precio A");
-        add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 330, 80, 30));
+        jLabel10.setText("Precio Mayoreo");
+        add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 330, 120, 30));
 
         jButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Elementos/Lotes/btnOrdenar.png"))); // NOI18N
         jButton3.setContentAreaFilled(false);
@@ -220,6 +220,7 @@ public class frmLotes extends javax.swing.JPanel {
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
     private com.toedter.calendar.JDateChooser jDateChooser1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -229,9 +230,7 @@ public class frmLotes extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
-    private javax.swing.JProgressBar jProgressBar1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSpinner jSpinner1;
     private javax.swing.JSpinner jSpinner2;
@@ -240,6 +239,6 @@ public class frmLotes extends javax.swing.JPanel {
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;
-    private javax.swing.JTextField jTextField5;
+    private javax.swing.JLabel txtEmpleado;
     // End of variables declaration//GEN-END:variables
 }

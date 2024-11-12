@@ -56,7 +56,7 @@ public class frmVenta extends javax.swing.JPanel {
         listaMedicamentos = new ArrayList<>();
         medDAO = new MedicamentoDAO();
         CargarTablaVentas();
-        CargarMedicamentos();
+        //CargarMedicamentos();
         loteDAO = new LoteDAO();
         listaLotes = new ArrayList<>();
         CargarLotes();

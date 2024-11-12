@@ -23,7 +23,7 @@ public class frmAdministrador extends javax.swing.JFrame {
     public frmAdministrador(Usuario user) {
         initComponents();
         this.userSesion = user;
-        this.jLabel3.setText(this.userSesion.getNombre());
+        this.jLabel3.setText("Bienvenido " + this.userSesion.getNombre());
     }
 
     /**
@@ -280,11 +280,6 @@ public class frmAdministrador extends javax.swing.JFrame {
         frmMedicamentos frm = new frmMedicamentos();
         frm.setVisible(true);
         this.jDesktopPane1.add(frm);
-        //this.pnlPrincipal.add(frm);
-        
-        /*frmBasquetbol frm1 = new frmBasquetbol();
-        frm1.setVisible(true);
-        jDesktopPane1.add(frm1);*/
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
