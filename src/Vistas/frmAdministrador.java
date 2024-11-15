@@ -280,24 +280,28 @@ public class frmAdministrador extends javax.swing.JFrame {
         frmMedicamentos frm = new frmMedicamentos();
         frm.setVisible(true);
         this.jDesktopPane1.add(frm);
+        frm.toFront();
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
         frmCategoria frm = new frmCategoria();
         frm.setVisible(true);
         this.jDesktopPane1.add(frm);
+        frm.toFront();
     }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
         frmProveedores frm = new frmProveedores();
         frm.setVisible(true);
         this.jDesktopPane1.add(frm);
+        frm.toFront();
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
         frmCliente frm = new frmCliente();
         frm.setVisible(true);
         this.jDesktopPane1.add(frm);
+        frm.toFront();
     }//GEN-LAST:event_jMenuItem4ActionPerformed
 
     /**
