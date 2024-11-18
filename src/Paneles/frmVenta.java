@@ -16,6 +16,7 @@ import EntidadesDAO.LoteDAO;
 import Vistas.frmAdministrador;
 import Vistas.frmCategoria;
 import Vistas.frmInventarioPequeño;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -92,6 +93,7 @@ public class frmVenta extends javax.swing.JPanel {
         }
     }
 
+
     /*private void CargarMedicamentos()
     {
         this.listaMedicamentos = this.medDAO.ConsultarMedicamento();
@@ -104,7 +106,6 @@ public class frmVenta extends javax.swing.JPanel {
     }*/
     private void CargarLotes() {
         this.listaLotes = this.loteDAO.ConsultarLote();
-
     }
 
     /**
@@ -116,6 +117,7 @@ public class frmVenta extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPopupMenu2 = new javax.swing.JPopupMenu();
         jButton3 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
@@ -157,6 +159,7 @@ public class frmVenta extends javax.swing.JPanel {
                 "ID", "USUARIO", "CLIENTE", "MONTO TOTAL"
             }
         ));
+        jTable1.setComponentPopupMenu(jPopupMenu2);
         jScrollPane1.setViewportView(jTable1);
 
         add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 70, 600, 580));
@@ -256,6 +259,7 @@ public class frmVenta extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
+    private javax.swing.JPopupMenu jPopupMenu2;
     private javax.swing.JRadioButton jRadioButton1;
     private javax.swing.JRadioButton jRadioButton2;
     private javax.swing.JRadioButton jRadioButton3;
