@@ -13,6 +13,9 @@ import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
 import Entidades.Lote;
 import EntidadesDAO.LoteDAO;
+import Vistas.frmAdministrador;
+import Vistas.frmCategoria;
+import Vistas.frmInventarioPequeño;
 
 /**
  *
@@ -30,6 +33,9 @@ public class frmVenta extends javax.swing.JPanel {
     private ArrayList<Lote> listaLotes;
     private LoteDAO loteDAO;
     private Lote lote;
+    private Lote loteSeleccionado;
+    frmAdministrador parent;
+
     /**
      * Creates new form frmCarrito
      */
@@ -41,15 +47,17 @@ public class frmVenta extends javax.swing.JPanel {
         listaMedicamentos = new ArrayList<>();
         medDAO = new MedicamentoDAO();
         CargarTablaVentas();
-        CargarMedicamentos();
+        //CargarMedicamentos();
         loteDAO = new LoteDAO();
         listaLotes = new ArrayList<>();
         CargarLotes();
     }
-    
-        public frmVenta(Usuario userFrmPrincipal) {
+
+    public frmVenta(Usuario userFrmPrincipal, frmAdministrador parent) {
         initComponents();
+        this.parent = parent;
         this.userSesion = userFrmPrincipal;
+        this.loteSeleccionado = new Lote();
         listaVentas = new ArrayList<>();
         tablaVentas = (DefaultTableModel) this.jTable1.getModel();
         ventaDAO = new VentaDAO();
@@ -60,36 +68,31 @@ public class frmVenta extends javax.swing.JPanel {
         loteDAO = new LoteDAO();
         listaLotes = new ArrayList<>();
         CargarLotes();
-        
+
     }
-    
+
     private void CargarTablaVentas() {
         this.tablaVentas.setRowCount(0);
         this.listaVentas = this.ventaDAO.ConsultarVentas();
-        
-        for(int i=0; i<this.listaVentas.size(); i++)
-        {
-            try{
-               String[] registroVentas={
-                Integer.toString(this.listaVentas.get(i).getIdVenta()),
-                this.listaVentas.get(i).getNombreUsuario(),
-                this.listaVentas.get(i).getNombreCliente(),
-                Double.toString(this.listaVentas.get(i).getMontoTotal())
-            };
-            
-            this.tablaVentas.addRow(registroVentas);
-            }
-            catch (Exception e)
-            {
+
+        for (int i = 0; i < this.listaVentas.size(); i++) {
+            try {
+                String[] registroVentas = {
+                    Integer.toString(this.listaVentas.get(i).getIdVenta()),
+                    this.listaVentas.get(i).getNombreUsuario(),
+                    this.listaVentas.get(i).getNombreCliente(),
+                    Double.toString(this.listaVentas.get(i).getMontoTotal())
+                };
+
+                this.tablaVentas.addRow(registroVentas);
+            } catch (Exception e) {
                 e.printStackTrace(); // Mostrar el error en consola
             }
-            
+
         }
     }
-    
 
-    
-    private void CargarMedicamentos()
+    /*private void CargarMedicamentos()
     {
         this.listaMedicamentos = this.medDAO.ConsultarMedicamento();
         
@@ -98,13 +101,10 @@ public class frmVenta extends javax.swing.JPanel {
         {
             this.jComboBox1.addItem(this.listaMedicamentos.get(i).getNombre());
         }
-    }
-
-    private void CargarLotes()
-    {
+    }*/
+    private void CargarLotes() {
         this.listaLotes = this.loteDAO.ConsultarLote();
-        
-        
+
     }
 
     /**
@@ -116,6 +116,7 @@ public class frmVenta extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jButton3 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jButton1 = new javax.swing.JButton();
@@ -131,13 +132,22 @@ public class frmVenta extends javax.swing.JPanel {
         jLabel7 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        txtProducto = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(56, 102, 65));
         setPreferredSize(new java.awt.Dimension(280, 720));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Elementos/Medicamento/btnBuscar.png"))); // NOI18N
+        jButton3.setContentAreaFilled(false);
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+        add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(1040, 170, 40, 40));
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -203,18 +213,8 @@ public class frmVenta extends javax.swing.JPanel {
         jLabel4.setText("Cantidad");
         add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 230, 100, 40));
 
-        jComboBox1.setBackground(new java.awt.Color(255, 255, 255));
-        jComboBox1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jComboBox1MouseClicked(evt);
-            }
-        });
-        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBox1ActionPerformed(evt);
-            }
-        });
-        add(jComboBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 170, 280, 30));
+        txtProducto.setBackground(new java.awt.Color(255, 255, 255));
+        add(txtProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(750, 170, 280, 40));
 
         jLabel1.setFont(new java.awt.Font("Calibri", 1, 24)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
@@ -222,38 +222,32 @@ public class frmVenta extends javax.swing.JPanel {
         add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 140, 120, -1));
 
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Elementos/Venta/FondoLabel.png"))); // NOI18N
-        add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 0, 1090, -1));
+        add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1110, 720));
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
-       
-        
-    }//GEN-LAST:event_jComboBox1ActionPerformed
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        //frmInventarioPequeño frmInv = new frmInventarioPequeño();
+        frmInventarioPequeño frmInv = new frmInventarioPequeño(this);
+        frmInv.setVisible(true);
+        this.parent.getDesktopPanel().add(frmInv);
+        //this.parent.add(frmInv);
+        frmInv.moveToFront();
+    }//GEN-LAST:event_jButton3ActionPerformed
 
-    private void jComboBox1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jComboBox1MouseClicked
-        
-        int idMed = this.jComboBox1.getSelectedIndex();
-        
-        for(int i=0; i<this.listaLotes.size();i++){
-            if(this.listaLotes.get(i).getIdMedicamento() == idMed){
-                
-                this.jLabel7.setText(Double.toString(this.listaLotes.get(i).getPrecioCosto()));
-                this.jLabel8.setText(Double.toString(this.listaLotes.get(i).getPrecioUnitario()));
-                this.jLabel6.setText(Double.toString(this.listaLotes.get(i).getPrecioMayoreo()));
-                break;
-            }
-        }
-    }//GEN-LAST:event_jComboBox1MouseClicked
+    public void ObtenerLoteSeleccionado(Lote loteSeleccionado) {
+        this.loteSeleccionado = loteSeleccionado;
+        this.txtProducto.setText(this.loteSeleccionado.getNombreMedicamento());
+    }
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
-    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;
@@ -269,5 +263,6 @@ public class frmVenta extends javax.swing.JPanel {
     private javax.swing.JSpinner jSpinner1;
     private javax.swing.JTable jTable1;
     private javax.swing.JTextField jTextField2;
+    private javax.swing.JTextField txtProducto;
     // End of variables declaration//GEN-END:variables
 }

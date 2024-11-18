@@ -6,6 +6,7 @@ package Vistas;
 
 import Entidades.Usuario;
 import Paneles.*;
+import javax.swing.JDesktopPane;
 import javax.swing.JInternalFrame;
 
 /**
@@ -261,7 +262,7 @@ public class frmAdministrador extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        new CambiaPanel(pnlPrincipal, new frmVenta(this.userSesion));
+        new CambiaPanel(pnlPrincipal, new frmVenta(this.userSesion, this));
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
@@ -338,6 +339,10 @@ public class frmAdministrador extends javax.swing.JFrame {
                 new frmAdministrador(null).setVisible(true);
             }
         });
+    }
+    
+    public JDesktopPane getDesktopPanel(){
+        return this.jDesktopPane1;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

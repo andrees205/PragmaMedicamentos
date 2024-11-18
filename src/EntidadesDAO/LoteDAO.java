@@ -60,6 +60,43 @@ public class LoteDAO {
         return listaLotes;
     }
     
+    
+    public Lote ConsultarLotePorID(int idLote) {
+        //ArrayList<Lote> listaLotes = new ArrayList<Lote>();
+        Lote lote = new Lote();
+        String sSQL = "{CALL ObtenerLotes(?)};";
+
+        try {
+            CallableStatement cs = this.CN.getConexion().prepareCall(sSQL);
+            cs.setInt(1, idLote);
+            rs = cs.executeQuery();
+            while (rs.next()) {
+                //Lote lote = new Lote();
+                
+                lote.setIdLote(rs.getInt(1));
+                lote.setIdMedicamento(rs.getInt(2));
+                lote.setNombreMedicamento(rs.getString(3));
+                lote.setCantidad(rs.getInt(4));
+                lote.setIdProveedor(rs.getInt(5));
+                lote.setNombreProveedor(rs.getString(6));
+                lote.setIdUsuario(rs.getInt(7));
+                lote.setNombreUsuario(rs.getString(8));
+                lote.setPrecioCosto(rs.getDouble(9));
+                lote.setPrecioUnitario(rs.getDouble(10));
+                lote.setPrecioMayoreo(rs.getDouble(11));
+                lote.setFecha(rs.getDate(12));
+                lote.setUbicacion(rs.getString(13));
+                
+                //listaLotes.add(lote);
+            }
+
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, ex.getMessage(), "¡¡ERROR!!", JOptionPane.ERROR_MESSAGE);
+        }
+
+        return lote;
+    }
+    
     public boolean InsertarLote(Lote lote) {
         String sSQL = "{CALL insertar_lote(?,?,?,?,?,?,?,?,?)}";
         

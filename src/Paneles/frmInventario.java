@@ -139,6 +139,12 @@ public class frmInventario extends javax.swing.JPanel {
 
         jPanel2.setBackground(new java.awt.Color(56, 102, 65));
         jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        tablaCustom1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tablaCustom1MouseClicked(evt);
+            }
+        });
         jPanel2.add(tablaCustom1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 110, 1020, 500));
 
         jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Elementos/Inventario/Circulo.png"))); // NOI18N
@@ -168,6 +174,10 @@ public class frmInventario extends javax.swing.JPanel {
                     .addGap(0, 0, Short.MAX_VALUE)))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void tablaCustom1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaCustom1MouseClicked
+
+    }//GEN-LAST:event_tablaCustom1MouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
