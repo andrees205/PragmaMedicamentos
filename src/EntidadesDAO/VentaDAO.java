@@ -103,5 +103,22 @@ public class VentaDAO {
             return false;
         }
     }
+    public int ObtenerUltimoIDVenta() {
+    String sSQL = "{CALL ObtenerUltimoIDVenta(?)}";
+    int ultimoID = -1; // Valor predeterminado en caso de error
+
+    try {
+        CallableStatement cs = this.CN.getConexion().prepareCall(sSQL);
+        cs.registerOutParameter(1, java.sql.Types.INTEGER);
+        cs.execute();
+
+        ultimoID = cs.getInt(1);
+    } catch (SQLException e) {
+        JOptionPane.showMessageDialog(null, e.getMessage(), "Error al obtener el último ID de venta", JOptionPane.ERROR_MESSAGE);
+    }
+
+    return ultimoID;
+}
+
     
 }

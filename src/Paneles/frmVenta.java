@@ -324,6 +324,7 @@ public class frmVenta extends javax.swing.JPanel {
         add(txtCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 110, 280, 40));
 
         lblTotal.setFont(new java.awt.Font("Calibri", 1, 18)); // NOI18N
+        lblTotal.setForeground(new java.awt.Color(255, 255, 255));
         lblTotal.setText("jLabel10");
         add(lblTotal, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 660, 190, 30));
 
@@ -346,18 +347,23 @@ public class frmVenta extends javax.swing.JPanel {
         double totalDetalleVenta = detalleVenta.getCantidad() * detalleVenta.getPrecioVendido();
         detalleVenta.setTotal(totalDetalleVenta);
         this.carritoDetalleVenta.add(detalleVenta);
-        this.CargarCarrito();
+
         this.ActualizarTotal();
+        this.CargarCarrito();
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void ActualizarTotal(){
-        //this.totalPagar = 0;
-        for (int i = 0; i<this.carritoDetalleVenta.size(); i++){
-            this.totalPagar = totalPagar+=this.detalleVenta.getTotal();
+    private void ActualizarTotal() {
+        this.totalPagar = 0;
+
+        // Iterar sobre todos los elementos del carrito
+        for (DetalleVenta dt : this.carritoDetalleVenta) {
+            this.totalPagar += dt.getTotal(); // Sumar el total de cada detalle
         }
-        this.lblTotal.setText(Double.toString(totalPagar));
+
+        // Mostrar el total en el lblTotal con dos decimales
+        this.lblTotal.setText("Total a pagar: " + String.format("%.2f", this.totalPagar));
     }
-    
+
     private void CargarCarrito() {
         this.modeloDetalle.setRowCount(0);
 
@@ -370,7 +376,8 @@ public class frmVenta extends javax.swing.JPanel {
                 dt.getNombreMedicamento(),
                 String.valueOf(dt.getCantidad()),
                 String.valueOf(dt.getPrecioVendido()),
-                String.format("%.2f", dt.getPrecioVendido()),};
+                String.valueOf(dt.getTotal()), //String.format("%.2f", dt.getPrecioVendido()),
+            };
 
             this.modeloDetalle.addRow(data);
         }
@@ -452,12 +459,26 @@ public class frmVenta extends javax.swing.JPanel {
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        this.venta = new Venta();
-        
+        Venta venta = new Venta();
+
         venta.setFechaVenta(this.jDateChooser1.getDate());
         venta.setIdUsuario(this.userSesion.getIdusuario());
         venta.setIdCliente(this.clienteSeleccionado.getIdCliente());
-        
+        venta.setMontoTotal(totalPagar);
+
+        this.ventaDAO.InsertarVenta(venta);
+        int ultimoIDVenta = this.ventaDAO.ObtenerUltimoIDVenta();
+
+        for (int i = 0; i < this.carritoDetalleVenta.size(); i++) {
+            DetalleVenta detalleVenta = new DetalleVenta(
+                    ultimoIDVenta,
+                    carritoDetalleVenta.get(i).getIdMedicamento(),
+                    carritoDetalleVenta.get(i).getCantidad(),
+                    carritoDetalleVenta.get(i).getPrecioVendido()
+            );
+
+            detalleVentaDAO.InsertarDetalle(detalleVenta);
+        }
     }//GEN-LAST:event_jButton2ActionPerformed
 
     public void ObtenerLoteSeleccionado(Lote loteSeleccionado) {
@@ -465,7 +486,7 @@ public class frmVenta extends javax.swing.JPanel {
         this.txtProducto.setText(this.loteSeleccionado.getNombreMedicamento());
     }
 
-        public void ObtenerClienteSeleccionado(Cliente clienteSeleccionado) {
+    public void ObtenerClienteSeleccionado(Cliente clienteSeleccionado) {
         this.clienteSeleccionado = clienteSeleccionado;
         this.txtCliente.setText(this.clienteSeleccionado.getNombre());
     }

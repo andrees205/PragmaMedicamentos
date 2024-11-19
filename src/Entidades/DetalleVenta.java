@@ -9,6 +9,7 @@ package Entidades;
  * @author andre
  */
 public class DetalleVenta {
+
     private int idDetalleVenta;
     private int idVenta;
     private int idMedicamento;
@@ -28,8 +29,15 @@ public class DetalleVenta {
         this.Cantidad = Cantidad;
         this.precioVendido = precioVendido;
     }
-    
-    
+
+    public DetalleVenta(int idVenta, int idMedicamento, int Cantidad, double precioVendido) {
+
+        this.idVenta = idVenta;
+        this.idMedicamento = idMedicamento;
+
+        this.Cantidad = Cantidad;
+        this.precioVendido = precioVendido;
+    }
 
     public String getNombreMedicamento() {
         return nombreMedicamento;
@@ -39,7 +47,6 @@ public class DetalleVenta {
         this.nombreMedicamento = nombreMedicamento;
     }
 
-    
     public int getIdDetalleVenta() {
         return idDetalleVenta;
     }
@@ -87,6 +94,5 @@ public class DetalleVenta {
     public void setTotal(double total) {
         this.total = total;
     }
-    
-    
+
 }
