@@ -7,7 +7,9 @@ package Paneles;
 import Entidades.Medicamento;
 import Entidades.Usuario;
 import Entidades.Venta;
+import Entidades.DetalleVenta;
 import EntidadesDAO.MedicamentoDAO;
+import EntidadesDAO.DetalleVentaDAO;
 import EntidadesDAO.VentaDAO;
 import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
@@ -16,6 +18,7 @@ import EntidadesDAO.LoteDAO;
 import Vistas.frmAdministrador;
 import Vistas.frmCategoria;
 import Vistas.frmInventarioPequeño;
+import java.awt.Component;
 import javax.swing.JOptionPane;
 
 /**
@@ -25,6 +28,7 @@ import javax.swing.JOptionPane;
 public class frmVenta extends javax.swing.JPanel {
 
     private ArrayList<Venta> listaVentas;
+    private ArrayList<DetalleVenta> listaVentaDetalle;
     private DefaultTableModel tablaVentas;
     private VentaDAO ventaDAO;
     private Venta venta;
@@ -35,6 +39,9 @@ public class frmVenta extends javax.swing.JPanel {
     private LoteDAO loteDAO;
     private Lote lote;
     private Lote loteSeleccionado;
+    private DetalleVenta detalleVenta;
+    private DetalleVentaDAO detalleVentaDAO;
+    private Component rootPane;
     frmAdministrador parent;
 
     /**
@@ -43,6 +50,7 @@ public class frmVenta extends javax.swing.JPanel {
     public frmVenta() {
         initComponents();
         listaVentas = new ArrayList<>();
+        listaVentaDetalle = new ArrayList<>();
         tablaVentas = (DefaultTableModel) this.jTable1.getModel();
         ventaDAO = new VentaDAO();
         listaMedicamentos = new ArrayList<>();
@@ -51,7 +59,11 @@ public class frmVenta extends javax.swing.JPanel {
         //CargarMedicamentos();
         loteDAO = new LoteDAO();
         listaLotes = new ArrayList<>();
+        venta = new Venta();
+        detalleVenta = new DetalleVenta();
+        detalleVentaDAO = new DetalleVentaDAO();
         CargarLotes();
+        cargarDetalleVenta();
     }
 
     public frmVenta(Usuario userFrmPrincipal, frmAdministrador parent) {
@@ -68,10 +80,17 @@ public class frmVenta extends javax.swing.JPanel {
         //CargarMedicamentos();
         loteDAO = new LoteDAO();
         listaLotes = new ArrayList<>();
+        venta = new Venta();
+        listaVentaDetalle = new ArrayList<>();
+        detalleVenta = new DetalleVenta();
+        detalleVentaDAO = new DetalleVentaDAO();
         CargarLotes();
-
+        cargarDetalleVenta();
     }
 
+    private void cargarDetalleVenta(){
+        this.listaVentaDetalle = this.detalleVentaDAO.ConsultarDetalles();
+    }
     private void CargarTablaVentas() {
         this.tablaVentas.setRowCount(0);
         this.listaVentas = this.ventaDAO.ConsultarVentas();
@@ -118,6 +137,8 @@ public class frmVenta extends javax.swing.JPanel {
     private void initComponents() {
 
         jPopupMenu2 = new javax.swing.JPopupMenu();
+        menuEditar = new javax.swing.JMenuItem();
+        menuEliminar = new javax.swing.JMenuItem();
         jButton3 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
@@ -137,6 +158,22 @@ public class frmVenta extends javax.swing.JPanel {
         txtProducto = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
+
+        menuEditar.setText("Editar");
+        menuEditar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuEditarActionPerformed(evt);
+            }
+        });
+        jPopupMenu2.add(menuEditar);
+
+        menuEliminar.setText("Eliminar");
+        menuEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuEliminarActionPerformed(evt);
+            }
+        });
+        jPopupMenu2.add(menuEliminar);
 
         setBackground(new java.awt.Color(56, 102, 65));
         setPreferredSize(new java.awt.Dimension(280, 720));
@@ -241,6 +278,50 @@ public class frmVenta extends javax.swing.JPanel {
         frmInv.moveToFront();
     }//GEN-LAST:event_jButton3ActionPerformed
 
+    private void menuEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuEditarActionPerformed
+        int fila=this.jTable1.getSelectedRow();
+        int id = Integer.parseInt(jTable1.getValueAt(fila, 0).toString());
+        
+        for(int i=0; i<this.listaVentas.size(); i++){
+            if(this.listaVentas.get(i).getIdVenta()==id){
+                venta = this.listaVentas.get(i);
+                break;
+            }
+        }
+        int opc=JOptionPane.showConfirmDialog(rootPane,"Seguro que desea eliminar la venta", "Advertencia!", JOptionPane.YES_NO_OPTION);
+        if (opc==JOptionPane.OK_OPTION) {
+            
+            
+        }
+    }//GEN-LAST:event_menuEditarActionPerformed
+
+    private void menuEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuEliminarActionPerformed
+        int fila=this.jTable1.getSelectedRow();
+        int id = Integer.parseInt(jTable1.getValueAt(fila, 0).toString());
+        
+        for(int i=0; i<this.listaVentas.size(); i++){
+            if(this.listaVentas.get(i).getIdVenta()==id){
+                venta = this.listaVentas.get(i);
+                break;
+            }
+        }
+        int opc=JOptionPane.showConfirmDialog(rootPane,"Seguro que desea eliminar la venta", "Advertencia!", JOptionPane.YES_NO_OPTION);
+        if (opc==JOptionPane.OK_OPTION) {
+            
+            for(int i=0; i<this.listaVentaDetalle.size(); i++){
+                if(this.listaVentaDetalle.get(i).getIdVenta()== venta.getIdVenta()){
+                    this.detalleVentaDAO.DevolucionLote(venta.getIdVenta());
+                    break;
+                }
+            }
+            //hasta que se termine de devolver la cantidad a los lotes se elimina la venta y el detalleventa
+            this.ventaDAO.EliminarVenta(venta.getIdVenta());
+            JOptionPane.showMessageDialog(rootPane, "Venta eliminado exitosamente!!", " ", JOptionPane.INFORMATION_MESSAGE);
+            
+            this.CargarTablaVentas();
+        }
+    }//GEN-LAST:event_menuEliminarActionPerformed
+
     public void ObtenerLoteSeleccionado(Lote loteSeleccionado) {
         this.loteSeleccionado = loteSeleccionado;
         this.txtProducto.setText(this.loteSeleccionado.getNombreMedicamento());
@@ -267,6 +348,8 @@ public class frmVenta extends javax.swing.JPanel {
     private javax.swing.JSpinner jSpinner1;
     private javax.swing.JTable jTable1;
     private javax.swing.JTextField jTextField2;
+    private javax.swing.JMenuItem menuEditar;
+    private javax.swing.JMenuItem menuEliminar;
     private javax.swing.JTextField txtProducto;
     // End of variables declaration//GEN-END:variables
 }

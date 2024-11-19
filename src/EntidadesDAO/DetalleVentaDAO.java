@@ -102,5 +102,19 @@ public class DetalleVentaDAO {
         }
     }
     
+    public boolean DevolucionLote(int idVenta) {
+        String sSQL = "CALL DevolverCantidadLote(?)";
+
+        try {
+            CallableStatement cs = CN.getConexion().prepareCall(sSQL);
+            cs.setInt(1, idVenta);
+            cs.executeUpdate();
+            return true;
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+    }
+    
     
 }

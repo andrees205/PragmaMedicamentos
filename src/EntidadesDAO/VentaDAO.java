@@ -89,6 +89,7 @@ public class VentaDAO {
         }
     }
     
+    //El procedimiento eliminar venta de una vez elimina los detalleventa con el mismo id
     public boolean EliminarVenta(int idVenta) {
         String sSQL = "CALL eliminar_venta(?)";
 
