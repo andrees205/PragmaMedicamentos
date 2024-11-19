@@ -23,6 +23,7 @@ import Vistas.frmInventarioPequeño;
 import java.awt.Component;
 import java.awt.event.KeyEvent;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.swing.JOptionPane;
 
@@ -51,6 +52,7 @@ public class frmVenta extends javax.swing.JPanel {
     Cliente clienteSeleccionado;
     frmAdministrador parent;
     DecimalFormat df = new DecimalFormat("#.00");
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
     /**
      * Creates new form frmCarrito
@@ -156,7 +158,7 @@ public class frmVenta extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         tblCarrito = new javax.swing.JTable();
         jButton1 = new javax.swing.JButton();
-        jTextField2 = new javax.swing.JTextField();
+        txtPrecio = new javax.swing.JTextField();
         jButton2 = new javax.swing.JButton();
         jRadioButton1 = new javax.swing.JRadioButton();
         jRadioButton2 = new javax.swing.JRadioButton();
@@ -228,9 +230,9 @@ public class frmVenta extends javax.swing.JPanel {
         });
         add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(730, 500, 270, 40));
 
-        jTextField2.setBackground(new java.awt.Color(255, 255, 255));
-        jTextField2.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
-        add(jTextField2, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 310, 270, 40));
+        txtPrecio.setBackground(new java.awt.Color(255, 255, 255));
+        txtPrecio.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
+        add(txtPrecio, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 310, 270, 40));
 
         jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Elementos/Venta/btnVender.png"))); // NOI18N
         jButton2.setContentAreaFilled(false);
@@ -343,7 +345,7 @@ public class frmVenta extends javax.swing.JPanel {
         detalleVenta.setIdMedicamento(this.loteSeleccionado.getIdMedicamento());
         detalleVenta.setNombreMedicamento(this.loteSeleccionado.getNombreMedicamento());
         detalleVenta.setCantidad((int) this.jSpinner1.getValue());
-        detalleVenta.setPrecioVendido(Double.parseDouble(this.jTextField2.getText()));
+        detalleVenta.setPrecioVendido(Double.parseDouble(this.txtPrecio.getText()));
         double totalDetalleVenta = detalleVenta.getCantidad() * detalleVenta.getPrecioVendido();
         detalleVenta.setTotal(totalDetalleVenta);
         this.carritoDetalleVenta.add(detalleVenta);
@@ -440,15 +442,15 @@ public class frmVenta extends javax.swing.JPanel {
     }//GEN-LAST:event_menuEliminarActionPerformed
 
     private void jRadioButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton2ActionPerformed
-        jTextField2.setText(String.valueOf(loteSeleccionado.getPrecioCosto()));
+        txtPrecio.setText(String.valueOf(loteSeleccionado.getPrecioCosto()));
     }//GEN-LAST:event_jRadioButton2ActionPerformed
 
     private void jRadioButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton3ActionPerformed
-        jTextField2.setText(String.valueOf(loteSeleccionado.getPrecioUnitario()));
+        txtPrecio.setText(String.valueOf(loteSeleccionado.getPrecioUnitario()));
     }//GEN-LAST:event_jRadioButton3ActionPerformed
 
     private void jRadioButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton1ActionPerformed
-        jTextField2.setText(String.valueOf(loteSeleccionado.getPrecioMayoreo()));
+        txtPrecio.setText(String.valueOf(loteSeleccionado.getPrecioMayoreo()));
     }//GEN-LAST:event_jRadioButton1ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
@@ -461,7 +463,15 @@ public class frmVenta extends javax.swing.JPanel {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         Venta venta = new Venta();
 
-        venta.setFechaVenta(this.jDateChooser1.getDate());
+        String fechaFormateada = sdf.format(this.jDateChooser1.getDate());
+
+        try {
+            java.sql.Date fechaVenta = java.sql.Date.valueOf(fechaFormateada);
+            venta.setFechaVenta(fechaVenta);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error al procesar la fecha", "Error", JOptionPane.ERROR_MESSAGE);
+            return; // Detener si hay un problema con la fecha
+        }
         venta.setIdUsuario(this.userSesion.getIdusuario());
         venta.setIdCliente(this.clienteSeleccionado.getIdCliente());
         venta.setMontoTotal(totalPagar);
@@ -479,6 +489,16 @@ public class frmVenta extends javax.swing.JPanel {
 
             detalleVentaDAO.InsertarDetalle(detalleVenta);
         }
+        JOptionPane.showMessageDialog(null, "Venta realizada con éxito", "Succes", JOptionPane.INFORMATION_MESSAGE);
+        this.modeloDetalle.setRowCount(0);
+        this.txtCliente.setText("");
+        this.txtProducto.setText("");
+        this.txtPrecio.setText("");
+        this.jSpinner1.setValue(0);
+        this.lblTotal.setText("");
+        this.carritoDetalleVenta.clear();
+        this.clienteSeleccionado = null;
+        this.loteSeleccionado = null;
     }//GEN-LAST:event_jButton2ActionPerformed
 
     public void ObtenerLoteSeleccionado(Lote loteSeleccionado) {
@@ -513,12 +533,12 @@ public class frmVenta extends javax.swing.JPanel {
     private javax.swing.JRadioButton jRadioButton3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSpinner jSpinner1;
-    private javax.swing.JTextField jTextField2;
     private javax.swing.JLabel lblTotal;
     private javax.swing.JMenuItem menuEditar;
     private javax.swing.JMenuItem menuEliminar;
     private javax.swing.JTable tblCarrito;
     private javax.swing.JTextField txtCliente;
+    private javax.swing.JTextField txtPrecio;
     private javax.swing.JTextField txtProducto;
     // End of variables declaration//GEN-END:variables
 }
