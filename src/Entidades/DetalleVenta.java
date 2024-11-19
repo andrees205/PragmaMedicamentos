@@ -15,6 +15,7 @@ public class DetalleVenta {
     private String nombreMedicamento;
     private int Cantidad;
     private double precioVendido;
+    private double total;
 
     public DetalleVenta() {
     }
@@ -77,6 +78,14 @@ public class DetalleVenta {
 
     public void setPrecioVendido(double precioVendido) {
         this.precioVendido = precioVendido;
+    }
+
+    public double getTotal() {
+        return total;
+    }
+
+    public void setTotal(double total) {
+        this.total = total;
     }
     
     

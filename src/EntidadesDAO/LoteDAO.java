@@ -64,7 +64,7 @@ public class LoteDAO {
     public Lote ConsultarLotePorID(int idLote) {
         //ArrayList<Lote> listaLotes = new ArrayList<Lote>();
         Lote lote = new Lote();
-        String sSQL = "{CALL ObtenerLotes(?)};";
+        String sSQL = "{CALL BuscarLotePorID(?)};";
 
         try {
             CallableStatement cs = this.CN.getConexion().prepareCall(sSQL);
@@ -78,14 +78,12 @@ public class LoteDAO {
                 lote.setNombreMedicamento(rs.getString(3));
                 lote.setCantidad(rs.getInt(4));
                 lote.setIdProveedor(rs.getInt(5));
-                lote.setNombreProveedor(rs.getString(6));
-                lote.setIdUsuario(rs.getInt(7));
-                lote.setNombreUsuario(rs.getString(8));
-                lote.setPrecioCosto(rs.getDouble(9));
-                lote.setPrecioUnitario(rs.getDouble(10));
-                lote.setPrecioMayoreo(rs.getDouble(11));
-                lote.setFecha(rs.getDate(12));
-                lote.setUbicacion(rs.getString(13));
+                lote.setIdUsuario(rs.getInt(6));
+                lote.setPrecioCosto(rs.getDouble(7));
+                lote.setPrecioUnitario(rs.getDouble(8));
+                lote.setPrecioMayoreo(rs.getDouble(9));
+                lote.setFecha(rs.getDate(10));
+                lote.setUbicacion(rs.getString(11));
                 
                 //listaLotes.add(lote);
             }

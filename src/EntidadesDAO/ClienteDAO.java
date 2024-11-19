@@ -50,6 +50,33 @@ public class ClienteDAO {
         return listaClientes;
     }
     
+        public Cliente ObtenerClienteByID(int idCliente) {
+        
+        Cliente cliente = new Cliente();
+        String sSQL = "{CALL LeerCliente(?)};";
+
+        try {
+            CallableStatement cs = this.CN.getConexion().prepareCall(sSQL);
+            cs.setInt(idCliente, 1);
+            rs = cs.executeQuery();
+            while (rs.next()) {
+                
+                
+                cliente.setIdCliente(rs.getInt(1));
+                cliente.setNombre(rs.getString(2));
+                cliente.setUbicacion(rs.getString(3));
+                
+                //listaClientes.add(cliente);
+            }
+
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, ex.getMessage(), "¡¡ERROR!!", JOptionPane.ERROR_MESSAGE);
+        }
+
+        return cliente;
+    }
+        
+        
     public boolean InsertarCliente(Cliente cliente) {
         String sSQL = "{CALL insertar_cliente(?,?)}";
         
