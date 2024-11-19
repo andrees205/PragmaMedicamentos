@@ -6,6 +6,7 @@ package Paneles;
 
 import Entidades.Categoria;
 import EntidadesDAO.CategoriaDAO;
+import Vistas.frmMedicamentos;
 import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
 
@@ -19,6 +20,7 @@ public class frmVerCategorias extends javax.swing.JInternalFrame {
     DefaultTableModel modelCategoria;
     ArrayList<Categoria> categorias;
     Categoria catSeleccionada;
+    private frmMedicamentos parentForm;
     /**
      * Creates new form frmVerCategorias
      */
@@ -28,6 +30,7 @@ public class frmVerCategorias extends javax.swing.JInternalFrame {
         this.modelCategoria=(DefaultTableModel) this.jTable1.getModel();
         this.categorias=new ArrayList();
         this.categorias=this.categoriaDAO.ConsultarCategorias();
+        RecargarCategorias();
     }
 
      private void RecargarCategorias(){
@@ -64,6 +67,11 @@ public class frmVerCategorias extends javax.swing.JInternalFrame {
                 "ID", "NOMBRE", "DESCRIPCIÓN"
             }
         ));
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable1MouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(jTable1);
 
         javax.swing.GroupLayout pnlPrincipalLayout = new javax.swing.GroupLayout(pnlPrincipal);
@@ -71,16 +79,16 @@ public class frmVerCategorias extends javax.swing.JInternalFrame {
         pnlPrincipalLayout.setHorizontalGroup(
             pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlPrincipalLayout.createSequentialGroup()
-                .addGap(29, 29, 29)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 520, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(35, Short.MAX_VALUE))
+                .addGap(19, 19, 19)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 515, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(24, Short.MAX_VALUE))
         );
         pnlPrincipalLayout.setVerticalGroup(
             pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlPrincipalLayout.createSequentialGroup()
-                .addContainerGap(76, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(22, 22, 22))
+                .addContainerGap(106, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 248, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(52, 52, 52))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -96,6 +104,25 @@ public class frmVerCategorias extends javax.swing.JInternalFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+        int fila = this.jTable1.getSelectedRow();
+        int id = Integer.parseInt(this.jTable1.getValueAt(fila, 0).toString());
+        
+        String categoriaNombre = (String) jTable1.getValueAt(fila, 1);
+        
+        
+        if (parentForm != null) {
+            parentForm.setCategoria(categoriaNombre, id); // Llama al método del formulario principal
+        }
+        
+        
+    }//GEN-LAST:event_jTable1MouseClicked
+
+    // Método para establecer la referencia al formulario principal
+    public void setParentForm(frmMedicamentos parentForm) {
+        this.parentForm = parentForm;
+    }
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -4,17 +4,31 @@
  */
 package Vistas;
 
+import Paneles.CambiaPanel;
+import Paneles.frmInventario;
+import Paneles.frmVerCategorias;
+import Entidades.Medicamento;
+import EntidadesDAO.MedicamentoDAO;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author andre
  */
 public class frmMedicamentos extends javax.swing.JInternalFrame {
 
+    MedicamentoDAO medDAO;
     /**
      * Creates new form frmMedicamentos
      */
     public frmMedicamentos() {
         initComponents();
+        medDAO = new MedicamentoDAO();
+    }
+
+    public void setCategoria(String categoriaNombre, int id) {
+        this.jTextField1.setText(categoriaNombre); // Actualiza el campo de texto
+        this.jLabel4.setText(Integer.toString(id));
     }
 
     /**
@@ -39,6 +53,7 @@ public class frmMedicamentos extends javax.swing.JInternalFrame {
         jLabel3 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
 
         setClosable(true);
@@ -90,6 +105,11 @@ public class frmMedicamentos extends javax.swing.JInternalFrame {
 
         jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Elementos/Medicamento/btnRegistrarMed (1).png"))); // NOI18N
         jButton1.setContentAreaFilled(false);
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
         jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 500, 280, 40));
 
         jLabel3.setFont(new java.awt.Font("Calibri", 1, 18)); // NOI18N
@@ -104,8 +124,13 @@ public class frmMedicamentos extends javax.swing.JInternalFrame {
 
         jLabel4.setFont(new java.awt.Font("Calibri", 1, 18)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel4.setText("Categoria");
-        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 200, 120, 30));
+        jLabel4.setText("ID");
+        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 203, 60, -1));
+
+        jLabel5.setFont(new java.awt.Font("Calibri", 1, 18)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel5.setText("Categoria");
+        jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 200, 120, 30));
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Elementos/Medicamento/lblFondoPequeño (2).png"))); // NOI18N
         jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 590, -1));
@@ -116,8 +141,35 @@ public class frmMedicamentos extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
+        frmVerCategorias frm = new frmVerCategorias();
+        frm.setParentForm(this); // Pasar referencia del formulario principal
+        frm.setVisible(true);
+        this.getDesktopPane().add(frm);
+        try {
+            frm.setSelected(true);
+        } catch (java.beans.PropertyVetoException ex) {
+            ex.printStackTrace();
+        }
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        
+        if(!this.jTextField1.getText().isBlank() && !this.jTextField1.getText().isEmpty() && !this.jTextField2.getText().isBlank() &&
+                !this.jTextField2.getText().isEmpty() && !this.jTextField3.getText().isBlank() && !this.jTextField3.getText().isEmpty()){
+            Medicamento med = new Medicamento();
+            
+            med.setIdCategoria(Integer.parseInt(this.jLabel4.getText()));
+            med.setPresentacion(this.jTextField2.getText());
+            med.setNombre(this.jTextField3.getText());
+            
+            this.medDAO.InsertarMedicamento(med);
+            JOptionPane.showMessageDialog(this, "Medicamento Agregado");
+        }else{
+            JOptionPane.showMessageDialog(this, "Ingrese información en los campos");
+        }
+        
+        
+    }//GEN-LAST:event_jButton1ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -129,6 +181,7 @@ public class frmMedicamentos extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
