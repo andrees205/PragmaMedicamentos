@@ -4,12 +4,15 @@
  */
 package Vistas;
 
+import Entidades.Categoria;
 import Paneles.CambiaPanel;
 import Paneles.frmInventario;
 import Paneles.frmVerCategorias;
 import Entidades.Medicamento;
 import EntidadesDAO.MedicamentoDAO;
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -18,12 +21,17 @@ import javax.swing.JOptionPane;
 public class frmMedicamentos extends javax.swing.JInternalFrame {
 
     MedicamentoDAO medDAO;
+    DefaultTableModel model;
+    ArrayList<Medicamento> listaMedicinas;
     /**
      * Creates new form frmMedicamentos
      */
     public frmMedicamentos() {
         initComponents();
         medDAO = new MedicamentoDAO();
+        this.model=(DefaultTableModel) this.jTable1.getModel();
+        this.listaMedicinas=new ArrayList();
+        cargarTabla();
     }
 
     public void setCategoria(String categoriaNombre, int id) {
@@ -31,6 +39,16 @@ public class frmMedicamentos extends javax.swing.JInternalFrame {
         this.jLabel4.setText(Integer.toString(id));
     }
 
+    private void cargarTabla(){
+        
+        this.model.setRowCount(0);
+        this.listaMedicinas = this.medDAO.ConsultarMedicamento();
+        for (int i = 0; i < this.listaMedicinas.size(); i++) {
+            Medicamento med=this.listaMedicinas.get(i);
+            String[] data= {Integer.toString(med.getIdMedicamento()), med.getNombre(), med.getNombreCategoria()};
+            this.model.addRow(data);
+        }
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -73,13 +91,10 @@ public class frmMedicamentos extends javax.swing.JInternalFrame {
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "ID", "MEDICAMENTO", "CATEGORIA"
             }
         ));
         jScrollPane1.setViewportView(jTable1);
@@ -164,6 +179,7 @@ public class frmMedicamentos extends javax.swing.JInternalFrame {
             
             this.medDAO.InsertarMedicamento(med);
             JOptionPane.showMessageDialog(this, "Medicamento Agregado");
+            cargarTabla();
         }else{
             JOptionPane.showMessageDialog(this, "Ingrese información en los campos");
         }

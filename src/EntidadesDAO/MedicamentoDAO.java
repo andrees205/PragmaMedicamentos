@@ -38,10 +38,10 @@ public class MedicamentoDAO {
                 Medicamento med = new Medicamento();
                 
                 med.setIdMedicamento(rs.getInt(1));
-                med.setIdCategoria(rs.getInt(2));
-                med.setNombreCategoria(rs.getString(3));
-                med.setPresentacion(rs.getString(4));
-                med.setNombre(rs.getString(5));
+                med.setNombre(rs.getString(2));
+                med.setPresentacion(rs.getString(3));
+                med.setNombreCategoria(rs.getString(4));
+                
                 listaMedicamentos.add(med);
             }
 
