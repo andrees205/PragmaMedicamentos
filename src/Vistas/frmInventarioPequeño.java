@@ -12,7 +12,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Vector;
 import javax.swing.JPanel;
+import javax.swing.RowFilter;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 
 /**
  *
@@ -43,6 +48,7 @@ public class frmInventarioPequeño extends javax.swing.JInternalFrame {
         public frmInventarioPequeño(frmVenta parentFrm) {
         initComponents();
         this.parentVenta  = parentFrm;
+        configurarListenerBusqueda();
         listaLotes = new ArrayList<>();
         modeloLotes = (DefaultTableModel) this.tblInventario.getModel();
         loteDAO = new LoteDAO();
@@ -74,7 +80,43 @@ public class frmInventarioPequeño extends javax.swing.JInternalFrame {
         
         this.tblInventario.setModel(modeloLotes);
     }
+    
+private void filtrarTabla(String textoBusqueda) {
+    // Crear el RowFilter que busca coincidencias en la columna de nombres de medicamentos
+    RowFilter<Object, Object> rf = RowFilter.regexFilter("(?i)" + textoBusqueda, 1); // 1 es el índice de la columna 'Nombre Medicamento'
 
+    // Aplicar el filtro al modelo
+    TableRowSorter<TableModel> sorter = new TableRowSorter<>(modeloLotes);
+    sorter.setRowFilter(rf);
+    tblInventario.setRowSorter(sorter);
+}
+private void configurarListenerBusqueda() {
+    txtBuscar.getDocument().addDocumentListener(new DocumentListener() {
+        @Override
+        public void insertUpdate(DocumentEvent e) {
+            actualizarFiltro();
+        }
+
+        @Override
+        public void removeUpdate(DocumentEvent e) {
+            actualizarFiltro();
+        }
+
+        @Override
+        public void changedUpdate(DocumentEvent e) {
+            actualizarFiltro();
+        }
+
+        // Método que actualiza el filtro al cambiar el texto
+        private void actualizarFiltro() {
+            // Obtener el texto de búsqueda
+            String textoBusqueda = txtBuscar.getText(); // Asegúrate de que txtBuscar es el campo de texto donde el usuario ingresa el término de búsqueda
+
+            // Llamar al método de filtrado
+            filtrarTabla(textoBusqueda);
+        }
+    });
+}
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -87,6 +129,7 @@ public class frmInventarioPequeño extends javax.swing.JInternalFrame {
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblInventario = new javax.swing.JTable();
+        txtBuscar = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
 
         setClosable(true);
@@ -113,6 +156,7 @@ public class frmInventarioPequeño extends javax.swing.JInternalFrame {
         jScrollPane1.setViewportView(tblInventario);
 
         jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 80, 530, 510));
+        jPanel1.add(txtBuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 40, 520, 30));
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Elementos/Categoria/lblFondoPequeño (2).png"))); // NOI18N
         jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, 630));
@@ -148,5 +192,6 @@ public class frmInventarioPequeño extends javax.swing.JInternalFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tblInventario;
+    private javax.swing.JTextField txtBuscar;
     // End of variables declaration//GEN-END:variables
 }

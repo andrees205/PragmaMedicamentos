@@ -10,7 +10,12 @@ import EntidadesDAO.ClienteDAO;
 import Paneles.frmVenta;
 import java.awt.Component;
 import java.util.ArrayList;
+import javax.swing.RowFilter;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 
 /**
  *
@@ -36,6 +41,7 @@ public class frmClienteSeleccionar extends javax.swing.JInternalFrame {
         this.clienteDao = new ClienteDAO();
         this.modelClientes=(DefaultTableModel) this.tblClientes.getModel();
         this.listaClientes=new ArrayList();
+        configurarListenerBusqueda();
         this.listaClientes=this.clienteDao.ConsultarClientes();
         this.RecargarUsuarios();
         this.clienteSeleccionado= new Cliente();
@@ -44,6 +50,7 @@ public class frmClienteSeleccionar extends javax.swing.JInternalFrame {
         initComponents();
         this.parentVenta = parentFrm;
         this.clienteDao = new ClienteDAO();
+        configurarListenerBusqueda();
         this.modelClientes=(DefaultTableModel) this.tblClientes.getModel();
         this.listaClientes=new ArrayList();
         this.listaClientes=this.clienteDao.ConsultarClientes();
@@ -61,6 +68,43 @@ public class frmClienteSeleccionar extends javax.swing.JInternalFrame {
             this.modelClientes.addRow(data);
         }
     }
+    private void configurarListenerBusqueda() {
+    txtBuscar.getDocument().addDocumentListener(new DocumentListener() {
+        @Override
+        public void insertUpdate(DocumentEvent e) {
+            actualizarFiltro();
+        }
+
+        @Override
+        public void removeUpdate(DocumentEvent e) {
+            actualizarFiltro();
+        }
+
+        @Override
+        public void changedUpdate(DocumentEvent e) {
+            actualizarFiltro();
+        }
+
+        // Método que actualiza el filtro al cambiar el texto
+        private void actualizarFiltro() {
+            // Obtener el texto de búsqueda
+            String textoBusqueda = txtBuscar.getText(); // Asegúrate de que txtBuscar es el campo de texto donde el usuario ingresa el término de búsqueda
+
+            // Llamar al método de filtrado
+            filtrarTabla(textoBusqueda);
+        }
+    });
+}
+    
+private void filtrarTabla(String textoBusqueda) {
+    // Crear un RowFilter que busque coincidencias en las columnas de Nombre y Ubicación
+    RowFilter<Object, Object> rf = RowFilter.regexFilter("(?i)" + textoBusqueda, 0, 1); // 0 y 1 son los índices de las columnas (Nombre y Ubicación)
+
+    // Aplicar el filtro al modelo
+    TableRowSorter<TableModel> sorter = new TableRowSorter<>(modelClientes);
+    sorter.setRowFilter(rf);
+    tblClientes.setRowSorter(sorter);
+}
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -72,6 +116,7 @@ public class frmClienteSeleccionar extends javax.swing.JInternalFrame {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         tblClientes = new javax.swing.JTable();
+        txtBuscar = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
 
         setClosable(true);
@@ -96,6 +141,7 @@ public class frmClienteSeleccionar extends javax.swing.JInternalFrame {
         jScrollPane1.setViewportView(tblClientes);
 
         getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 50, 510, 540));
+        getContentPane().add(txtBuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 10, 510, 30));
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Elementos/Categoria/lblFondoPequeño (2).png"))); // NOI18N
         getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
@@ -117,5 +163,6 @@ public class frmClienteSeleccionar extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tblClientes;
+    private javax.swing.JTextField txtBuscar;
     // End of variables declaration//GEN-END:variables
 }
