@@ -285,6 +285,7 @@ public class frmLotes extends javax.swing.JPanel {
             
             this.loteDAO.InsertarLote(lote);
             JOptionPane.showMessageDialog(this, "Medicamento Agregado");
+            this.CargarTablaLotes();
             
         }else{
             JOptionPane.showMessageDialog(this, "Ingrese información en los campos");
