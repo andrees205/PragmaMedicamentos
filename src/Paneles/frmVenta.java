@@ -342,7 +342,7 @@ public class frmVenta extends javax.swing.JPanel {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         this.detalleVenta = new DetalleVenta();
         //se genera el idVenta a la hora de procesar la venta
-        detalleVenta.setIdMedicamento(this.loteSeleccionado.getIdMedicamento());
+        detalleVenta.setIdLote(this.loteSeleccionado.getIdMedicamento());
         detalleVenta.setNombreMedicamento(this.loteSeleccionado.getNombreMedicamento());
         detalleVenta.setCantidad((int) this.jSpinner1.getValue());
         detalleVenta.setPrecioVendido(Double.parseDouble(this.txtPrecio.getText()));
@@ -482,7 +482,7 @@ public class frmVenta extends javax.swing.JPanel {
         for (int i = 0; i < this.carritoDetalleVenta.size(); i++) {
             DetalleVenta detalleVenta = new DetalleVenta(
                     ultimoIDVenta,
-                    carritoDetalleVenta.get(i).getIdMedicamento(),
+                    carritoDetalleVenta.get(i).getIdLote(),
                     carritoDetalleVenta.get(i).getCantidad(),
                     carritoDetalleVenta.get(i).getPrecioVendido()
             );

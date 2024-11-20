@@ -29,6 +29,7 @@ public class frmUsuarios extends javax.swing.JPanel {
     String nombre, password, rol;
     private Usuario userSesion;
     private Component rootPane;
+    boolean blnEditar;
 
     public frmUsuarios() {
         initComponents();
@@ -49,6 +50,7 @@ public class frmUsuarios extends javax.swing.JPanel {
         this.usuarios=this.usuarioDAO.ConsultarUsuarios();
         this.RecargarUsuarios();
         this.usuarioSeleccionado= new Usuario();
+        this.blnEditar = false;
     }
 
     /**
@@ -156,24 +158,31 @@ public class frmUsuarios extends javax.swing.JPanel {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         this.CapturarDatosUsuario();
-        if (this.ValidarTextFields(nombre, rol, password)) {
-            if (this.usuarioDAO.UsuarioExiste(nombre)) {
-                JOptionPane.showMessageDialog(rootPane, "Cada empleado debe tener un nombre de usuario unico", "El usuario ya existe", JOptionPane.WARNING_MESSAGE);
-            } else {
-                Usuario user = new Usuario(nombre, password, rol);
-                if (this.usuarioDAO.InsertarUsuario(user)) {
-                    JOptionPane.showMessageDialog(rootPane, "", "Empleado agregado exitosamente!!", JOptionPane.INFORMATION_MESSAGE);
-                    this.usuarios = this.usuarioDAO.ConsultarUsuarios();
-                    this.RecargarUsuarios();
+        if (!this.blnEditar) {
+            if (this.ValidarTextFields(nombre, rol, password)) {
+                if (this.usuarioDAO.UsuarioExiste(nombre)) {
+                    JOptionPane.showMessageDialog(rootPane, "Cada empleado debe tener un nombre de usuario unico", "El usuario ya existe", JOptionPane.WARNING_MESSAGE);
                 } else {
-                    JOptionPane.showMessageDialog(rootPane, "El empleado no pudo ser agregado, revise los datos ingresados", "Error inesperado!!", JOptionPane.WARNING_MESSAGE);
+                    Usuario user = new Usuario(nombre, password, rol);
+                    if (this.usuarioDAO.InsertarUsuario(user)) {
+                        JOptionPane.showMessageDialog(rootPane, "", "Empleado agregado exitosamente!!", JOptionPane.INFORMATION_MESSAGE);
+                        this.usuarios = this.usuarioDAO.ConsultarUsuarios();
+                        this.RecargarUsuarios();
+                    } else {
+                        JOptionPane.showMessageDialog(rootPane, "El empleado no pudo ser agregado, revise los datos ingresados", "Error inesperado!!", JOptionPane.WARNING_MESSAGE);
+                    }
                 }
+
+            } else {
+                JOptionPane.showMessageDialog(rootPane, "Todos los datos deben ser llenados", "Datos incompletos o vacios", JOptionPane.WARNING_MESSAGE);
             }
-
         } else {
-            JOptionPane.showMessageDialog(rootPane, "Todos los datos deben ser llenados", "Datos incompletos o vacios", JOptionPane.WARNING_MESSAGE);
+                Usuario user = new Usuario(this.usuarioSeleccionado.getIdusuario(), nombre, password, rol);
+                this.usuarioDAO.actualizarUsuario(user);
+                JOptionPane.showMessageDialog(rootPane, "Usuario actualizado", "Success", JOptionPane.INFORMATION_MESSAGE);
+                this.blnEditar = false;
+                this.RecargarUsuarios();
         }
-
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void menuBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuBorrarActionPerformed
@@ -196,10 +205,12 @@ public class frmUsuarios extends javax.swing.JPanel {
     }//GEN-LAST:event_menuBorrarActionPerformed
 
     private void menuEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuEditarActionPerformed
+        this.blnEditar = true;
         int registro = this.tblUsuarios.getSelectedRow();
-        this.txtNombreUsuario.setText(tblUsuarios.getValueAt(registro, 0).toString());
-        this.txtContraseña.setText(tblUsuarios.getValueAt(registro, 1).toString());
-        this.txtRol.setText(tblUsuarios.getValueAt(registro, 2).toString());
+        usuarioSeleccionado = this.usuarios.get(registro);
+        this.txtNombreUsuario.setText(usuarioSeleccionado.getNombre());
+        this.txtContraseña.setText(usuarioSeleccionado.getContraseña());
+        this.txtRol.setText(usuarioSeleccionado.getRol());
     }//GEN-LAST:event_menuEditarActionPerformed
 
     private void tblUsuariosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblUsuariosMouseClicked

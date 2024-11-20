@@ -37,7 +37,7 @@ public class DetalleVentaDAO {
                 
                 detalle.setIdDetalleVenta(rs.getInt(1));
                 detalle.setIdVenta(rs.getInt(2));
-                detalle.setIdMedicamento(rs.getInt(3));
+                detalle.setIdLote(rs.getInt(3));
                 detalle.setNombreMedicamento(rs.getString(4));
                 detalle.setCantidad(rs.getInt(5));
                 detalle.setPrecioVendido(rs.getDouble(6));
@@ -59,7 +59,7 @@ public class DetalleVentaDAO {
             CallableStatement cs = this.CN.getConexion().prepareCall(sSQL);
             
             cs.setInt(1, detalle.getIdVenta());
-            cs.setInt(2,  detalle.getIdMedicamento());
+            cs.setInt(2,  detalle.getIdLote());
             cs.setInt(3, detalle.getCantidad());
             cs.setDouble(4, detalle.getPrecioVendido());
             cs.executeUpdate();
@@ -77,7 +77,7 @@ public class DetalleVentaDAO {
             CallableStatement cs = CN.getConexion().prepareCall(sSQL);
             cs.setInt(1, detalle.getIdDetalleVenta());
             cs.setInt(2, detalle.getIdVenta());
-            cs.setInt(3,  detalle.getIdMedicamento());
+            cs.setInt(3,  detalle.getIdLote());
             cs.setInt(4, detalle.getCantidad());
             cs.setDouble(5, detalle.getPrecioVendido());
             cs.executeUpdate();

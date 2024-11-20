@@ -154,4 +154,25 @@ public class UsuarioDAO {
 
         return user;
     }
+    
+     public boolean actualizarUsuario(Usuario user) { 
+        String sSQL = "CALL actualizar_usuario(?, ?, ?, ?)";
+
+        try {
+            CallableStatement cs = this.CN.getConexion().prepareCall(sSQL);
+            
+            cs.setInt(1, user.getIdusuario());
+            cs.setString(2, user.getNombre());
+            cs.setString(3, user.getContraseña());
+            cs.setString(4, user.getRol()); 
+            cs.executeUpdate();
+            
+            return true;
+        } 
+        catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, ex.getMessage(), "¡¡ERROR!!", JOptionPane.ERROR_MESSAGE);
+        }
+        
+        return false;
+    }
 }
