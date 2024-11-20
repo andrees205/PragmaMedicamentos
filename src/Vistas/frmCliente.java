@@ -9,6 +9,7 @@ import Entidades.Usuario;
 import EntidadesDAO.ClienteDAO;
 import java.awt.Component;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -27,11 +28,13 @@ public class frmCliente extends javax.swing.JInternalFrame {
     String nombre, ubicacion;
     private Usuario userSesion;
     private Component rootPane;
+    boolean blnEditar;
     
     public frmCliente(Usuario userFrmPrincipal) {
         initComponents();
         this.userSesion = userFrmPrincipal;
         this.clienteDao = new ClienteDAO();
+        this.blnEditar = false;
         
         this.modelClientes=(DefaultTableModel) this.tblClientes.getModel();
         this.listaClientes=new ArrayList();
@@ -48,6 +51,7 @@ public class frmCliente extends javax.swing.JInternalFrame {
         this.listaClientes=this.clienteDao.ConsultarClientes();
         this.RecargarUsuarios();
         this.clienteSeleccionado= new Cliente();
+        this.blnEditar = false;
     }
     
     private void RecargarUsuarios()
@@ -69,6 +73,9 @@ public class frmCliente extends javax.swing.JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPopupMenu1 = new javax.swing.JPopupMenu();
+        menuEditar = new javax.swing.JMenuItem();
+        menuEliminar = new javax.swing.JMenuItem();
         jButton4 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -79,6 +86,22 @@ public class frmCliente extends javax.swing.JInternalFrame {
         jLabel3 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
+
+        menuEditar.setText("Editar");
+        menuEditar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuEditarActionPerformed(evt);
+            }
+        });
+        jPopupMenu1.add(menuEditar);
+
+        menuEliminar.setText("Eliminar");
+        menuEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuEliminarActionPerformed(evt);
+            }
+        });
+        jPopupMenu1.add(menuEliminar);
 
         setClosable(true);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -102,12 +125,18 @@ public class frmCliente extends javax.swing.JInternalFrame {
                 "Cliente", "Ubicación"
             }
         ));
+        tblClientes.setComponentPopupMenu(jPopupMenu1);
         jScrollPane1.setViewportView(tblClientes);
 
         getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 70, 360, 420));
 
         jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Elementos/Cliente/btnRegistrarCliente.png"))); // NOI18N
         jButton1.setContentAreaFilled(false);
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
         getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 500, 280, 40));
 
         jTextField2.setBackground(new java.awt.Color(255, 255, 255));
@@ -132,6 +161,69 @@ public class frmCliente extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void menuEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuEditarActionPerformed
+        int fila = this.tblClientes.getSelectedRow();
+        if(fila != -1){
+            this.blnEditar = true;
+             clienteSeleccionado = this.listaClientes.get(fila);
+            this.jTextField1.setText(clienteSeleccionado.getUbicacion());
+            this.jTextField2.setText(clienteSeleccionado.getNombre());
+        }else{
+            JOptionPane.showMessageDialog(rootPane, "Seleccione una fila de la tabla", "Success", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }//GEN-LAST:event_menuEditarActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        if (!this.blnEditar) {
+            if(!this.jTextField1.getText().isBlank() && !this.jTextField1.getText().isEmpty() && !this.jTextField2.getText().isBlank() &&
+                !this.jTextField2.getText().isEmpty()){
+                Cliente cliente = new Cliente();
+
+                cliente.setNombre(this.jTextField2.getText());
+                cliente.setUbicacion(this.jTextField1.getText());
+
+                this.clienteDao.InsertarCliente(cliente);
+                JOptionPane.showMessageDialog(this, "Cliente Agregado");
+                RecargarUsuarios();
+            }else{
+                JOptionPane.showMessageDialog(this, "Ingrese información en los campos");
+            }
+        } else {
+            
+                Cliente cliente = new Cliente();
+                cliente.setIdCliente(clienteSeleccionado.getIdCliente());
+                cliente.setNombre(this.jTextField2.getText());
+                cliente.setUbicacion(this.jTextField1.getText());
+
+                this.clienteDao.ActualizarCliente(cliente);
+                JOptionPane.showMessageDialog(rootPane, "Cliente actualizado", "Success", JOptionPane.INFORMATION_MESSAGE);
+                this.blnEditar = false;
+                this.RecargarUsuarios();
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void menuEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuEliminarActionPerformed
+        int fila = this.tblClientes.getSelectedRow();
+        clienteSeleccionado = this.listaClientes.get(fila);
+        if(fila != -1){
+            int opc=JOptionPane.showConfirmDialog(rootPane,"Seguro que desea eliminar el cliente?", "Advertencia!", JOptionPane.YES_NO_OPTION);
+            if (opc==JOptionPane.OK_OPTION) {
+                if (this.clienteDao.EliminarCliente(this.clienteSeleccionado.getIdCliente())) {
+                    JOptionPane.showMessageDialog(rootPane, "", "Cliente eliminado exitosamente!!", JOptionPane.INFORMATION_MESSAGE);
+                    
+                    this.RecargarUsuarios();
+                }
+                else
+                {
+                    JOptionPane.showMessageDialog(rootPane, "El cliente no pudo ser eliminado, intente nuevamente", "Error inesperado!!", JOptionPane.ERROR_MESSAGE);
+                    this.RecargarUsuarios();
+                }
+            }
+        }else{
+            JOptionPane.showMessageDialog(rootPane, "Seleccione una fila de la tabla", "Success", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }//GEN-LAST:event_menuEliminarActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
@@ -140,9 +232,12 @@ public class frmCliente extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
+    private javax.swing.JMenuItem menuEditar;
+    private javax.swing.JMenuItem menuEliminar;
     private javax.swing.JTable tblClientes;
     // End of variables declaration//GEN-END:variables
 }

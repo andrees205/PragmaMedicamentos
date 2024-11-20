@@ -4,19 +4,59 @@
  */
 package Vistas;
 
+import Entidades.Proveedor;
+import javax.swing.JOptionPane;
+import EntidadesDAO.ProveedorDAO;
+import java.util.ArrayList;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author andre
  */
 public class frmProveedores extends javax.swing.JInternalFrame {
 
+    boolean blnEditar;
+    Proveedor prov;
+    ProveedorDAO provDAO;
+    DefaultTableModel model;
+    ArrayList<Proveedor> lista;
     /**
      * Creates new form frmProveedores
      */
     public frmProveedores() {
         initComponents();
+        this.blnEditar = false;
+        prov = new Proveedor();
+        provDAO = new ProveedorDAO();
+        this.model=(DefaultTableModel) this.jTable1.getModel();
+        this.lista=new ArrayList();
+        CargarTabla();
+        
     }
 
+    private void CargarTabla() {
+        this.model.setRowCount(0);
+        this.lista = this.provDAO.ConsultarProveedores();
+        
+        for(int i=0; i<this.lista.size(); i++)
+        {
+            try{
+               String[] registro={
+                Integer.toString(this.lista.get(i).getIdproveedor()),
+                this.lista.get(i).getNombreProveedor(),
+                this.lista.get(i).getUbicacion()
+            };
+            
+            this.model.addRow(registro);
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace(); // Mostrar el error en consola
+            }
+            
+        }
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -26,6 +66,9 @@ public class frmProveedores extends javax.swing.JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPopupMenu1 = new javax.swing.JPopupMenu();
+        menuEditar = new javax.swing.JMenuItem();
+        menuEliminar = new javax.swing.JMenuItem();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jButton4 = new javax.swing.JButton();
@@ -37,20 +80,36 @@ public class frmProveedores extends javax.swing.JInternalFrame {
         jTextField1 = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
 
+        menuEditar.setText("Editar");
+        menuEditar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuEditarActionPerformed(evt);
+            }
+        });
+        jPopupMenu1.add(menuEditar);
+
+        menuEliminar.setText("Eliminar");
+        menuEliminar.setComponentPopupMenu(jPopupMenu1);
+        menuEliminar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        menuEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuEliminarActionPerformed(evt);
+            }
+        });
+        jPopupMenu1.add(menuEliminar);
+
         setClosable(true);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "ID", "NOMBRE", "UBICACION"
             }
         ));
+        jTable1.setComponentPopupMenu(jPopupMenu1);
         jScrollPane1.setViewportView(jTable1);
 
         getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 70, 360, 420));
@@ -65,6 +124,11 @@ public class frmProveedores extends javax.swing.JInternalFrame {
 
         jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Elementos/Proveedores/btnRegistrarProveedor.png"))); // NOI18N
         jButton1.setContentAreaFilled(false);
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
         getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 500, 280, 40));
 
         jTextField2.setBackground(new java.awt.Color(255, 255, 255));
@@ -89,6 +153,68 @@ public class frmProveedores extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        if (!this.blnEditar) {
+            if(!this.jTextField1.getText().isBlank() && !this.jTextField1.getText().isEmpty() && !this.jTextField2.getText().isBlank() &&
+                !this.jTextField2.getText().isEmpty()){
+                Proveedor prov = new Proveedor();
+
+                prov.setNombreProveedor(this.jTextField2.getText());
+                prov.setUbicacion(this.jTextField1.getText());
+
+                this.provDAO.InsertarProveedor(prov);
+                JOptionPane.showMessageDialog(this, "Proveedor Agregado");
+                CargarTabla();
+            }else{
+                JOptionPane.showMessageDialog(this, "Ingrese información en los campos");
+            }
+        } else {
+            
+                Proveedor proveedor = new Proveedor();
+                proveedor.setIdproveedor(this.prov.getIdproveedor());
+                proveedor.setNombreProveedor(this.jTextField2.getText());
+                proveedor.setUbicacion(this.jTextField1.getText());
+                this.provDAO.ActualizarProveedor(proveedor);
+                JOptionPane.showMessageDialog(rootPane, "Proveedor actualizado", "Success", JOptionPane.INFORMATION_MESSAGE);
+                this.blnEditar = false;
+                this.CargarTabla();
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void menuEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuEditarActionPerformed
+        int fila = this.jTable1.getSelectedRow();
+        if(fila != -1){
+            this.blnEditar = true;
+            prov = this.lista.get(fila);
+            this.jTextField1.setText(prov.getUbicacion());
+            this.jTextField2.setText(prov.getNombreProveedor());
+        }else{
+            JOptionPane.showMessageDialog(rootPane, "Seleccione una fila de la tabla", "Success", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }//GEN-LAST:event_menuEditarActionPerformed
+
+    private void menuEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuEliminarActionPerformed
+        int fila = this.jTable1.getSelectedRow();
+        prov = this.lista.get(fila);
+        if(fila != -1){
+            int opc=JOptionPane.showConfirmDialog(rootPane,"Seguro que desea eliminar el proveedor?", "Advertencia!", JOptionPane.YES_NO_OPTION);
+            if (opc==JOptionPane.OK_OPTION) {
+                if (this.provDAO.EliminarProveedor(this.prov.getIdproveedor())) {
+                    JOptionPane.showMessageDialog(rootPane, "", "Proveedor eliminado exitosamente!!", JOptionPane.INFORMATION_MESSAGE);
+                    
+                    this.CargarTabla();
+                }
+                else
+                {
+                    JOptionPane.showMessageDialog(rootPane, "El proveedor no pudo ser eliminado, intente nuevamente", "Error inesperado!!", JOptionPane.ERROR_MESSAGE);
+                    this.CargarTabla();
+                }
+            }
+        }else{
+            JOptionPane.showMessageDialog(rootPane, "Seleccione una fila de la tabla", "Success", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }//GEN-LAST:event_menuEliminarActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
@@ -97,9 +223,12 @@ public class frmProveedores extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
+    private javax.swing.JMenuItem menuEditar;
+    private javax.swing.JMenuItem menuEliminar;
     // End of variables declaration//GEN-END:variables
 }
