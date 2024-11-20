@@ -133,8 +133,10 @@ public class frmInventarioPequeño extends javax.swing.JInternalFrame {
 
     private void tblInventarioMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblInventarioMouseClicked
         int filaSeleccionada = this.tblInventario.getSelectedRow();
-        int idInventario = Integer.parseInt(this.tblInventario.getValueAt(filaSeleccionada, 0).toString());
-        Lote loteSeleccionado = this.loteDAO.ConsultarLotePorID(idInventario);
+        
+        //int idInventario = Integer.parseInt(this.tblInventario.getValueAt(filaSeleccionada, 0).toString());
+        //Lote loteSeleccionado = this.loteDAO.ConsultarLotePorID(idInventario);
+        Lote loteSeleccionado = this.listaLotes.get(filaSeleccionada);
         this.parentVenta.ObtenerLoteSeleccionado(loteSeleccionado);
         this.dispose();
 

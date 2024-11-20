@@ -59,9 +59,9 @@ public class DetalleVentaDAO {
             CallableStatement cs = this.CN.getConexion().prepareCall(sSQL);
             
             cs.setInt(1, detalle.getIdVenta());
-            cs.setInt(2,  detalle.getIdLote());
-            cs.setInt(3, detalle.getCantidad());
-            cs.setDouble(4, detalle.getPrecioVendido());
+            cs.setInt(2, detalle.getCantidad());
+            cs.setDouble(3, detalle.getPrecioVendido());
+            cs.setInt(4,  detalle.getIdLote());
             cs.executeUpdate();
             return true;
         } catch (Exception e) {
