@@ -410,14 +410,21 @@ private void CargarTablaVentas() {
         //se genera el idVenta a la hora de procesar la venta
         detalleVenta.setIdLote(this.loteSeleccionado.getIdMedicamento());
         detalleVenta.setNombreMedicamento(this.loteSeleccionado.getNombreMedicamento());
-        detalleVenta.setCantidad((int) this.jSpinner1.getValue());
-        detalleVenta.setPrecioVendido(Double.parseDouble(this.txtPrecio.getText()));
-        double totalDetalleVenta = detalleVenta.getCantidad() * detalleVenta.getPrecioVendido();
-        detalleVenta.setTotal(totalDetalleVenta);
-        this.carritoDetalleVenta.add(detalleVenta);
+        int cantidadAVender = ((int) this.jSpinner1.getValue());
+        if (cantidadAVender > this.loteSeleccionado.getCantidad()) {
+            JOptionPane.showMessageDialog(rootPane, "Error, no hay suficiente cantidad en el stock", " ", JOptionPane.ERROR_MESSAGE);
+        } else {
 
-        this.ActualizarTotal();
-        this.CargarCarrito();
+            detalleVenta.setCantidad(cantidadAVender);
+            detalleVenta.setPrecioVendido(Double.parseDouble(this.txtPrecio.getText()));
+            double totalDetalleVenta = detalleVenta.getCantidad() * detalleVenta.getPrecioVendido();
+            detalleVenta.setTotal(totalDetalleVenta);
+            this.carritoDetalleVenta.add(detalleVenta);
+
+            this.ActualizarTotal();
+            this.CargarCarrito();
+        }
+        
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void ActualizarTotal() {

@@ -32,6 +32,8 @@ public class frmLogin extends javax.swing.JFrame {
     UsuarioDAO usuarioDao;
     public frmLogin() {
         initComponents();
+        this.txtContraseña.setForeground(new Color(0x6A994E));
+        this.txtUsuario.setForeground(new Color(0x6A994E));
         usuarioDao = new UsuarioDAO();
         //ImagenFondo();
         //cargarImagen();
@@ -94,7 +96,7 @@ public class frmLogin extends javax.swing.JFrame {
                 txtUsuarioActionPerformed(evt);
             }
         });
-        jPanel1.add(txtUsuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 320, 300, 30));
+        jPanel1.add(txtUsuario, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 300, 300, 50));
 
         jSeparator1.setBackground(new java.awt.Color(56, 102, 65));
         jSeparator1.setForeground(new java.awt.Color(255, 255, 255));
@@ -114,7 +116,7 @@ public class frmLogin extends javax.swing.JFrame {
                 txtContraseñaMousePressed(evt);
             }
         });
-        jPanel1.add(txtContraseña, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 380, 300, 30));
+        jPanel1.add(txtContraseña, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 370, 300, 50));
 
         chkVerContraseña.setBackground(new java.awt.Color(56, 102, 65));
         chkVerContraseña.setFont(new java.awt.Font("Calibri", 1, 16)); // NOI18N
@@ -183,10 +185,11 @@ public class frmLogin extends javax.swing.JFrame {
         if (this.txtUsuario.getText().equals("USUARIO")) {
             this.txtUsuario.setText("");
             this.txtUsuario.setForeground(Color.white);
+            
         }
         if (String.valueOf(this.txtContraseña.getPassword()).isEmpty()) {
             this.txtContraseña.setText("********");
-            this.txtContraseña.setForeground(Color.green);
+            this.txtContraseña.setForeground(new Color(0x6A994E));
         }
     }//GEN-LAST:event_txtUsuarioMousePressed
 
@@ -197,7 +200,7 @@ public class frmLogin extends javax.swing.JFrame {
         }
         if (this.txtUsuario.getText().isEmpty()) {
             this.txtUsuario.setText("USUARIO");
-            this.txtUsuario.setForeground(Color.green);
+            this.txtUsuario.setForeground(new Color(0x6A994E));
         }
     }//GEN-LAST:event_txtContraseñaMousePressed
 

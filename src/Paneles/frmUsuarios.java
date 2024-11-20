@@ -29,7 +29,7 @@ public class frmUsuarios extends javax.swing.JPanel {
     String nombre, password, rol;
     private Usuario userSesion;
     private Component rootPane;
-    boolean blnEditar;
+    boolean blnEditar, contraseñaEscrita;
 
     public frmUsuarios() {
         initComponents();
@@ -51,6 +51,7 @@ public class frmUsuarios extends javax.swing.JPanel {
         this.RecargarUsuarios();
         this.usuarioSeleccionado= new Usuario();
         this.blnEditar = false;
+        this.contraseñaEscrita = false;
     }
 
     /**
@@ -69,7 +70,7 @@ public class frmUsuarios extends javax.swing.JPanel {
         jButton1 = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        txtRol = new javax.swing.JTextField();
+        jComboBox1 = new javax.swing.JComboBox<>();
         txtContraseña = new javax.swing.JTextField();
         txtNombreUsuario = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -119,12 +120,17 @@ public class frmUsuarios extends javax.swing.JPanel {
         jLabel4.setText("Contraseña");
         add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 260, 120, -1));
 
-        txtRol.setBackground(new java.awt.Color(255, 255, 255));
-        txtRol.setFont(new java.awt.Font("Calibri", 1, 18)); // NOI18N
-        add(txtRol, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 370, 280, 40));
+        jComboBox1.setFont(new java.awt.Font("Calibri", 1, 18)); // NOI18N
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Administrador", "Vendedor" }));
+        add(jComboBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 370, 280, 40));
 
         txtContraseña.setBackground(new java.awt.Color(255, 255, 255));
         txtContraseña.setFont(new java.awt.Font("Calibri", 1, 18)); // NOI18N
+        txtContraseña.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                txtContraseñaMousePressed(evt);
+            }
+        });
         add(txtContraseña, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 290, 280, 40));
 
         txtNombreUsuario.setBackground(new java.awt.Color(255, 255, 255));
@@ -177,6 +183,7 @@ public class frmUsuarios extends javax.swing.JPanel {
                 JOptionPane.showMessageDialog(rootPane, "Todos los datos deben ser llenados", "Datos incompletos o vacios", JOptionPane.WARNING_MESSAGE);
             }
         } else {
+                
                 Usuario user = new Usuario(this.usuarioSeleccionado.getIdusuario(), nombre, password, rol);
                 this.usuarioDAO.actualizarUsuario(user);
                 JOptionPane.showMessageDialog(rootPane, "Usuario actualizado", "Success", JOptionPane.INFORMATION_MESSAGE);
@@ -209,13 +216,21 @@ public class frmUsuarios extends javax.swing.JPanel {
         int registro = this.tblUsuarios.getSelectedRow();
         usuarioSeleccionado = this.usuarios.get(registro);
         this.txtNombreUsuario.setText(usuarioSeleccionado.getNombre());
+        
+        
+        
         this.txtContraseña.setText(usuarioSeleccionado.getContraseña());
-        this.txtRol.setText(usuarioSeleccionado.getRol());
+        //this.txtRol.setText(usuarioSeleccionado.getRol());
+        this.jComboBox1.setSelectedItem(usuarioSeleccionado.getRol());
     }//GEN-LAST:event_menuEditarActionPerformed
 
     private void tblUsuariosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblUsuariosMouseClicked
         // TODO add your handling code here:
     }//GEN-LAST:event_tblUsuariosMouseClicked
+
+    private void txtContraseñaMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtContraseñaMousePressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtContraseñaMousePressed
 
         
     private void RecargarUsuarios()
@@ -232,7 +247,8 @@ public class frmUsuarios extends javax.swing.JPanel {
     
     private void CapturarDatosUsuario() {
         this.nombre = this.txtNombreUsuario.getText().trim();
-        this.rol = this.txtRol.getText().trim();
+        //this.rol = this.txtRol.getText().trim();
+        this.rol = (String) this.jComboBox1.getSelectedItem();
         this.password = Hash.toSHA1(this.txtContraseña.getText().trim());
     }
 
@@ -248,6 +264,7 @@ public class frmUsuarios extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
+    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -259,6 +276,5 @@ public class frmUsuarios extends javax.swing.JPanel {
     private javax.swing.JTable tblUsuarios;
     private javax.swing.JTextField txtContraseña;
     private javax.swing.JTextField txtNombreUsuario;
-    private javax.swing.JTextField txtRol;
     // End of variables declaration//GEN-END:variables
 }
