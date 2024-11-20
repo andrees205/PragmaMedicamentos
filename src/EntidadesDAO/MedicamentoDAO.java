@@ -70,13 +70,14 @@ public class MedicamentoDAO {
     }
     
     public boolean ActualizarMedicamento(Medicamento med) {
-        String sSQL = "CALL actualizar_medicamento(?,?,?)";
+        String sSQL = "CALL actualizar_medicamento(?,?,?,?)";
 
         try {
             CallableStatement cs = CN.getConexion().prepareCall(sSQL);
             cs.setInt(1, med.getIdMedicamento());
-            cs.setString(2, med.getPresentacion());
-            cs.setString(3, med.getNombre());
+            cs.setInt(2, med.getIdCategoria());
+            cs.setString(3, med.getPresentacion());
+            cs.setString(4, med.getNombre());
             cs.executeUpdate();
             return true;
         } catch (Exception e) {

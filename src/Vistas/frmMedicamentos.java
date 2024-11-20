@@ -5,10 +5,12 @@
 package Vistas;
 
 import Entidades.Categoria;
+import Entidades.Lote;
 import Paneles.CambiaPanel;
 import Paneles.frmInventario;
 import Paneles.frmVerCategorias;
 import Entidades.Medicamento;
+import EntidadesDAO.LoteDAO;
 import EntidadesDAO.MedicamentoDAO;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
@@ -22,7 +24,11 @@ public class frmMedicamentos extends javax.swing.JInternalFrame {
 
     MedicamentoDAO medDAO;
     DefaultTableModel model;
+    Medicamento med;
     ArrayList<Medicamento> listaMedicinas;
+    boolean blnEditar;
+    private ArrayList<Lote> listaLotes;
+    private LoteDAO loteDAO;
     /**
      * Creates new form frmMedicamentos
      */
@@ -31,7 +37,9 @@ public class frmMedicamentos extends javax.swing.JInternalFrame {
         medDAO = new MedicamentoDAO();
         this.model=(DefaultTableModel) this.jTable1.getModel();
         this.listaMedicinas=new ArrayList();
+        med = new Medicamento();
         cargarTabla();
+        this.blnEditar = false;
     }
 
     public void setCategoria(String categoriaNombre, int id) {
@@ -58,6 +66,9 @@ public class frmMedicamentos extends javax.swing.JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPopupMenu1 = new javax.swing.JPopupMenu();
+        Editar = new javax.swing.JMenuItem();
+        Eliminar = new javax.swing.JMenuItem();
         jPanel1 = new javax.swing.JPanel();
         jTextField1 = new javax.swing.JTextField();
         jTextField2 = new javax.swing.JTextField();
@@ -73,6 +84,22 @@ public class frmMedicamentos extends javax.swing.JInternalFrame {
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
+
+        Editar.setText("Editar");
+        Editar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                EditarActionPerformed(evt);
+            }
+        });
+        jPopupMenu1.add(Editar);
+
+        Eliminar.setText("Eliminar");
+        Eliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                EliminarActionPerformed(evt);
+            }
+        });
+        jPopupMenu1.add(Eliminar);
 
         setClosable(true);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -169,26 +196,85 @@ public class frmMedicamentos extends javax.swing.JInternalFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         
-        if(!this.jTextField1.getText().isBlank() && !this.jTextField1.getText().isEmpty() && !this.jTextField2.getText().isBlank() &&
+        if (!this.blnEditar) {
+            if(!this.jTextField1.getText().isBlank() && !this.jTextField1.getText().isEmpty() && !this.jTextField2.getText().isBlank() &&
                 !this.jTextField2.getText().isEmpty() && !this.jTextField3.getText().isBlank() && !this.jTextField3.getText().isEmpty()){
-            Medicamento med = new Medicamento();
+                Medicamento med = new Medicamento();
+
+                med.setIdCategoria(Integer.parseInt(this.jLabel4.getText()));
+                med.setPresentacion(this.jTextField2.getText());
+                med.setNombre(this.jTextField3.getText());
+
+                this.medDAO.InsertarMedicamento(med);
+                JOptionPane.showMessageDialog(this, "Medicamento Agregado");
+                cargarTabla();
+            }else{
+                JOptionPane.showMessageDialog(this, "Ingrese información en los campos");
+            }
+        } else {
             
-            med.setIdCategoria(Integer.parseInt(this.jLabel4.getText()));
-            med.setPresentacion(this.jTextField2.getText());
-            med.setNombre(this.jTextField3.getText());
-            
-            this.medDAO.InsertarMedicamento(med);
-            JOptionPane.showMessageDialog(this, "Medicamento Agregado");
-            cargarTabla();
+                Medicamento med = new Medicamento();
+                med.setIdMedicamento(this.med.getIdMedicamento());
+                med.setIdCategoria(Integer.parseInt(this.jLabel4.getText()));
+                med.setPresentacion(this.jTextField2.getText());
+                med.setNombre(this.jTextField3.getText());
+                this.medDAO.ActualizarMedicamento(med);
+                JOptionPane.showMessageDialog(rootPane, "Medicamento actualizado", "Success", JOptionPane.INFORMATION_MESSAGE);
+                this.blnEditar = false;
+                this.cargarTabla();
+        }
+
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void EditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EditarActionPerformed
+        int fila = this.jTable1.getSelectedRow();
+        if(fila != -1){
+            this.blnEditar = true;
+            med = this.listaMedicinas.get(fila);
+            this.jTextField3.setText(med.getNombre());
+            this.jTextField1.setText(med.getNombreCategoria());
+            this.jLabel4.setText(Integer.toString(med.getIdCategoria()));
+            this.jTextField2.setText(med.getPresentacion());
         }else{
-            JOptionPane.showMessageDialog(this, "Ingrese información en los campos");
+            JOptionPane.showMessageDialog(rootPane, "Seleccione una fila de la tabla", "Success", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }//GEN-LAST:event_EditarActionPerformed
+
+    private void EliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EliminarActionPerformed
+        boolean eliminar = true;
+        int fila = this.jTable1.getSelectedRow();
+        med = this.listaMedicinas.get(fila);
+        this.listaLotes = this.loteDAO.ConsultarLote();
+        if(fila != -1){
+            int opc=JOptionPane.showConfirmDialog(rootPane,"Seguro que desea eliminar el medicamento?", "Advertencia!", JOptionPane.YES_NO_OPTION);
+            if (opc==JOptionPane.OK_OPTION) {
+                for(int i =0; i< this.listaLotes.size(); i++){
+                    if(this.listaLotes.get(i).getIdMedicamento() == med.getIdMedicamento()){
+                        JOptionPane.showMessageDialog(rootPane, "", "No se puede eliminar el medicamento, su lote correspondiente aun tiene stock", JOptionPane.INFORMATION_MESSAGE);
+                        eliminar = false;
+                        break;
+                        
+                    }
+                }
+            }
+            
+            if(eliminar==true){
+                this.medDAO.EliminarMedicamento(this.med.getIdMedicamento());
+                JOptionPane.showMessageDialog(rootPane, "", "Medicamento eliminado exitosamente!!", JOptionPane.INFORMATION_MESSAGE);
+                this.cargarTabla();
+            }else{
+                JOptionPane.showMessageDialog(rootPane, "El medicamento no pudo ser eliminado, intente nuevamente", "Error inesperado!!", JOptionPane.ERROR_MESSAGE);
+                this.cargarTabla();
+            }
+            
         }
         
-        
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_EliminarActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem Editar;
+    private javax.swing.JMenuItem Eliminar;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
@@ -199,6 +285,7 @@ public class frmMedicamentos extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JTextField jTextField1;

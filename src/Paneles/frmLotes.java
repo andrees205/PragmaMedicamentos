@@ -13,6 +13,7 @@ import Vistas.frmClienteSeleccionar;
 import Vistas.frmMedicamentos;
 import Vistas.frmVerMedicinas;
 import Vistas.frmVerProveedores;
+import java.awt.Component;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
@@ -30,6 +31,8 @@ public class frmLotes extends javax.swing.JPanel {
     private Usuario userSesion;
     private SimpleDateFormat formatoFecha = new SimpleDateFormat("yyyy-mm-dd");
     frmAdministrador parent;
+    boolean blnEditar;
+    private Component rootPane;
     
     /**
      * Creates new form frmLotes
@@ -41,6 +44,7 @@ public class frmLotes extends javax.swing.JPanel {
         loteDAO = new LoteDAO();
         CargarTablaLotes();
         this.jDateChooser1.getDateEditor().setEnabled(false);
+        this.blnEditar = false;
     }
         public frmLotes(Usuario userFrmPrincipal, frmAdministrador parent) {
         initComponents();
@@ -51,6 +55,7 @@ public class frmLotes extends javax.swing.JPanel {
         loteDAO = new LoteDAO();
         CargarTablaLotes();
         this.jDateChooser1.getDateEditor().setEnabled(false);
+        this.blnEditar = false;
     }
 
     public void setMedicina(String nombre, int id) {
@@ -99,6 +104,9 @@ public class frmLotes extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPopupMenu1 = new javax.swing.JPopupMenu();
+        menuEditar = new javax.swing.JMenuItem();
+        menuEliminar = new javax.swing.JMenuItem();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jDateChooser1 = new com.toedter.calendar.JDateChooser();
@@ -128,6 +136,22 @@ public class frmLotes extends javax.swing.JPanel {
         jLabel12 = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
+
+        menuEditar.setText("Editar");
+        menuEditar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuEditarActionPerformed(evt);
+            }
+        });
+        jPopupMenu1.add(menuEditar);
+
+        menuEliminar.setText("Eliminar");
+        menuEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuEliminarActionPerformed(evt);
+            }
+        });
+        jPopupMenu1.add(menuEliminar);
 
         setBackground(new java.awt.Color(56, 102, 65));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -265,34 +289,50 @@ public class frmLotes extends javax.swing.JPanel {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         
-        if(!this.jTextField1.getText().isBlank() && !this.jTextField1.getText().isEmpty() && !this.jTextField2.getText().isBlank() &&
+        if (!this.blnEditar){
+            if(!this.jTextField1.getText().isBlank() && !this.jTextField1.getText().isEmpty() && !this.jTextField2.getText().isBlank() &&
                 !this.jTextField2.getText().isEmpty() && !this.jTextField3.getText().isBlank() && !this.jTextField3.getText().isEmpty()
                 && !this.jTextField4.getText().isBlank() && !this.jTextField4.getText().isEmpty() && !this.jTextField5.getText().isBlank()
                 && !this.jTextField5.getText().isEmpty() && !this.jTextField6.getText().isBlank() && !this.jTextField6.getText().isEmpty()
                 && (int)this.jSpinner1.getValue()!=0 && (int)this.jSpinner2.getValue()!=0){
             
-            Lote lote = new Lote();
-            lote.setIdMedicamento(Integer.parseInt(this.jLabel11.getText()));
-            lote.setCantidad((int) jSpinner1.getValue());
-            lote.setLimite((int) jSpinner2.getValue());
-            lote.setIdProveedor(Integer.parseInt(this.jLabel8.getText()));
-            lote.setIdUsuario(this.userSesion.getIdusuario());
-            lote.setPrecioCosto(Double.parseDouble(this.jTextField2.getText()));
-            lote.setPrecioUnitario(Double.parseDouble(this.jTextField5.getText()));
-            lote.setPrecioMayoreo(Double.parseDouble(this.jTextField3.getText()));
-            lote.setFecha(this.jDateChooser1.getDate());
-            lote.setUbicacion(this.jTextField4.getText());
-            
-            this.loteDAO.InsertarLote(lote);
-            JOptionPane.showMessageDialog(this, "Medicamento Agregado");
-            this.CargarTablaLotes();
-            
+                Lote lote = new Lote();
+                lote.setIdMedicamento(Integer.parseInt(this.jLabel11.getText()));
+                lote.setCantidad((int) jSpinner1.getValue());
+                lote.setLimite((int) jSpinner2.getValue());
+                lote.setIdProveedor(Integer.parseInt(this.jLabel8.getText()));
+                lote.setIdUsuario(this.userSesion.getIdusuario());
+                lote.setPrecioCosto(Double.parseDouble(this.jTextField2.getText()));
+                lote.setPrecioUnitario(Double.parseDouble(this.jTextField5.getText()));
+                lote.setPrecioMayoreo(Double.parseDouble(this.jTextField3.getText()));
+                lote.setFecha(this.jDateChooser1.getDate());
+                lote.setUbicacion(this.jTextField4.getText());
+
+                this.loteDAO.InsertarLote(lote);
+                JOptionPane.showMessageDialog(this, "Lote Agregado");
+                this.CargarTablaLotes();
+
+            }else{
+                JOptionPane.showMessageDialog(this, "Ingrese información en los campos");
+            }
         }else{
-            JOptionPane.showMessageDialog(this, "Ingrese información en los campos");
+            Lote lote = new Lote();
+                lote.setIdLote(lote.getIdLote());
+                lote.setIdMedicamento(Integer.parseInt(this.jLabel11.getText()));
+                lote.setCantidad((int) jSpinner1.getValue());
+                lote.setLimite((int) jSpinner2.getValue());
+                lote.setIdProveedor(Integer.parseInt(this.jLabel8.getText()));
+                lote.setIdUsuario(this.userSesion.getIdusuario());
+                lote.setPrecioCosto(Double.parseDouble(this.jTextField2.getText()));
+                lote.setPrecioUnitario(Double.parseDouble(this.jTextField5.getText()));
+                lote.setPrecioMayoreo(Double.parseDouble(this.jTextField3.getText()));
+                lote.setFecha(this.jDateChooser1.getDate());
+                lote.setUbicacion(this.jTextField4.getText());
+                this.loteDAO.ActualizarLote(lote);
+                JOptionPane.showMessageDialog(this, "Lote actualizado");
+                this.CargarTablaLotes();
         }
-        
-        
-        
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
@@ -309,6 +349,46 @@ public class frmLotes extends javax.swing.JPanel {
         this.parent.getDesktopPanel().add(frm);
         frm.moveToFront();
     }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void menuEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuEditarActionPerformed
+        int fila = this.jTable1.getSelectedRow();
+        if(fila != -1){
+            this.blnEditar = true;
+            lote = this.listaLotes.get(fila);
+            this.jLabel11.setText(Integer.toString(lote.getIdMedicamento()));
+            this.jTextField6.setText(lote.getNombreMedicamento());
+            this.jSpinner1.setValue(lote.getCantidad());
+            this.jSpinner2.setValue(lote.getLimite());
+            this.jTextField2.setText(Double.toString(lote.getPrecioCosto()));
+            this.jTextField3.setText(Double.toString(lote.getPrecioMayoreo()));
+            this.jTextField5.setText(Double.toString(lote.getPrecioUnitario()));
+            this.jDateChooser1.setDate(lote.getFecha());
+            this.jTextField4.setText(lote.getUbicacion());
+            
+        }else{
+            JOptionPane.showMessageDialog(rootPane, "Seleccione una fila de la tabla", "Success", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }//GEN-LAST:event_menuEditarActionPerformed
+
+    private void menuEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuEliminarActionPerformed
+        int fila = this.jTable1.getSelectedRow();
+        lote = this.listaLotes.get(fila);
+        if(fila != -1){
+            int opc=JOptionPane.showConfirmDialog(rootPane,"Seguro que desea eliminar el lote?", "Advertencia!", JOptionPane.YES_NO_OPTION);
+            if (opc==JOptionPane.OK_OPTION) {
+                if (this.loteDAO.EliminarLote(this.lote.getIdMedicamento())) {
+                    JOptionPane.showMessageDialog(rootPane, "", "Lote eliminado exitosamente!!", JOptionPane.INFORMATION_MESSAGE);
+                    
+                    this.CargarTablaLotes();
+                }
+                else
+                {
+                    JOptionPane.showMessageDialog(rootPane, "El lote no pudo ser eliminado, intente nuevamente", "Error inesperado!!", JOptionPane.ERROR_MESSAGE);
+                    this.CargarTablaLotes();
+                }
+            }
+        }
+    }//GEN-LAST:event_menuEliminarActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -330,6 +410,7 @@ public class frmLotes extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
+    private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSpinner jSpinner1;
     private javax.swing.JSpinner jSpinner2;
@@ -340,6 +421,8 @@ public class frmLotes extends javax.swing.JPanel {
     private javax.swing.JTextField jTextField4;
     private javax.swing.JTextField jTextField5;
     private javax.swing.JTextField jTextField6;
+    private javax.swing.JMenuItem menuEditar;
+    private javax.swing.JMenuItem menuEliminar;
     private javax.swing.JLabel txtEmpleado;
     // End of variables declaration//GEN-END:variables
 }
