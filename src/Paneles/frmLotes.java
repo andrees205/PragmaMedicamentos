@@ -397,6 +397,8 @@ public class frmLotes extends javax.swing.JPanel {
             lote = this.listaLotes.get(fila);
             this.jLabel11.setText(Integer.toString(lote.getIdMedicamento()));
             this.jTextField6.setText(lote.getNombreMedicamento());
+            this.jLabel8.setText(Integer.toString(lote.getIdProveedor()));
+            this.jTextField1.setText(lote.getNombreProveedor());
             this.jSpinner1.setValue(lote.getCantidad());
             this.jSpinner2.setValue(lote.getLimite());
             this.jTextField2.setText(Double.toString(lote.getPrecioCosto()));
