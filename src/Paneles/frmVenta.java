@@ -20,11 +20,22 @@ import Vistas.frmAdministrador;
 import Vistas.frmCategoria;
 import Vistas.frmClienteSeleccionar;
 import Vistas.frmInventarioPequeño;
+import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 import java.awt.Component;
 import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
 /**
@@ -112,34 +123,32 @@ public class frmVenta extends javax.swing.JPanel {
         this.carritoDetalleVenta = this.detalleVentaDAO.ConsultarDetalles();
     }
 
-private void CargarTablaVentas() { 
-    this.modeloMaestro.setRowCount(0);  // Limpiar la tabla antes de cargar los nuevos datos
-    
-    // Obtener las ventas desde la base de datos
-    this.listaVentas = this.ventaDAO.ConsultarVentas(); 
-    
-    // Recorrer la lista de ventas
-    for (int i = 0; i < this.listaVentas.size(); i++) { 
-        try { 
-             String fechaVenta = sdf.format(this.listaVentas.get(i).getFechaVenta());
-            // Crear el arreglo de registros para cada fila
-            String[] registroVentas = { 
-                Integer.toString(this.listaVentas.get(i).getIdVenta()), 
-                this.listaVentas.get(i).getNombreUsuario(), 
-                this.listaVentas.get(i).getNombreCliente(), 
-                Double.toString(this.listaVentas.get(i).getMontoTotal()), 
-                fechaVenta    // Aquí estaba el error: falta la coma y el punto y coma era innecesario
-            }; 
-            
-            // Añadir el registro a la tabla
-            this.modeloMaestro.addRow(registroVentas); 
-        } catch (Exception e) { 
-            e.printStackTrace();  // Mostrar el error en consola 
-        } 
-    } 
-}
+    private void CargarTablaVentas() {
+        this.modeloMaestro.setRowCount(0);  // Limpiar la tabla antes de cargar los nuevos datos
 
+        // Obtener las ventas desde la base de datos
+        this.listaVentas = this.ventaDAO.ConsultarVentas();
 
+        // Recorrer la lista de ventas
+        for (int i = 0; i < this.listaVentas.size(); i++) {
+            try {
+                String fechaVenta = sdf.format(this.listaVentas.get(i).getFechaVenta());
+                // Crear el arreglo de registros para cada fila
+                String[] registroVentas = {
+                    Integer.toString(this.listaVentas.get(i).getIdVenta()),
+                    this.listaVentas.get(i).getNombreUsuario(),
+                    this.listaVentas.get(i).getNombreCliente(),
+                    Double.toString(this.listaVentas.get(i).getMontoTotal()),
+                    fechaVenta // Aquí estaba el error: falta la coma y el punto y coma era innecesario
+                };
+
+                // Añadir el registro a la tabla
+                this.modeloMaestro.addRow(registroVentas);
+            } catch (Exception e) {
+                e.printStackTrace();  // Mostrar el error en consola 
+            }
+        }
+    }
 
     /*private void CargarMedicamentos()
     {
@@ -423,8 +432,12 @@ private void CargarTablaVentas() {
 
             this.ActualizarTotal();
             this.CargarCarrito();
+            this.loteSeleccionado= null;
+            this.txtPrecio.setText("");
+            this.txtProducto.setText("");
+            this.jSpinner1.setValue(0);
         }
-        
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void ActualizarTotal() {
@@ -460,10 +473,9 @@ private void CargarTablaVentas() {
         this.tblCarrito.setModel(modeloDetalle);
 
     }
-    
+
     private void MostrarVentas() {
         this.modeloMaestroDetalle.setRowCount(0);
-        
 
         for (int i = 0; i < this.listaDetallesVenta.size(); i++) {
             DetalleVenta dt = this.listaDetallesVenta.get(i);
@@ -472,7 +484,6 @@ private void CargarTablaVentas() {
                 //dt.getNombreMedicamento(),
                 String.valueOf(dt.getIdDetalleVenta()),
                 String.valueOf(dt.getIdVenta()),
-                
                 String.valueOf(dt.getCantidad()),
                 String.valueOf(dt.getPrecioVendido()),
                 dt.getNombreMedicamento(),
@@ -559,7 +570,7 @@ private void CargarTablaVentas() {
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        Venta venta = new Venta();
+        this.venta = new Venta();
 
         String fechaFormateada = sdf.format(this.jDateChooser1.getDate());
 
@@ -587,7 +598,11 @@ private void CargarTablaVentas() {
 
             detalleVentaDAO.InsertarDetalle(detalleVenta);
         }
-        JOptionPane.showMessageDialog(null, "Venta realizada con éxito", "Succes", JOptionPane.INFORMATION_MESSAGE);
+        int opc = JOptionPane.showConfirmDialog(rootPane, "Venta realizada con éxito ¿Desea generar un ticket?", "Success!", JOptionPane.YES_NO_OPTION);
+        if (opc == JOptionPane.OK_OPTION) {
+            GenerarTicket();
+        }
+        this.CargarTablaVentas();
         this.modeloDetalle.setRowCount(0);
         this.txtCliente.setText("");
         this.txtProducto.setText("");
@@ -597,7 +612,84 @@ private void CargarTablaVentas() {
         this.carritoDetalleVenta.clear();
         this.clienteSeleccionado = null;
         this.loteSeleccionado = null;
+        this.venta = null;
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void GenerarTicket() {
+        // Abrir un selector para guardar el archivo PDF
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
+
+        int resultado = fileChooser.showSaveDialog(null);
+        File rutaSeleccionada = null;
+
+        if (resultado == JFileChooser.APPROVE_OPTION) {
+            rutaSeleccionada = fileChooser.getSelectedFile();
+            if (!rutaSeleccionada.getAbsolutePath().endsWith(".pdf")) {
+                rutaSeleccionada = new File(rutaSeleccionada.getAbsolutePath() + ".pdf");
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "No se seleccionó ninguna ruta", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        com.itextpdf.text.Document documento = new com.itextpdf.text.Document();
+
+        try {
+            // Crear el escritor de PDF
+            PdfWriter.getInstance(documento, new FileOutputStream(rutaSeleccionada));
+            documento.open();
+
+            // Encabezado del ticket
+            com.itextpdf.text.Font fontTitulo = new com.itextpdf.text.Font(com.itextpdf.text.Font.FontFamily.HELVETICA, 16, com.itextpdf.text.Font.BOLD);
+            Paragraph titulo = new Paragraph("TICKET DE VENTA\n", fontTitulo);
+            titulo.setAlignment(Element.ALIGN_CENTER);
+            documento.add(titulo);
+
+            Paragraph infoVenta = new Paragraph("ID Venta: " + this.venta.getIdVenta() + "\n"
+                    + "Fecha: " + new SimpleDateFormat("yyyy-MM-dd").format(this.venta.getFechaVenta()) + "\n"
+                    + "Cliente: " + this.clienteSeleccionado.getNombre() + "\n"
+                    + "Atendido por: " + this.userSesion.getNombre() + "\n\n",
+                    new com.itextpdf.text.Font(com.itextpdf.text.Font.FontFamily.HELVETICA, 12));
+            documento.add(infoVenta);
+
+            // Tabla de productos vendidos
+            PdfPTable tabla = new PdfPTable(4); // 4 columnas: Producto, Cantidad, Precio Unitario, Subtotal
+            tabla.setWidthPercentage(100);
+            tabla.addCell("Producto");
+            tabla.addCell("Cantidad");
+            tabla.addCell("Precio Unitario");
+            tabla.addCell("Subtotal");
+
+            for (DetalleVenta detalle : this.carritoDetalleVenta) {
+                tabla.addCell(detalle.getNombreMedicamento());
+                tabla.addCell(String.valueOf(detalle.getCantidad()));
+                tabla.addCell(String.format("%.2f", detalle.getPrecioVendido()));
+                tabla.addCell(String.format("%.2f", detalle.getTotal()));
+            }
+
+            documento.add(tabla);
+
+            // Total
+            Paragraph total = new Paragraph("\nTOTAL: $" + String.format("%.2f", this.totalPagar), fontTitulo);
+            total.setAlignment(Element.ALIGN_RIGHT);
+            documento.add(total);
+
+            // Mensaje de agradecimiento
+            Paragraph footer = new Paragraph("\n¡Gracias por su compra!", new com.itextpdf.text.Font(com.itextpdf.text.Font.FontFamily.HELVETICA, 12, com.itextpdf.text.Font.ITALIC));
+            footer.setAlignment(Element.ALIGN_CENTER);
+            documento.add(footer);
+
+            JOptionPane.showMessageDialog(null, "Ticket generado correctamente en: " + rutaSeleccionada.getAbsolutePath());
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error al generar el ticket: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } finally {
+            if (documento.isOpen()) {
+                documento.close();
+            }
+        }
+    }
+
 
     private void tblVentasMaestroMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblVentasMaestroMouseClicked
         int fila = this.tblVentasMaestro.getSelectedRow();
