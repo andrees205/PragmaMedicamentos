@@ -4,7 +4,6 @@
  */
 package Paneles;
 
-import Entidades.Usuario;
 import Entidades.*;
 import EntidadesDAO.*;
 import java.awt.BorderLayout;
@@ -67,7 +66,6 @@ public class pnlGraficos extends javax.swing.JPanel {
         med = new Medicamento();
         crearGraficoVentas();
         graficoBarras();
-                
         
     }
     
