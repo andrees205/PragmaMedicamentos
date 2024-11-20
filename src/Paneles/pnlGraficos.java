@@ -5,23 +5,18 @@
 package Paneles;
 
 import Entidades.Usuario;
+import Entidades.*;
+import EntidadesDAO.*;
 import java.awt.BorderLayout;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import Entidades.*;
-import EntidadesDAO.*;
-import java.util.Map;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
-import org.jfree.data.xy.XYDataset;
-import org.jfree.data.xy.XYSeries;
-import org.jfree.data.xy.XYSeriesCollection;
 
 /**
  *
@@ -32,6 +27,9 @@ public class pnlGraficos extends javax.swing.JPanel {
     private ArrayList<Venta> listaVentas;
     private VentaDAO ventaDAO;
     private Venta venta;
+    private ArrayList<DetalleVenta> listaDetalles;
+    private DetalleVenta detalle;
+    private DetalleVentaDAO detalleDAO;
     /**
      * Creates new form pnlGraficos
      */
@@ -41,6 +39,11 @@ public class pnlGraficos extends javax.swing.JPanel {
         listaVentas = new ArrayList<>();
         ventaDAO = new VentaDAO();
         venta = new Venta();
+        listaDetalles = new ArrayList<>();
+        detalleDAO = new DetalleVentaDAO();
+        detalle = new DetalleVenta();
+        crearGraficoVentas();
+        
     }
     public pnlGraficos(Usuario userSesion) {
         initComponents();
@@ -48,54 +51,54 @@ public class pnlGraficos extends javax.swing.JPanel {
         listaVentas = new ArrayList<>();
         ventaDAO = new VentaDAO();
         venta = new Venta();
-    }
-    
-public void crearGrafico() {
-    int j = 0;
-    this.listaVentas = this.ventaDAO.ConsultarVentas();
-    
-    // Usamos un HashMap para almacenar las fechas (por mes)
-    Map<String, Integer> conteoVentas = new HashMap<>();
-    DefaultCategoryDataset datos = new DefaultCategoryDataset();
-    
-    // Llenamos el conteo de ventas por mes
-    for (int i = 0; i < this.listaVentas.size(); i++) {
-        String fechaMes = new SimpleDateFormat("yyyy-MM").format(this.listaVentas.get(i).getFechaVenta());
-        // Obtener el IDVenta, pero realmente el IDVenta no se usa para el conteo de ventas aquí
-        // Se usa la fecha y la cantidad de ventas por mes.
-        conteoVentas.put(fechaMes, conteoVentas.getOrDefault(fechaMes, 0) + 1);
-    }
-
-    // Crear el conjunto de datos para el gráfico
-    for (Map.Entry<String, Integer> entry : conteoVentas.entrySet()) {
-        String fechaMes = entry.getKey();
-        int totalVentas = entry.getValue();
+        listaDetalles = new ArrayList<>();
+        detalleDAO = new DetalleVentaDAO();
+        detalle = new DetalleVenta();
+        crearGraficoVentas();
+                
         
-        // Usamos la fecha como categoría en el eje X y la cantidad de ventas como valor Y
-        //datos.addValue(totalVentas, "Ventas", fechaMes);  // "Ventas" es la serie, fechaMes es la categoría X
     }
+    
+    public void crearGraficoVentas() {
+        
+        this.listaVentas = this.ventaDAO.ConsultarVentas();
 
-    // Crear el gráfico de líneas usando DefaultCategoryDataset
-    JFreeChart chart = ChartFactory.createLineChart(
-        "Ventas por Mes",  // Título
-        "Mes",  // Etiqueta eje X (mes)
-        "Cantidad de Ventas",  // Etiqueta eje Y
-        datos,  // Datos
-        PlotOrientation.VERTICAL,
-        true,  // Mostrar leyenda
-        true,  // Mostrar tooltip
-        false  // Mostrar URL
-    );
+        // Usamos un HashMap para almacenar las ventas agrupadas por mes.
+        Map<String, Integer> conteoVentas = new HashMap<>();
+        SimpleDateFormat formatoMes = new SimpleDateFormat("yyyy-MM");
 
-    // Configurar el panel donde se dibujará el gráfico
-    ChartPanel chartPanel = new ChartPanel(chart);
-    chartPanel.setPreferredSize(jPanel1.getSize());
-    jPanel1.removeAll();  // Limpiar el panel
-    jPanel1.setLayout(new BorderLayout());
-    jPanel1.add(chartPanel, BorderLayout.CENTER);  // Agregar el gráfico al panel
-    jPanel1.revalidate();  // Redibujar el panel
-    jPanel1.repaint();  // Redibujar la interfaz
-}
+        for (Venta venta : listaVentas) {
+            String fechaMes = formatoMes.format(venta.getFechaVenta());
+            conteoVentas.put(fechaMes, conteoVentas.getOrDefault(fechaMes, 0) + 1);
+        }
+
+        // Creamos el conjunto de datos para el gráfico.
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+        for (Map.Entry<String, Integer> entry : conteoVentas.entrySet()) {
+            dataset.addValue(entry.getValue(), "Ventas", entry.getKey());
+        }
+
+        // Crear el gráfico de líneas.
+        JFreeChart chart = ChartFactory.createLineChart(
+            "Ventas por Mes",           // Título del gráfico
+            "Mes",                      // Etiqueta del eje X
+            "Cantidad de Ventas",       // Etiqueta del eje Y
+            dataset,                    // Datos
+            PlotOrientation.VERTICAL,   // Orientación del gráfico
+            true,                       // Incluir leyenda
+            true,                       // Incluir tooltips
+            false                       // URLs no necesarias
+        );
+
+        // Configuración del panel del gráfico.
+        ChartPanel chartPanel = new ChartPanel(chart);
+        chartPanel.setPreferredSize(jPanel2.getSize());
+        jPanel2.removeAll();
+        jPanel2.setLayout(new BorderLayout());
+        jPanel2.add(chartPanel, BorderLayout.CENTER);
+        jPanel2.revalidate();
+        jPanel2.repaint();
+    }
 
     
     
@@ -109,14 +112,46 @@ public void crearGrafico() {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
+        pnlPrincipal = new javax.swing.JPanel();
+        jTabbedPane1 = new javax.swing.JTabbedPane();
+        jPanel2 = new javax.swing.JPanel();
+        jPanel3 = new javax.swing.JPanel();
 
         setBackground(new java.awt.Color(56, 102, 65));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        pnlPrincipal.setBackground(new java.awt.Color(56, 102, 65));
+
+        jTabbedPane1.addTab("Gráfico de ventas", jPanel2);
+        jTabbedPane1.addTab("Productos más vendidos", jPanel3);
+
+        javax.swing.GroupLayout pnlPrincipalLayout = new javax.swing.GroupLayout(pnlPrincipal);
+        pnlPrincipal.setLayout(pnlPrincipalLayout);
+        pnlPrincipalLayout.setHorizontalGroup(
+            pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlPrincipalLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1115, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        pnlPrincipalLayout.setVerticalGroup(
+            pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlPrincipalLayout.createSequentialGroup()
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 717, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 17, Short.MAX_VALUE))
+        );
+
+        jPanel1.add(pnlPrincipal);
+
         add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1120, 720));
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JPanel pnlPrincipal;
     // End of variables declaration//GEN-END:variables
 }
