@@ -61,6 +61,7 @@ public class frmInventario extends javax.swing.JPanel {
         listaLotes = new ArrayList<>();
 //        tablaLotes = (DefaultTableModel) this.jTable1.getModel();
         loteDAO = new LoteDAO();
+        this.listaLotes = this.loteDAO.ConsultarLote();
 //        CargarTablaLotes();
         CargarTabla();
     }
@@ -95,11 +96,12 @@ public class frmInventario extends javax.swing.JPanel {
 //        }
 //    }
     private void CargarTabla() {
-
+        this.tablaCustom1.clearTable();
         String[] columnas = {
             "ID",
             "MEDICAMENTO",
             "CANTIDAD",
+            "LIMITE",
             "PROVEEDOR",
             "USUARIO",
             "PRECIO",
@@ -111,7 +113,7 @@ public class frmInventario extends javax.swing.JPanel {
 
         this.tablaCustom1.setColumnNames(columnas);
 
-        this.listaLotes = this.loteDAO.ConsultarLote();
+        
 
         for (int i = 0; i < this.listaLotes.size(); i++) {
             try {
@@ -119,6 +121,7 @@ public class frmInventario extends javax.swing.JPanel {
                 rowData.add(Integer.toString(this.listaLotes.get(i).getIdLote()));
                 rowData.add(this.listaLotes.get(i).getNombreMedicamento());
                 rowData.add(Integer.toString(this.listaLotes.get(i).getCantidad()));
+                rowData.add(Integer.toString(this.listaLotes.get(i).getLimite()));
                 rowData.add(this.listaLotes.get(i).getNombreProveedor());
                 rowData.add(this.listaLotes.get(i).getNombreUsuario());
                 rowData.add(Double.toString(this.listaLotes.get(i).getPrecioCosto()));
@@ -147,6 +150,9 @@ public class frmInventario extends javax.swing.JPanel {
         jPanel2 = new javax.swing.JPanel();
         tablaCustom1 = new Clases.tablaCustom();
         jButton1 = new javax.swing.JButton();
+        jButton4 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
 
@@ -167,6 +173,30 @@ public class frmInventario extends javax.swing.JPanel {
             }
         });
         jPanel2.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(920, 60, 120, 40));
+
+        jButton4.setText("Recargar");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
+        jPanel2.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 620, 100, 30));
+
+        jButton3.setText("Stock al limite");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+        jPanel2.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 620, 120, 30));
+
+        jButton2.setText("Productos caducados");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+        jPanel2.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(890, 620, 150, 30));
 
         jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Elementos/Inventario/Circulo.png"))); // NOI18N
         jPanel2.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
@@ -204,6 +234,22 @@ public class frmInventario extends javax.swing.JPanel {
         // TODO add your handling code here:
         generarReporte();
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        this.listaLotes = this.loteDAO.ConsultarLotesAgotados();
+        this.CargarTabla();
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        
+        this.listaLotes = this.loteDAO.ConsultarLotesVencidos();
+        this.CargarTabla();
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        // TODO add your handling code here:
+        this.listaLotes = this.loteDAO.ConsultarLote();
+    }//GEN-LAST:event_jButton4ActionPerformed
 
     private void generarReporte() {
         JFileChooser fileChooser = new JFileChooser();
@@ -286,6 +332,9 @@ public class frmInventario extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel2;

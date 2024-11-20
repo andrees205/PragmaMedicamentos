@@ -165,7 +165,6 @@ public class frmVenta extends javax.swing.JPanel {
         }
         
 
-        // Recorrer la lista de ventas
         for (int i = 0; i < this.listaVentas.size(); i++) {
             try {
                 String fechaVenta = sdf.format(this.listaVentas.get(i).getFechaVenta());
@@ -572,30 +571,21 @@ public class frmVenta extends javax.swing.JPanel {
     }//GEN-LAST:event_menuEditarActionPerformed
 
     private void menuEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuEliminarActionPerformed
-        int fila = this.tblCarrito.getSelectedRow();
-        int id = Integer.parseInt(tblCarrito.getValueAt(fila, 0).toString());
+    int filaSeleccionada = this.tblCarrito.getSelectedRow();
+    
+    // Verificar si se ha seleccionado una fila
+    if (filaSeleccionada != -1) {
+        // Convertir el índice de la fila seleccionada en el modelo
+        //int filaOriginal = this.tblCarrito.convertRowIndexToModel(filaSeleccionada);
+        
+        // Eliminar el objeto correspondiente del ArrayList
+        this.carritoDetalleVenta.remove(filaSeleccionada);
 
-        for (int i = 0; i < this.listaVentas.size(); i++) {
-            if (this.listaVentas.get(i).getIdVenta() == id) {
-                venta = this.listaVentas.get(i);
-                break;
-            }
-        }
-        int opc = JOptionPane.showConfirmDialog(rootPane, "Seguro que desea eliminar la venta", "Advertencia!", JOptionPane.YES_NO_OPTION);
-        if (opc == JOptionPane.OK_OPTION) {
-
-            for (int i = 0; i < this.carritoDetalleVenta.size(); i++) {
-                if (this.carritoDetalleVenta.get(i).getIdVenta() == venta.getIdVenta()) {
-                    this.detalleVentaDAO.DevolucionLote(venta.getIdVenta());
-                    break;
-                }
-            }
-            //hasta que se termine de devolver la cantidad a los lotes se elimina la venta y el detalleventa
-            this.ventaDAO.EliminarVenta(venta.getIdVenta());
-            JOptionPane.showMessageDialog(rootPane, "Venta eliminado exitosamente!!", " ", JOptionPane.INFORMATION_MESSAGE);
-
-            this.CargarTablaVentas();
-        }
+        // Actualizar la tabla para reflejar los cambios
+        CargarCarrito();
+    } else {
+        JOptionPane.showMessageDialog(this, "Por favor, seleccione un producto para eliminar.");
+    }
     }//GEN-LAST:event_menuEliminarActionPerformed
 
     private void jRadioButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton2ActionPerformed
