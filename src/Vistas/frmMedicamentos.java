@@ -29,11 +29,14 @@ public class frmMedicamentos extends javax.swing.JInternalFrame {
     boolean blnEditar;
     private ArrayList<Lote> listaLotes;
     private LoteDAO loteDAO;
+    Categoria cat;
     /**
      * Creates new form frmMedicamentos
      */
     public frmMedicamentos() {
         initComponents();
+        cat = new Categoria();
+        this.loteDAO = new LoteDAO();
         medDAO = new MedicamentoDAO();
         this.model=(DefaultTableModel) this.jTable1.getModel();
         this.listaMedicinas=new ArrayList();
@@ -42,9 +45,10 @@ public class frmMedicamentos extends javax.swing.JInternalFrame {
         this.blnEditar = false;
     }
 
-    public void setCategoria(String categoriaNombre, int id) {
-        this.jTextField1.setText(categoriaNombre); // Actualiza el campo de texto
-        this.jLabel4.setText(Integer.toString(id));
+    public void setCategoria(Categoria categoriaSeleccionada) {
+        this.cat = categoriaSeleccionada;
+        this.jTextField1.setText(cat.getNombreCategoria()); // Actualiza el campo de texto
+        this.jLabel4.setText(Integer.toString(cat.getIdcategoria()));
     }
 
     private void cargarTabla(){
@@ -201,8 +205,9 @@ public class frmMedicamentos extends javax.swing.JInternalFrame {
             if(!this.jTextField1.getText().isBlank() && !this.jTextField1.getText().isEmpty() && !this.jTextField2.getText().isBlank() &&
                 !this.jTextField2.getText().isEmpty() && !this.jTextField3.getText().isBlank() && !this.jTextField3.getText().isEmpty()){
                 Medicamento med = new Medicamento();
-
-                med.setIdCategoria(Integer.parseInt(this.jLabel4.getText()));
+                
+                med.setIdCategoria(this.cat.getIdcategoria());
+                //med.setIdCategoria(Integer.parseInt(this.jLabel4.getText()));
                 med.setPresentacion(this.jTextField2.getText());
                 med.setNombre(this.jTextField3.getText());
 
@@ -216,7 +221,8 @@ public class frmMedicamentos extends javax.swing.JInternalFrame {
             
                 Medicamento med = new Medicamento();
                 med.setIdMedicamento(this.med.getIdMedicamento());
-                med.setIdCategoria(Integer.parseInt(this.jLabel4.getText()));
+                //med.setIdCategoria(Integer.parseInt(this.jLabel4.getText()));
+                med.setIdCategoria(this.cat.getIdcategoria());
                 med.setPresentacion(this.jTextField2.getText());
                 med.setNombre(this.jTextField3.getText());
                 this.medDAO.ActualizarMedicamento(med);
@@ -231,7 +237,8 @@ public class frmMedicamentos extends javax.swing.JInternalFrame {
         int fila = this.jTable1.getSelectedRow();
         if(fila != -1){
             this.blnEditar = true;
-            med = this.listaMedicinas.get(fila);
+            this.med = this.listaMedicinas.get(fila);
+            
             this.jTextField3.setText(med.getNombre());
             this.jTextField1.setText(med.getNombreCategoria());
             this.jLabel4.setText(Integer.toString(med.getIdCategoria()));

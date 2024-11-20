@@ -111,9 +111,9 @@ public class frmVerCategorias extends javax.swing.JInternalFrame {
         
         String categoriaNombre = (String) jTable1.getValueAt(fila, 1);
         
-        
+        Categoria categoriaSeleccionada = this.categorias.get(fila);
         if (parentForm != null) {
-            parentForm.setCategoria(categoriaNombre, id); // Llama al método del formulario principal
+            parentForm.setCategoria(categoriaSeleccionada); // Llama al método del formulario principal
         }
         
         
