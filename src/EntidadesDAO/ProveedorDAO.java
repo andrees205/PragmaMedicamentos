@@ -25,7 +25,7 @@ public class ProveedorDAO {
         this.CN = new cn();
     }
     
-    public ArrayList<Proveedor> ConsultarUsuarios() {
+    public ArrayList<Proveedor> ConsultarProveedores() {
         ArrayList<Proveedor> listaProveedores = new ArrayList<Proveedor>();
         String sSQL = "{CALL ObtenerProveedores()};";
 

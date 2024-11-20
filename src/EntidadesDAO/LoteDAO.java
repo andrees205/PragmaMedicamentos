@@ -40,15 +40,16 @@ public class LoteDAO {
                 lote.setIdMedicamento(rs.getInt(2));
                 lote.setNombreMedicamento(rs.getString(3));
                 lote.setCantidad(rs.getInt(4));
-                lote.setIdProveedor(rs.getInt(5));
-                lote.setNombreProveedor(rs.getString(6));
-                lote.setIdUsuario(rs.getInt(7));
-                lote.setNombreUsuario(rs.getString(8));
-                lote.setPrecioCosto(rs.getDouble(9));
-                lote.setPrecioUnitario(rs.getDouble(10));
-                lote.setPrecioMayoreo(rs.getDouble(11));
-                lote.setFecha(rs.getDate(12));
-                lote.setUbicacion(rs.getString(13));
+                lote.setLimite(rs.getInt(5));
+                lote.setIdProveedor(rs.getInt(6));
+                lote.setNombreProveedor(rs.getString(7));
+                lote.setIdUsuario(rs.getInt(8));
+                lote.setNombreUsuario(rs.getString(9));
+                lote.setPrecioCosto(rs.getDouble(10));
+                lote.setPrecioUnitario(rs.getDouble(11));
+                lote.setPrecioMayoreo(rs.getDouble(12));
+                lote.setFecha(rs.getDate(13));
+                lote.setUbicacion(rs.getString(14));
                 
                 listaLotes.add(lote);
             }
@@ -77,62 +78,70 @@ public class LoteDAO {
                 lote.setIdMedicamento(rs.getInt(2));
                 lote.setNombreMedicamento(rs.getString(3));
                 lote.setCantidad(rs.getInt(4));
-                lote.setIdProveedor(rs.getInt(5));
-                lote.setIdUsuario(rs.getInt(6));
-                lote.setPrecioCosto(rs.getDouble(7));
-                lote.setPrecioUnitario(rs.getDouble(8));
-                lote.setPrecioMayoreo(rs.getDouble(9));
-                lote.setFecha(rs.getDate(10));
-                lote.setUbicacion(rs.getString(11));
+                lote.setLimite(rs.getInt(5));
+                lote.setIdProveedor(rs.getInt(6));
+                lote.setNombreProveedor(rs.getString(7));
+                lote.setIdUsuario(rs.getInt(8));
+                lote.setNombreUsuario(rs.getString(9));
+                lote.setPrecioCosto(rs.getDouble(10));
+                lote.setPrecioUnitario(rs.getDouble(11));
+                lote.setPrecioMayoreo(rs.getDouble(12));
+                lote.setFecha(rs.getDate(13));
+                lote.setUbicacion(rs.getString(14));
                 
                 //listaLotes.add(lote);
             }
 
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, ex.getMessage(), "¡¡ERROR!!", JOptionPane.ERROR_MESSAGE);
+            
         }
 
         return lote;
     }
     
     public boolean InsertarLote(Lote lote) {
-        String sSQL = "{CALL insertar_lote(?,?,?,?,?,?,?,?,?)}";
+        String sSQL = "{CALL insertar_lote(?,?,?,?,?,?,?,?,?,?)}";
         
         try {
             CallableStatement cs = this.CN.getConexion().prepareCall(sSQL);
             
             cs.setInt(1, lote.getIdMedicamento());
             cs.setInt(2,  lote.getCantidad());
-            cs.setInt(3, lote.getIdProveedor());
-            cs.setInt(4, lote.getIdUsuario());
-            cs.setDouble(5, lote.getPrecioCosto());
-            cs.setDouble(6, lote.getPrecioMayoreo());
+            cs.setInt(3,  lote.getLimite());
+            cs.setInt(4, lote.getIdProveedor());
+            cs.setInt(5, lote.getIdUsuario());
+            cs.setDouble(6, lote.getPrecioCosto());
             cs.setDouble(7, lote.getPrecioMayoreo());
-            cs.setDate(8, (Date) lote.getFecha());
-            cs.setString(9, lote.getUbicacion());
+            cs.setDouble(8, lote.getPrecioUnitario());
+            cs.setDate(9, new java.sql.Date(lote.getFecha().getTime()));
+            cs.setString(10, lote.getUbicacion());
             cs.executeUpdate();
+            
             return true;
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e.getMessage(), "¡¡ERROR!!", JOptionPane.ERROR_MESSAGE);
+            System.out.print(e.getMessage());
             return false;
         }
     }
     
     public boolean ActualizarLote(Lote lote) {
-        String sSQL = "CALL actualizar_lote(?,?,?,?,?,?,?,?,?,?)";
+        String sSQL = "CALL actualizar_lote(?,?,?,?,?,?,?,?,?,?,?)";
 
         try {
             CallableStatement cs = CN.getConexion().prepareCall(sSQL);
             cs.setInt(1, lote.getIdLote());
             cs.setInt(2, lote.getIdMedicamento());
             cs.setInt(3,  lote.getCantidad());
-            cs.setInt(4, lote.getIdProveedor());
-            cs.setInt(5, lote.getIdUsuario());
-            cs.setDouble(6, lote.getPrecioCosto());
-            cs.setDouble(7, lote.getPrecioMayoreo());
+            cs.setInt(4,  lote.getLimite());
+            cs.setInt(5, lote.getIdProveedor());
+            cs.setInt(6, lote.getIdUsuario());
+            cs.setDouble(7, lote.getPrecioCosto());
             cs.setDouble(8, lote.getPrecioMayoreo());
-            cs.setDate(9, (Date) lote.getFecha());
-            cs.setString(10, lote.getUbicacion());
+            cs.setDouble(9, lote.getPrecioMayoreo());
+            cs.setDate(10, (Date) lote.getFecha());
+            cs.setString(11, lote.getUbicacion());
             cs.executeUpdate();
             return true;
         } catch (Exception e) {

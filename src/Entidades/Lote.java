@@ -14,6 +14,7 @@ public class Lote {
     private int idMedicamento;
     private String nombreMedicamento;
     private int Cantidad;
+    private int limite;
     private int idProveedor;
     private String nombreProveedor;
     private int idUsuario;
@@ -27,11 +28,12 @@ public class Lote {
     public Lote() {
     }
 
-    public Lote(int idLote, int idMedicamento, String nombreMedicamento, int Cantidad, int idProveedor, String nombreProveedor, int idUsuario, String nombreUsuario, double precioCosto, double precioUnitario, double precioMayoreo, Date fecha, String ubicacion) {
+    public Lote(int idLote, int idMedicamento, String nombreMedicamento, int Cantidad, int limite, int idProveedor, String nombreProveedor, int idUsuario, String nombreUsuario, double precioCosto, double precioUnitario, double precioMayoreo, Date fecha, String ubicacion) {
         this.idLote = idLote;
         this.idMedicamento = idMedicamento;
         this.nombreMedicamento = nombreMedicamento;
         this.Cantidad = Cantidad;
+        this.limite = limite;
         this.idProveedor = idProveedor;
         this.nombreProveedor = nombreProveedor;
         this.idUsuario = idUsuario;
@@ -42,6 +44,16 @@ public class Lote {
         this.fecha = fecha;
         this.ubicacion = ubicacion;
     }
+
+    public int getLimite() {
+        return limite;
+    }
+
+    public void setLimite(int limite) {
+        this.limite = limite;
+    }
+
+    
 
     public String getNombreMedicamento() {
         return nombreMedicamento;

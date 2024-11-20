@@ -8,8 +8,14 @@ import Entidades.Lote;
 import Entidades.Usuario;
 import com.toedter.calendar.JDateChooser;
 import EntidadesDAO.LoteDAO;
+import Vistas.frmAdministrador;
+import Vistas.frmClienteSeleccionar;
+import Vistas.frmMedicamentos;
+import Vistas.frmVerMedicinas;
+import Vistas.frmVerProveedores;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 /**
  *
@@ -17,13 +23,13 @@ import javax.swing.table.DefaultTableModel;
  */
 public class frmLotes extends javax.swing.JPanel {
     
-//    private cn oCon;
     private ArrayList<Lote> listaLotes;
     private DefaultTableModel tablaLotes;
     private LoteDAO loteDAO;
     private Lote lote;
     private Usuario userSesion;
     private SimpleDateFormat formatoFecha = new SimpleDateFormat("yyyy-mm-dd");
+    frmAdministrador parent;
     
     /**
      * Creates new form frmLotes
@@ -32,23 +38,31 @@ public class frmLotes extends javax.swing.JPanel {
         initComponents();
         listaLotes = new ArrayList<>();
         tablaLotes = (DefaultTableModel) this.jTable1.getModel();
-//        this.oCon= new cn();
         loteDAO = new LoteDAO();
         CargarTablaLotes();
         this.jDateChooser1.getDateEditor().setEnabled(false);
     }
-        public frmLotes(Usuario userFrmPrincipal) {
+        public frmLotes(Usuario userFrmPrincipal, frmAdministrador parent) {
         initComponents();
-        
+        this.parent = parent;
         this.userSesion = userFrmPrincipal;
-        //listaLotes = new ArrayList<>();
+        listaLotes = new ArrayList<>();
         tablaLotes = (DefaultTableModel) this.jTable1.getModel();
-//        this.oCon= new cn();
-        //loteDAO = new LoteDAO();
-        //CargarTablaLotes();
+        loteDAO = new LoteDAO();
+        CargarTablaLotes();
         this.jDateChooser1.getDateEditor().setEnabled(false);
     }
 
+    public void setMedicina(String nombre, int id) {
+        this.jTextField6.setText(nombre); 
+        this.jLabel11.setText(Integer.toString(id));
+    }
+    
+    public void setProveedor(String nombre, int id) {
+        this.jTextField1.setText(nombre); 
+        this.jLabel8.setText(Integer.toString(id));
+    }
+        
     private void CargarTablaLotes() {
         this.tablaLotes.setRowCount(0);
         this.listaLotes = this.loteDAO.ConsultarLote();
@@ -60,13 +74,10 @@ public class frmLotes extends javax.swing.JPanel {
                 Integer.toString(this.listaLotes.get(i).getIdLote()),
                 this.listaLotes.get(i).getNombreMedicamento(),
                 Integer.toString(this.listaLotes.get(i).getCantidad()),
-                this.listaLotes.get(i).getNombreProveedor(),
-                this.listaLotes.get(i).getNombreUsuario(),
                 Double.toString(this.listaLotes.get(i).getPrecioCosto()),
-                Double.toString(this.listaLotes.get(i).getPrecioUnitario()),
                 Double.toString(this.listaLotes.get(i).getPrecioMayoreo()),
+                Double.toString(this.listaLotes.get(i).getPrecioUnitario()),
                 formatoFecha.format(this.listaLotes.get(i).getFecha()),
-                this.listaLotes.get(i).getUbicacion()
             };
             
             this.tablaLotes.addRow(registroLotes);
@@ -92,14 +103,12 @@ public class frmLotes extends javax.swing.JPanel {
         jTable1 = new javax.swing.JTable();
         jDateChooser1 = new com.toedter.calendar.JDateChooser();
         jLabel1 = new javax.swing.JLabel();
-        jButton4 = new javax.swing.JButton();
         jSpinner2 = new javax.swing.JSpinner();
         txtEmpleado = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jSpinner1 = new javax.swing.JSpinner();
         jLabel5 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
-        jLabel3 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jTextField2 = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
@@ -110,6 +119,14 @@ public class frmLotes extends javax.swing.JPanel {
         jLabel10 = new javax.swing.JLabel();
         jButton3 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
+        jLabel8 = new javax.swing.JLabel();
+        jTextField5 = new javax.swing.JTextField();
+        jButton4 = new javax.swing.JButton();
+        jLabel11 = new javax.swing.JLabel();
+        jTextField6 = new javax.swing.JTextField();
+        jButton5 = new javax.swing.JButton();
+        jLabel12 = new javax.swing.JLabel();
+        jLabel13 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(56, 102, 65));
@@ -120,23 +137,19 @@ public class frmLotes extends javax.swing.JPanel {
 
             },
             new String [] {
-                "MEDICAMENTO", "CANTIDAD", "PROVEEDOR", "COSTO", "MAYOREO", "Title 6"
+                "ID", "MEDICAMENTO", "CANTIDAD", "PROVEEDOR", "COSTO", "MAYOREO", "UNITARIO"
             }
         ));
         jScrollPane1.setViewportView(jTable1);
 
-        add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 70, 630, 580));
-        add(jDateChooser1, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 450, 270, 40));
+        add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 60, 640, 580));
+        add(jDateChooser1, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 480, 270, 30));
 
         jLabel1.setFont(new java.awt.Font("Calibri", 1, 24)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("Límite stock");
-        add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(900, 190, 120, 30));
-
-        jButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Elementos/Venta/btnAgregar.png"))); // NOI18N
-        jButton4.setContentAreaFilled(false);
-        add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 500, 270, 40));
-        add(jSpinner2, new org.netbeans.lib.awtextra.AbsoluteConstraints(900, 218, 120, -1));
+        add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(900, 240, 120, 30));
+        add(jSpinner2, new org.netbeans.lib.awtextra.AbsoluteConstraints(900, 270, 120, -1));
 
         txtEmpleado.setFont(new java.awt.Font("Calibri", 1, 18)); // NOI18N
         txtEmpleado.setForeground(new java.awt.Color(204, 255, 204));
@@ -145,34 +158,29 @@ public class frmLotes extends javax.swing.JPanel {
         jLabel4.setFont(new java.awt.Font("Calibri", 1, 18)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(255, 255, 255));
         jLabel4.setText("Precio unitario");
-        add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(890, 330, 130, 30));
-        add(jSpinner1, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 218, 110, -1));
+        add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(890, 370, 130, 30));
+        add(jSpinner1, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 270, 110, -1));
 
         jLabel5.setFont(new java.awt.Font("Calibri", 1, 24)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(255, 255, 255));
         jLabel5.setText("Cantidad");
-        add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 190, 120, 30));
+        add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 240, 120, 30));
 
         jTextField1.setBackground(new java.awt.Color(255, 255, 255));
-        add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 140, 270, 40));
-
-        jLabel3.setFont(new java.awt.Font("Calibri", 1, 24)); // NOI18N
-        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel3.setText("Producto");
-        add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 140, 120, -1));
+        add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 190, 270, 40));
 
         jLabel6.setFont(new java.awt.Font("Calibri", 1, 24)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel6.setText("Producto");
-        add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 110, 120, -1));
+        jLabel6.setText("Ubicación");
+        add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 520, 120, -1));
 
         jTextField2.setBackground(new java.awt.Color(255, 255, 255));
-        add(jTextField2, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 272, 270, 40));
+        add(jTextField2, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 330, 270, 30));
 
         jLabel7.setFont(new java.awt.Font("Calibri", 1, 24)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(255, 255, 255));
         jLabel7.setText("Costo");
-        add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 250, 120, 30));
+        add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 300, 120, 30));
 
         jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Elementos/Lotes/btnComprarLote.png"))); // NOI18N
         jButton1.setContentAreaFilled(false);
@@ -181,23 +189,23 @@ public class frmLotes extends javax.swing.JPanel {
                 jButton1ActionPerformed(evt);
             }
         });
-        add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 550, 270, 50));
+        add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(750, 590, 270, 50));
 
         jLabel9.setFont(new java.awt.Font("Calibri", 1, 24)); // NOI18N
         jLabel9.setForeground(new java.awt.Color(255, 255, 255));
         jLabel9.setText("Fecha caducidad");
-        add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 410, 200, 40));
+        add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 450, 200, 30));
 
         jTextField3.setBackground(new java.awt.Color(255, 255, 255));
-        add(jTextField3, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 360, 140, 40));
+        add(jTextField3, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 400, 140, 40));
 
         jTextField4.setBackground(new java.awt.Color(255, 255, 255));
-        add(jTextField4, new org.netbeans.lib.awtextra.AbsoluteConstraints(890, 360, 140, 40));
+        add(jTextField4, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 550, 140, 30));
 
         jLabel10.setFont(new java.awt.Font("Calibri", 1, 18)); // NOI18N
         jLabel10.setForeground(new java.awt.Color(255, 255, 255));
         jLabel10.setText("Precio Mayoreo");
-        add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 330, 120, 30));
+        add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 370, 130, 30));
 
         jButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Elementos/Lotes/btnOrdenar.png"))); // NOI18N
         jButton3.setContentAreaFilled(false);
@@ -207,13 +215,99 @@ public class frmLotes extends javax.swing.JPanel {
         jButton2.setContentAreaFilled(false);
         add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 30, 30, 30));
 
+        jLabel8.setFont(new java.awt.Font("Calibri", 1, 24)); // NOI18N
+        jLabel8.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel8.setText("ID");
+        add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(860, 160, 60, 30));
+
+        jTextField5.setBackground(new java.awt.Color(255, 255, 255));
+        add(jTextField5, new org.netbeans.lib.awtextra.AbsoluteConstraints(890, 400, 140, 40));
+
+        jButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Elementos/Medicamento/btnBuscar.png"))); // NOI18N
+        jButton4.setContentAreaFilled(false);
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
+        add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(1030, 190, 40, 40));
+
+        jLabel11.setFont(new java.awt.Font("Calibri", 1, 24)); // NOI18N
+        jLabel11.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel11.setText("ID");
+        add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(850, 80, 70, 30));
+
+        jTextField6.setBackground(new java.awt.Color(255, 255, 255));
+        add(jTextField6, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 110, 270, 40));
+
+        jButton5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Elementos/Medicamento/btnBuscar.png"))); // NOI18N
+        jButton5.setContentAreaFilled(false);
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
+        add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(1030, 110, 40, 40));
+
+        jLabel12.setFont(new java.awt.Font("Calibri", 1, 24)); // NOI18N
+        jLabel12.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel12.setText("Producto");
+        add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 80, 120, 30));
+
+        jLabel13.setFont(new java.awt.Font("Calibri", 1, 24)); // NOI18N
+        jLabel13.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel13.setText("Proveedor");
+        add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 160, 120, 30));
+
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Elementos/Lotes/FondoLabel.png"))); // NOI18N
-        add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1110, 720));
+        add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1120, 720));
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+        
+        if(!this.jTextField1.getText().isBlank() && !this.jTextField1.getText().isEmpty() && !this.jTextField2.getText().isBlank() &&
+                !this.jTextField2.getText().isEmpty() && !this.jTextField3.getText().isBlank() && !this.jTextField3.getText().isEmpty()
+                && !this.jTextField4.getText().isBlank() && !this.jTextField4.getText().isEmpty() && !this.jTextField5.getText().isBlank()
+                && !this.jTextField5.getText().isEmpty() && !this.jTextField6.getText().isBlank() && !this.jTextField6.getText().isEmpty()
+                && (int)this.jSpinner1.getValue()!=0 && (int)this.jSpinner2.getValue()!=0){
+            
+            Lote lote = new Lote();
+            lote.setIdMedicamento(Integer.parseInt(this.jLabel11.getText()));
+            lote.setCantidad((int) jSpinner1.getValue());
+            lote.setLimite((int) jSpinner2.getValue());
+            lote.setIdProveedor(Integer.parseInt(this.jLabel8.getText()));
+            lote.setIdUsuario(this.userSesion.getIdusuario());
+            lote.setPrecioCosto(Double.parseDouble(this.jTextField2.getText()));
+            lote.setPrecioUnitario(Double.parseDouble(this.jTextField5.getText()));
+            lote.setPrecioMayoreo(Double.parseDouble(this.jTextField3.getText()));
+            lote.setFecha(this.jDateChooser1.getDate());
+            lote.setUbicacion(this.jTextField4.getText());
+            
+            this.loteDAO.InsertarLote(lote);
+            JOptionPane.showMessageDialog(this, "Medicamento Agregado");
+            
+        }else{
+            JOptionPane.showMessageDialog(this, "Ingrese información en los campos");
+        }
+        
+        
+        
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        frmVerProveedores frm = new frmVerProveedores(this);
+        frm.setVisible(true);
+        this.parent.getDesktopPanel().add(frm);
+        frm.moveToFront();
+    }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+
+        frmVerMedicinas frm = new frmVerMedicinas(this);
+        frm.setVisible(true);
+        this.parent.getDesktopPanel().add(frm);
+        frm.moveToFront();
+    }//GEN-LAST:event_jButton5ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -221,15 +315,19 @@ public class frmLotes extends javax.swing.JPanel {
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton5;
     private com.toedter.calendar.JDateChooser jDateChooser1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSpinner jSpinner1;
@@ -239,6 +337,8 @@ public class frmLotes extends javax.swing.JPanel {
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;
+    private javax.swing.JTextField jTextField5;
+    private javax.swing.JTextField jTextField6;
     private javax.swing.JLabel txtEmpleado;
     // End of variables declaration//GEN-END:variables
 }
