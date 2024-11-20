@@ -8,7 +8,12 @@ import Entidades.Medicamento;
 import EntidadesDAO.MedicamentoDAO;
 import Paneles.frmLotes;
 import java.util.ArrayList;
+import javax.swing.RowFilter;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 
 /**
  *
@@ -20,14 +25,15 @@ public class frmVerMedicinas extends javax.swing.JInternalFrame {
     MedicamentoDAO medDAO;
     DefaultTableModel model;
     ArrayList<Medicamento> listaMedicinas;
+
     /**
      * Creates new form frmVerMedicinas
      */
     public frmVerMedicinas() {
         initComponents();
         medDAO = new MedicamentoDAO();
-        this.model=(DefaultTableModel) this.jTable1.getModel();
-        this.listaMedicinas=new ArrayList();
+        this.model = (DefaultTableModel) this.jTable1.getModel();
+        this.listaMedicinas = new ArrayList();
         cargarTabla();
     }
 
@@ -35,20 +41,65 @@ public class frmVerMedicinas extends javax.swing.JInternalFrame {
         initComponents();
         this.parentForm = parentForm;
         medDAO = new MedicamentoDAO();
-        this.model=(DefaultTableModel) this.jTable1.getModel();
-        this.listaMedicinas=new ArrayList();
+        this.model = (DefaultTableModel) this.jTable1.getModel();
+        this.listaMedicinas = new ArrayList();
         cargarTabla();
+        configurarListenerBusquedaMedicamentos();
+        filtrarTablaMedicamentos(txtBuscar.getText());
     }
-    private void cargarTabla(){
-        
+
+    private void cargarTabla() {
+
         this.model.setRowCount(0);
         this.listaMedicinas = this.medDAO.ConsultarMedicamento();
         for (int i = 0; i < this.listaMedicinas.size(); i++) {
-            Medicamento med=this.listaMedicinas.get(i);
-            String[] data= {Integer.toString(med.getIdMedicamento()), med.getNombre(), med.getNombreCategoria()};
+            Medicamento med = this.listaMedicinas.get(i);
+            String[] data = {Integer.toString(med.getIdMedicamento()), med.getNombre(), med.getNombreCategoria()};
             this.model.addRow(data);
         }
+
     }
+
+    // Método para filtrar la tabla según el texto de búsqueda
+    private void filtrarTablaMedicamentos(String textoBusqueda) {
+        // Crear un RowFilter que busque coincidencias en las columnas de Nombre y Categoría
+        RowFilter<Object, Object> rf = RowFilter.regexFilter("(?i)" + textoBusqueda, 1, 2); // 1 y 2 son los índices de las columnas (Nombre y NombreCategoría)
+
+        // Aplicar el filtro al modelo
+        TableRowSorter<TableModel> sorter = new TableRowSorter<>(model);
+        sorter.setRowFilter(rf);
+        jTable1.setRowSorter(sorter);
+    }
+// Agregar un DocumentListener al campo de búsqueda
+
+    private void configurarListenerBusquedaMedicamentos() {
+        txtBuscar.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                actualizarFiltroMedicamentos();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                actualizarFiltroMedicamentos();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                actualizarFiltroMedicamentos();
+            }
+
+            // Método que actualiza el filtro al cambiar el texto
+            private void actualizarFiltroMedicamentos() {
+                // Obtener el texto de búsqueda
+                String textoBusqueda = txtBuscar.getText();
+
+                // Llamar al método de filtrado
+                filtrarTablaMedicamentos(textoBusqueda);
+            }
+        });
+    }
+
 //    
 //    public void setParentForm(frmLotes parentForm) {
 //        this.parentForm = parentForm;
@@ -64,6 +115,7 @@ public class frmVerMedicinas extends javax.swing.JInternalFrame {
 
         jLabel1 = new javax.swing.JLabel();
         pnlPrincipal = new javax.swing.JPanel();
+        txtBuscar = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
 
@@ -94,13 +146,17 @@ public class frmVerMedicinas extends javax.swing.JInternalFrame {
             pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlPrincipalLayout.createSequentialGroup()
                 .addGap(17, 17, 17)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(28, Short.MAX_VALUE))
+                .addGroup(pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane1)
+                    .addComponent(txtBuscar))
+                .addContainerGap(63, Short.MAX_VALUE))
         );
         pnlPrincipalLayout.setVerticalGroup(
             pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlPrincipalLayout.createSequentialGroup()
-                .addContainerGap(97, Short.MAX_VALUE)
+                .addContainerGap(61, Short.MAX_VALUE)
+                .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(26, 26, 26))
         );
@@ -122,7 +178,7 @@ public class frmVerMedicinas extends javax.swing.JInternalFrame {
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
         int fila = this.jTable1.getSelectedRow();
         int id = Integer.parseInt(this.jTable1.getValueAt(fila, 0).toString());
-        
+
         String nombre = (String) jTable1.getValueAt(fila, 1);
 
         parentForm.setMedicina(nombre, id);
@@ -135,5 +191,6 @@ public class frmVerMedicinas extends javax.swing.JInternalFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JPanel pnlPrincipal;
+    private javax.swing.JTextField txtBuscar;
     // End of variables declaration//GEN-END:variables
 }

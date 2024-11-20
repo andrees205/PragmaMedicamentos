@@ -36,7 +36,7 @@ public class frmInventarioPequeño extends javax.swing.JInternalFrame {
     private SimpleDateFormat formatoFecha = new SimpleDateFormat("yyyy-mm-dd");
     frmVenta parentVenta;
 
-        public frmInventarioPequeño() {
+    public frmInventarioPequeño() {
         initComponents();
         listaLotes = new ArrayList<>();
         modeloLotes = (DefaultTableModel) this.tblInventario.getModel();
@@ -44,10 +44,10 @@ public class frmInventarioPequeño extends javax.swing.JInternalFrame {
 //        CargarTablaLotes();
         CargarTabla();
     }
-    
-        public frmInventarioPequeño(frmVenta parentFrm) {
+
+    public frmInventarioPequeño(frmVenta parentFrm) {
         initComponents();
-        this.parentVenta  = parentFrm;
+        this.parentVenta = parentFrm;
         configurarListenerBusqueda();
         listaLotes = new ArrayList<>();
         modeloLotes = (DefaultTableModel) this.tblInventario.getModel();
@@ -60,10 +60,10 @@ public class frmInventarioPequeño extends javax.swing.JInternalFrame {
 
         listaLotes = loteDAO.ConsultarLote();
         this.modeloLotes.setRowCount(0);
-        
+
         for (int i = 0; i < this.listaLotes.size(); i++) {
             Lote lote = this.listaLotes.get(i);
-            
+
             String[] data = {
                 String.valueOf(lote.getIdLote()),
                 lote.getNombreMedicamento(),
@@ -74,49 +74,51 @@ public class frmInventarioPequeño extends javax.swing.JInternalFrame {
                 String.valueOf(lote.getFecha()),
                 lote.getUbicacion()
             };
-            
+
             this.modeloLotes.addRow(data);
         }
-        
+
         this.tblInventario.setModel(modeloLotes);
     }
-    
-private void filtrarTabla(String textoBusqueda) {
-    // Crear el RowFilter que busca coincidencias en la columna de nombres de medicamentos
-    RowFilter<Object, Object> rf = RowFilter.regexFilter("(?i)" + textoBusqueda, 1); // 1 es el índice de la columna 'Nombre Medicamento'
 
-    // Aplicar el filtro al modelo
-    TableRowSorter<TableModel> sorter = new TableRowSorter<>(modeloLotes);
-    sorter.setRowFilter(rf);
-    tblInventario.setRowSorter(sorter);
-}
-private void configurarListenerBusqueda() {
-    txtBuscar.getDocument().addDocumentListener(new DocumentListener() {
-        @Override
-        public void insertUpdate(DocumentEvent e) {
-            actualizarFiltro();
-        }
+    private void filtrarTabla(String textoBusqueda) {
+        // Crear el RowFilter que busca coincidencias en la columna de nombres de medicamentos
+        RowFilter<Object, Object> rf = RowFilter.regexFilter("(?i)" + textoBusqueda, 1); // 1 es el índice de la columna 'Nombre Medicamento'
 
-        @Override
-        public void removeUpdate(DocumentEvent e) {
-            actualizarFiltro();
-        }
+        // Aplicar el filtro al modelo
+        TableRowSorter<TableModel> sorter = new TableRowSorter<>(modeloLotes);
+        sorter.setRowFilter(rf);
+        tblInventario.setRowSorter(sorter);
+    }
 
-        @Override
-        public void changedUpdate(DocumentEvent e) {
-            actualizarFiltro();
-        }
+    private void configurarListenerBusqueda() {
+        txtBuscar.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                actualizarFiltro();
+            }
 
-        // Método que actualiza el filtro al cambiar el texto
-        private void actualizarFiltro() {
-            // Obtener el texto de búsqueda
-            String textoBusqueda = txtBuscar.getText(); // Asegúrate de que txtBuscar es el campo de texto donde el usuario ingresa el término de búsqueda
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                actualizarFiltro();
+            }
 
-            // Llamar al método de filtrado
-            filtrarTabla(textoBusqueda);
-        }
-    });
-}
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                actualizarFiltro();
+            }
+
+            // Método que actualiza el filtro al cambiar el texto
+            private void actualizarFiltro() {
+                // Obtener el texto de búsqueda
+                String textoBusqueda = txtBuscar.getText(); // Asegúrate de que txtBuscar es el campo de texto donde el usuario ingresa el término de búsqueda
+
+                // Llamar al método de filtrado
+                filtrarTabla(textoBusqueda);
+            }
+        });
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -177,7 +179,7 @@ private void configurarListenerBusqueda() {
 
     private void tblInventarioMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblInventarioMouseClicked
         int filaSeleccionada = this.tblInventario.getSelectedRow();
-        
+
         //int idInventario = Integer.parseInt(this.tblInventario.getValueAt(filaSeleccionada, 0).toString());
         //Lote loteSeleccionado = this.loteDAO.ConsultarLotePorID(idInventario);
         Lote loteSeleccionado = this.listaLotes.get(filaSeleccionada);
@@ -186,7 +188,7 @@ private void configurarListenerBusqueda() {
 
     }//GEN-LAST:event_tblInventarioMouseClicked
 
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;

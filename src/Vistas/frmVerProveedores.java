@@ -8,7 +8,12 @@ import Paneles.frmLotes;
 import EntidadesDAO.ProveedorDAO;
 import Entidades.Proveedor;
 import java.util.ArrayList;
+import javax.swing.RowFilter;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 
 /**
  *
@@ -20,9 +25,11 @@ public class frmVerProveedores extends javax.swing.JInternalFrame {
     private ProveedorDAO provDAO;
     DefaultTableModel model;
     ArrayList<Proveedor> listaProveedores;
+    
     /**
      * Creates new form frmVerProveedores
      */
+    
     public frmVerProveedores() {
         initComponents();
         provDAO = new ProveedorDAO();
@@ -33,6 +40,7 @@ public class frmVerProveedores extends javax.swing.JInternalFrame {
 
     public frmVerProveedores(frmLotes parentForm) {
         initComponents();
+        configurarListenerBusqueda();
         this.parentForm = parentForm;
         provDAO = new ProveedorDAO();
         this.model=(DefaultTableModel) this.jTable1.getModel();
@@ -50,6 +58,43 @@ public class frmVerProveedores extends javax.swing.JInternalFrame {
             this.model.addRow(data);
         }
     }
+    private void configurarListenerBusqueda() {
+        txtBuscar.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                actualizarFiltro();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                actualizarFiltro();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                actualizarFiltro();
+            }
+
+            // Método que actualiza el filtro al cambiar el texto
+            private void actualizarFiltro() {
+                // Obtener el texto de búsqueda
+                String textoBusqueda = txtBuscar.getText(); // Asegúrate de que txtBuscar es el campo de texto donde el usuario ingresa el término de búsqueda
+
+                // Llamar al método de filtrado
+                filtrarTabla(textoBusqueda);
+            }
+        });
+    }
+    
+        private void filtrarTabla(String textoBusqueda) {
+        // Crear el RowFilter que busca coincidencias en la columna de nombres de medicamentos
+        RowFilter<Object, Object> rf = RowFilter.regexFilter("(?i)" + textoBusqueda, 1); // 1 es el índice de la columna 'Nombre Medicamento'
+
+        // Aplicar el filtro al modelo
+        TableRowSorter<TableModel> sorter = new TableRowSorter<>(this.model);
+        sorter.setRowFilter(rf);
+        this.jTable1.setRowSorter(sorter);
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -62,6 +107,7 @@ public class frmVerProveedores extends javax.swing.JInternalFrame {
         pnlPrincipal = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
+        txtBuscar = new javax.swing.JTextField();
 
         pnlPrincipal.setBackground(new java.awt.Color(56, 102, 65));
 
@@ -86,13 +132,17 @@ public class frmVerProveedores extends javax.swing.JInternalFrame {
             pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlPrincipalLayout.createSequentialGroup()
                 .addGap(37, 37, 37)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(txtBuscar)
+                    .addComponent(jScrollPane1))
                 .addContainerGap(49, Short.MAX_VALUE))
         );
         pnlPrincipalLayout.setVerticalGroup(
             pnlPrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlPrincipalLayout.createSequentialGroup()
-                .addGap(84, 84, 84)
+                .addGap(42, 42, 42)
+                .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(25, Short.MAX_VALUE))
         );
@@ -126,5 +176,6 @@ public class frmVerProveedores extends javax.swing.JInternalFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JPanel pnlPrincipal;
+    private javax.swing.JTextField txtBuscar;
     // End of variables declaration//GEN-END:variables
 }

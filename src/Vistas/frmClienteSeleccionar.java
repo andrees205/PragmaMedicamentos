@@ -34,77 +34,79 @@ public class frmClienteSeleccionar extends javax.swing.JInternalFrame {
     private Usuario userSesion;
     private Component rootPane;
     frmVenta parentVenta;
-    
+
     public frmClienteSeleccionar(Usuario userFrmPrincipal) {
         initComponents();
         this.userSesion = userFrmPrincipal;
         this.clienteDao = new ClienteDAO();
-        this.modelClientes=(DefaultTableModel) this.tblClientes.getModel();
-        this.listaClientes=new ArrayList();
+        this.modelClientes = (DefaultTableModel) this.tblClientes.getModel();
+        this.listaClientes = new ArrayList();
         configurarListenerBusqueda();
-        this.listaClientes=this.clienteDao.ConsultarClientes();
+        this.listaClientes = this.clienteDao.ConsultarClientes();
         this.RecargarUsuarios();
-        this.clienteSeleccionado= new Cliente();
+        this.clienteSeleccionado = new Cliente();
     }
-        public frmClienteSeleccionar(frmVenta parentFrm) {
+
+    public frmClienteSeleccionar(frmVenta parentFrm) {
         initComponents();
         this.parentVenta = parentFrm;
         this.clienteDao = new ClienteDAO();
         configurarListenerBusqueda();
-        this.modelClientes=(DefaultTableModel) this.tblClientes.getModel();
-        this.listaClientes=new ArrayList();
-        this.listaClientes=this.clienteDao.ConsultarClientes();
+        this.modelClientes = (DefaultTableModel) this.tblClientes.getModel();
+        this.listaClientes = new ArrayList();
+        this.listaClientes = this.clienteDao.ConsultarClientes();
         this.RecargarUsuarios();
-        this.clienteSeleccionado= new Cliente();
+        this.clienteSeleccionado = new Cliente();
     }
-    
-    private void RecargarUsuarios()
-    {
+
+    private void RecargarUsuarios() {
         this.tblClientes.clearSelection();
         this.modelClientes.setRowCount(0);
         for (int i = 0; i < this.listaClientes.size(); i++) {
-            Cliente cliente=this.listaClientes.get(i);
-            String[] data= {cliente.getNombre(), cliente.getUbicacion()};
+            Cliente cliente = this.listaClientes.get(i);
+            String[] data = {cliente.getNombre(), cliente.getUbicacion()};
             this.modelClientes.addRow(data);
         }
     }
+
     private void configurarListenerBusqueda() {
-    txtBuscar.getDocument().addDocumentListener(new DocumentListener() {
-        @Override
-        public void insertUpdate(DocumentEvent e) {
-            actualizarFiltro();
-        }
+        txtBuscar.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                actualizarFiltro();
+            }
 
-        @Override
-        public void removeUpdate(DocumentEvent e) {
-            actualizarFiltro();
-        }
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                actualizarFiltro();
+            }
 
-        @Override
-        public void changedUpdate(DocumentEvent e) {
-            actualizarFiltro();
-        }
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                actualizarFiltro();
+            }
 
-        // Método que actualiza el filtro al cambiar el texto
-        private void actualizarFiltro() {
-            // Obtener el texto de búsqueda
-            String textoBusqueda = txtBuscar.getText(); // Asegúrate de que txtBuscar es el campo de texto donde el usuario ingresa el término de búsqueda
+            // Método que actualiza el filtro al cambiar el texto
+            private void actualizarFiltro() {
+                // Obtener el texto de búsqueda
+                String textoBusqueda = txtBuscar.getText(); // Asegúrate de que txtBuscar es el campo de texto donde el usuario ingresa el término de búsqueda
 
-            // Llamar al método de filtrado
-            filtrarTabla(textoBusqueda);
-        }
-    });
-}
-    
-private void filtrarTabla(String textoBusqueda) {
-    // Crear un RowFilter que busque coincidencias en las columnas de Nombre y Ubicación
-    RowFilter<Object, Object> rf = RowFilter.regexFilter("(?i)" + textoBusqueda, 0, 1); // 0 y 1 son los índices de las columnas (Nombre y Ubicación)
+                // Llamar al método de filtrado
+                filtrarTabla(textoBusqueda);
+            }
+        });
+    }
 
-    // Aplicar el filtro al modelo
-    TableRowSorter<TableModel> sorter = new TableRowSorter<>(modelClientes);
-    sorter.setRowFilter(rf);
-    tblClientes.setRowSorter(sorter);
-}
+    private void filtrarTabla(String textoBusqueda) {
+        // Crear un RowFilter que busque coincidencias en las columnas de Nombre y Ubicación
+        RowFilter<Object, Object> rf = RowFilter.regexFilter("(?i)" + textoBusqueda, 0, 1); // 0 y 1 son los índices de las columnas (Nombre y Ubicación)
+
+        // Aplicar el filtro al modelo
+        TableRowSorter<TableModel> sorter = new TableRowSorter<>(modelClientes);
+        sorter.setRowFilter(rf);
+        tblClientes.setRowSorter(sorter);
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
