@@ -157,7 +157,7 @@ public class frmVenta extends javax.swing.JPanel {
         this.modeloMaestro.setRowCount(0);  // Limpiar la tabla antes de cargar los nuevos datos
 
         // Obtener las ventas desde la base de datos
-        if (this.userSesion.getRol()=="Administrador") {
+        if ("Administrador".equals(this.userSesion.getRol())) {
             this.listaVentas = this.ventaDAO.ConsultarVentas();
         }
         else{

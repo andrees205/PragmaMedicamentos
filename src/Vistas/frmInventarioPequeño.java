@@ -85,7 +85,7 @@ public class frmInventarioPequeño extends javax.swing.JInternalFrame {
         // Crear el RowFilter que busca coincidencias en la columna de nombres de medicamentos
         RowFilter<Object, Object> rf = RowFilter.regexFilter("(?i)" + textoBusqueda, 1); // 1 es el índice de la columna 'Nombre Medicamento'
 
-        // Aplicar el filtro al modelo
+        // Aplicar el filtro al modelo de la tabla
         TableRowSorter<TableModel> sorter = new TableRowSorter<>(modeloLotes);
         sorter.setRowFilter(rf);
         tblInventario.setRowSorter(sorter);
@@ -158,7 +158,7 @@ public class frmInventarioPequeño extends javax.swing.JInternalFrame {
         jScrollPane1.setViewportView(tblInventario);
 
         jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 80, 530, 510));
-        jPanel1.add(txtBuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 40, 520, 30));
+        jPanel1.add(txtBuscar, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 40, 530, 30));
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Elementos/Categoria/lblFondoPequeño (2).png"))); // NOI18N
         jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, 630));
@@ -178,12 +178,24 @@ public class frmInventarioPequeño extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void tblInventarioMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblInventarioMouseClicked
-        int filaSeleccionada = this.tblInventario.getSelectedRow();
+        /*int filaSeleccionada = this.tblInventario.getSelectedRow();
 
         //int idInventario = Integer.parseInt(this.tblInventario.getValueAt(filaSeleccionada, 0).toString());
         //Lote loteSeleccionado = this.loteDAO.ConsultarLotePorID(idInventario);
         Lote loteSeleccionado = this.listaLotes.get(filaSeleccionada);
         this.parentVenta.ObtenerLoteSeleccionado(loteSeleccionado);
+        this.dispose();*/
+
+        int filaSeleccionada = tblInventario.getSelectedRow();
+        int filaOriginal = tblInventario.convertRowIndexToModel(filaSeleccionada);  // Convertir el índice a la fila original en el modelo
+
+        // Obtener el objeto Lote de la lista original utilizando el índice original
+        Lote loteSeleccionado = this.listaLotes.get(filaOriginal);
+
+        // Pasar el objeto seleccionado a la clase padre
+        this.parentVenta.ObtenerLoteSeleccionado(loteSeleccionado);
+
+        // Cerrar la ventana actual
         this.dispose();
 
     }//GEN-LAST:event_tblInventarioMouseClicked

@@ -20,7 +20,7 @@ public class cn {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
 
-            conexion = (Connection) DriverManager.getConnection("jdbc:mysql://localhost:3306/pragama_db?zeroDateTimeBehavior=CONVERT_TO_NULL", "root", "catolica10");
+            conexion = (Connection) DriverManager.getConnection("jdbc:mysql://localhost:3306/pragama_db?zeroDateTimeBehavior=CONVERT_TO_NULL", "root", "");
         } catch (ClassNotFoundException | SQLException e) {
             System.err.println("Error" + e);
         }

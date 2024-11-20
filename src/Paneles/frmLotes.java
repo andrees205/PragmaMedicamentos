@@ -5,6 +5,7 @@
 package Paneles;
 
 import Entidades.Lote;
+import Entidades.Medicamento;
 import Entidades.Usuario;
 import com.toedter.calendar.JDateChooser;
 import EntidadesDAO.LoteDAO;
@@ -35,6 +36,7 @@ public class frmLotes extends javax.swing.JPanel {
     frmUsuario parentUsuario;
     boolean blnEditar;
     private Component rootPane;
+    Medicamento medicinaSeleccionada;
     
     /**
      * Creates new form frmLotes
@@ -51,6 +53,7 @@ public class frmLotes extends javax.swing.JPanel {
         public frmLotes(Usuario userFrmPrincipal, frmAdministrador parent) {
         initComponents();
         this.parent = parent;
+        this.medicinaSeleccionada = new Medicamento();
         this.userSesion = userFrmPrincipal;
         listaLotes = new ArrayList<>();
         tablaLotes = (DefaultTableModel) this.jTable1.getModel();
@@ -59,9 +62,10 @@ public class frmLotes extends javax.swing.JPanel {
         this.jDateChooser1.getDateEditor().setEnabled(false);
         this.blnEditar = false;
     }
-        
-                public frmLotes(Usuario userFrmPrincipal, frmUsuario parent) {
+
+    public frmLotes(Usuario userFrmPrincipal, frmUsuario parent) {
         initComponents();
+        this.medicinaSeleccionada = new Medicamento();
         this.parentUsuario = parent;
         this.userSesion = userFrmPrincipal;
         listaLotes = new ArrayList<>();
@@ -72,9 +76,10 @@ public class frmLotes extends javax.swing.JPanel {
         this.blnEditar = false;
     }
 
-    public void setMedicina(String nombre, int id) {
-        this.jTextField6.setText(nombre); 
-        this.jLabel11.setText(Integer.toString(id));
+    public void setMedicina(Medicamento medicinaSeleccionada) {
+        this.medicinaSeleccionada = medicinaSeleccionada;
+        this.jTextField6.setText(this.medicinaSeleccionada.getNombre()); 
+        this.jLabel11.setText(Integer.toString(this.medicinaSeleccionada.getIdMedicamento()));
     }
     
     public void setProveedor(String nombre, int id) {

@@ -153,9 +153,9 @@ public class frmClienteSeleccionar extends javax.swing.JInternalFrame {
 
     private void tblClientesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblClientesMouseClicked
         int filaSeleccionada = this.tblClientes.getSelectedRow();
-        this.clienteSeleccionado = this.listaClientes.get(filaSeleccionada);
-        //int idCliente = Integer.parseInt(this.tblClientes.getValueAt(filaSeleccionada, 0).toString());
-        //Cliente clienteSeleccionado = this.clienteDao.ObtenerClienteByID(idCliente);
+        
+        int filaOriginal = this.tblClientes.convertRowIndexToModel(filaSeleccionada);
+        this.clienteSeleccionado = this.listaClientes.get(filaOriginal);
         this.parentVenta.ObtenerClienteSeleccionado(clienteSeleccionado);
         this.dispose();
     }//GEN-LAST:event_tblClientesMouseClicked
