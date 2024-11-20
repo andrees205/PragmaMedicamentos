@@ -164,6 +164,7 @@ public class frmLotes extends javax.swing.JPanel {
                 "ID", "MEDICAMENTO", "CANTIDAD", "PROVEEDOR", "COSTO", "MAYOREO", "UNITARIO"
             }
         ));
+        jTable1.setComponentPopupMenu(jPopupMenu1);
         jScrollPane1.setViewportView(jTable1);
 
         add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 60, 640, 580));

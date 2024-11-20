@@ -124,6 +124,7 @@ public class frmMedicamentos extends javax.swing.JInternalFrame {
                 "ID", "MEDICAMENTO", "CATEGORIA"
             }
         ));
+        jTable1.setComponentPopupMenu(jPopupMenu1);
         jScrollPane1.setViewportView(jTable1);
 
         jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 70, 360, 420));
