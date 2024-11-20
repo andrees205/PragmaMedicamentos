@@ -69,7 +69,7 @@ public class pnlGraficos extends javax.swing.JPanel {
             String fechaMes = entry.getKey();
             int totalVentas = entry.getValue();
             int idVenta = this.listaVentas.get(j).getIdVenta();
-            datos.setValue(totalVentas, "Ventas", Integer.toString(idVenta));
+            //datos.setValue(totalVentas, "Ventas", Integer.toString(idVenta));
         }
         
         

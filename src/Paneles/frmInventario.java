@@ -27,6 +27,7 @@ import java.util.Vector;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.text.Document;
+
 /**
  *
  * @author andre
@@ -36,23 +37,23 @@ public class frmInventario extends javax.swing.JPanel {
     /**
      * Creates new form frmInventario
      */
-    
     private Usuario userSesion;
     private ArrayList<Lote> listaLotes;
 //    private DefaultTableModel tablaLotes;
     private LoteDAO loteDAO;
     private Lote lote;
     private SimpleDateFormat formatoFecha = new SimpleDateFormat("yyyy-mm-dd");
+
     public frmInventario() {
         initComponents();
-        
+
         listaLotes = new ArrayList<>();
 //        tablaLotes = (DefaultTableModel) this.jTable1.getModel();
         loteDAO = new LoteDAO();
 //        CargarTablaLotes();
-         CargarTabla();
+        CargarTabla();
     }
-    
+
     public frmInventario(Usuario userFrmPrincipal) {
         initComponents();
         this.userSesion = userFrmPrincipal;
@@ -93,10 +94,9 @@ public class frmInventario extends javax.swing.JPanel {
 //            
 //        }
 //    }
-        
-        private void CargarTabla() {
-        
-        String[] columnas={
+    private void CargarTabla() {
+
+        String[] columnas = {
             "ID",
             "MEDICAMENTO",
             "CANTIDAD",
@@ -108,14 +108,13 @@ public class frmInventario extends javax.swing.JPanel {
             "FECHA",
             "UBICACION"
         };
-        
+
         this.tablaCustom1.setColumnNames(columnas);
-        
+
         this.listaLotes = this.loteDAO.ConsultarLote();
-        
-        for(int i=0; i<this.listaLotes.size(); i++)
-        {
-            try{
+
+        for (int i = 0; i < this.listaLotes.size(); i++) {
+            try {
                 Vector<Object> rowData = new Vector<>();
                 rowData.add(Integer.toString(this.listaLotes.get(i).getIdLote()));
                 rowData.add(this.listaLotes.get(i).getNombreMedicamento());
@@ -127,14 +126,12 @@ public class frmInventario extends javax.swing.JPanel {
                 rowData.add(Double.toString(this.listaLotes.get(i).getPrecioMayoreo()));
                 rowData.add(formatoFecha.format(this.listaLotes.get(i).getFecha()));
                 rowData.add(this.listaLotes.get(i).getUbicacion());
-            
-            this.tablaCustom1.addRow(rowData);
-            }
-            catch (Exception e)
-            {
+
+                this.tablaCustom1.addRow(rowData);
+            } catch (Exception e) {
                 e.printStackTrace(); // Mostrar el error en consola
             }
-            
+
         }
     }
 
@@ -208,88 +205,85 @@ public class frmInventario extends javax.swing.JPanel {
         generarReporte();
     }//GEN-LAST:event_jButton1ActionPerformed
 
-private void generarReporte() {
-    JFileChooser fileChooser = new JFileChooser();
-    fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
+    private void generarReporte() {
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
 
-    int resultado = fileChooser.showSaveDialog(null);
-    File rutaSeleccionada = null;
+        int resultado = fileChooser.showSaveDialog(null);
+        File rutaSeleccionada = null;
 
-    if (resultado == JFileChooser.APPROVE_OPTION) {
-        rutaSeleccionada = fileChooser.getSelectedFile();
-        
-        if (!rutaSeleccionada.getAbsolutePath().endsWith(".pdf")) {
-            rutaSeleccionada = new File(rutaSeleccionada.getAbsolutePath() + ".pdf");
-        }
-    } 
-    else {
-        JOptionPane.showMessageDialog(null, "No se seleccionó ninguna ruta", "¡¡ERROR!!", JOptionPane.INFORMATION_MESSAGE);
-        return;
-    }
+        if (resultado == JFileChooser.APPROVE_OPTION) {
+            rutaSeleccionada = fileChooser.getSelectedFile();
 
-    com.itextpdf.text.Document documento = new com.itextpdf.text.Document();
-
-    try {
-        ArrayList<Lote> listadoLotes = this.loteDAO.ConsultarLote();
-        
-        PdfWriter.getInstance(documento, new FileOutputStream(rutaSeleccionada));
-        documento.open();
-
-        // Fuente del título
-        com.itextpdf.text.Font fuenteDelTitulo = new com.itextpdf.text.Font(com.itextpdf.text.Font.FontFamily.HELVETICA, 18, com.itextpdf.text.Font.BOLD);
-        Paragraph titulo = new Paragraph("Reporte de Inventario", fuenteDelTitulo);
-        titulo.setAlignment(Element.ALIGN_CENTER);
-        documento.add(titulo);
-
-        // Espacio entre el título y la tabla
-        documento.add(new Paragraph("\n"));
-
-        // Crear tabla con encabezados
-        PdfPTable tabla = new PdfPTable(9); // 9 columnas
-        tabla.setWidthPercentage(100);
-        tabla.setSpacingBefore(10f);
-        tabla.setSpacingAfter(10f);
-        tabla.setWidths(new float[]{2, 3, 2, 3, 3, 2, 2, 2, 3}); // Ajusta proporciones de las columnas
-
-        // Encabezados
-        String[] encabezados = {
-            "ID", "Medicamento", "Cantidad", "Proveedor", "Usuario",
-            "Precio Unitario", "Precio Mayoreo", "Precio Costo", "Fecha Vencimiento"
-        };
-        for (String encabezado : encabezados) {
-            PdfPCell celdaEncabezado = new PdfPCell(new Paragraph(encabezado));
-            celdaEncabezado.setHorizontalAlignment(Element.ALIGN_CENTER);
-            celdaEncabezado.setBackgroundColor(BaseColor.LIGHT_GRAY);
-            tabla.addCell(celdaEncabezado);
+            if (!rutaSeleccionada.getAbsolutePath().endsWith(".pdf")) {
+                rutaSeleccionada = new File(rutaSeleccionada.getAbsolutePath() + ".pdf");
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "No se seleccionó ninguna ruta", "¡¡ERROR!!", JOptionPane.INFORMATION_MESSAGE);
+            return;
         }
 
-        // Agregar datos
-        for (Lote lote : listadoLotes) {
-            tabla.addCell(String.valueOf(lote.getIdLote()));
-            tabla.addCell(lote.getNombreMedicamento() != null ? lote.getNombreMedicamento() : "N/A");
-            tabla.addCell(String.valueOf(lote.getCantidad()));
-            tabla.addCell(lote.getNombreProveedor() != null ? lote.getNombreProveedor() : "N/A");
-            tabla.addCell(lote.getNombreUsuario() != null ? lote.getNombreUsuario() : "N/A");
-            tabla.addCell(String.valueOf(lote.getPrecioUnitario()));
-            tabla.addCell(String.valueOf(lote.getPrecioMayoreo()));
-            tabla.addCell(String.valueOf(lote.getPrecioCosto()));
-            tabla.addCell(lote.getFecha() != null ? lote.getFecha().toString() : "N/A");
-        }
+        com.itextpdf.text.Document documento = new com.itextpdf.text.Document();
 
-        documento.add(tabla);
-        JOptionPane.showMessageDialog(null, "PDF generado correctamente en: " + rutaSeleccionada.getAbsolutePath());
-    } 
-    catch (DocumentException | IOException e) {
-        JOptionPane.showMessageDialog(null, "Error al generar el PDF: " + e.getMessage(), "¡¡ERROR!!", JOptionPane.ERROR_MESSAGE);
-    } 
-    finally {
-        if (documento.isOpen()) {
-            documento.close();
+        try {
+            ArrayList<Lote> listadoLotes = this.loteDAO.ConsultarLote();
+
+            PdfWriter.getInstance(documento, new FileOutputStream(rutaSeleccionada));
+            documento.open();
+
+            // Fuente del título
+            com.itextpdf.text.Font fuenteDelTitulo = new com.itextpdf.text.Font(com.itextpdf.text.Font.FontFamily.HELVETICA, 18, com.itextpdf.text.Font.BOLD);
+            Paragraph titulo = new Paragraph("Reporte de Inventario", fuenteDelTitulo);
+            titulo.setAlignment(Element.ALIGN_CENTER);
+            documento.add(titulo);
+
+            // Espacio entre el título y la tabla
+            documento.add(new Paragraph("\n"));
+
+            // Crear tabla con encabezados
+            PdfPTable tabla = new PdfPTable(9); // 9 columnas
+            tabla.setWidthPercentage(100);
+            tabla.setSpacingBefore(10f);
+            tabla.setSpacingAfter(10f);
+            tabla.setWidths(new float[]{2, 3, 2, 3, 3, 2, 2, 2, 3}); // Ajusta proporciones de las columnas
+
+            // Encabezados
+            String[] encabezados = {
+                "ID", "Medicamento", "Cantidad", "Proveedor", "Usuario",
+                "Precio Unitario", "Precio Mayoreo", "Precio Costo", "Fecha Vencimiento"
+            };
+            for (String encabezado : encabezados) {
+                PdfPCell celdaEncabezado = new PdfPCell(new Paragraph(encabezado));
+                celdaEncabezado.setHorizontalAlignment(Element.ALIGN_CENTER);
+                celdaEncabezado.setBackgroundColor(BaseColor.LIGHT_GRAY);
+                tabla.addCell(celdaEncabezado);
+            }
+
+            // Agregar datos
+            for (Lote lote : listadoLotes) {
+                tabla.addCell(String.valueOf(lote.getIdLote()));
+                tabla.addCell(lote.getNombreMedicamento() != null ? lote.getNombreMedicamento() : "N/A");
+                tabla.addCell(String.valueOf(lote.getCantidad()));
+                tabla.addCell(lote.getNombreProveedor() != null ? lote.getNombreProveedor() : "N/A");
+                tabla.addCell(lote.getNombreUsuario() != null ? lote.getNombreUsuario() : "N/A");
+                tabla.addCell(String.valueOf(lote.getPrecioUnitario()));
+                tabla.addCell(String.valueOf(lote.getPrecioMayoreo()));
+                tabla.addCell(String.valueOf(lote.getPrecioCosto()));
+                tabla.addCell(lote.getFecha() != null ? lote.getFecha().toString() : "N/A");
+            }
+
+            documento.add(tabla);
+            JOptionPane.showMessageDialog(null, "PDF generado correctamente en: " + rutaSeleccionada.getAbsolutePath());
+        } catch (DocumentException | IOException e) {
+            JOptionPane.showMessageDialog(null, "Error al generar el PDF: " + e.getMessage(), "¡¡ERROR!!", JOptionPane.ERROR_MESSAGE);
+        } finally {
+            if (documento.isOpen()) {
+                documento.close();
+            }
         }
     }
-}
 
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;

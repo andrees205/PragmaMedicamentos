@@ -52,6 +52,36 @@ public class DetalleVentaDAO {
         return listaDetalles;
     }
     
+        public ArrayList<DetalleVenta> ConsultarDetallesById(int idVenta) {
+        ArrayList<DetalleVenta> listaDetalles = new ArrayList<DetalleVenta>();
+        String sSQL = "{CALL ObtenerDetalleVentaById(?)};";
+
+        try {
+            CallableStatement cs = this.CN.getConexion().prepareCall(sSQL);
+            cs.setInt(1, idVenta); 
+            rs = cs.executeQuery();
+            while (rs.next()) {
+                DetalleVenta detalle = new DetalleVenta();
+                
+                detalle.setIdDetalleVenta(rs.getInt(1));
+                detalle.setIdVenta(rs.getInt(2));
+                detalle.setCantidad(rs.getInt(3));
+                detalle.setPrecioVendido(rs.getDouble(4));
+                detalle.setIdLote(rs.getInt(5));
+                detalle.setNombreMedicamento(rs.getString(7));
+                
+                
+                
+                listaDetalles.add(detalle);
+            }
+
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, ex.getMessage(), "¡¡ERROR!!", JOptionPane.ERROR_MESSAGE);
+        }
+
+        return listaDetalles;
+    }
+    
     public boolean InsertarDetalle(DetalleVenta detalle) {
         String sSQL = "{CALL insertar_detalleventa(?,?,?,?)}";
         
