@@ -12,6 +12,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -43,6 +44,7 @@ public class pnlGraficos extends javax.swing.JPanel {
         detalleDAO = new DetalleVentaDAO();
         detalle = new DetalleVenta();
         crearGraficoVentas();
+        graficoBarras();
         
     }
     public pnlGraficos(Usuario userSesion) {
@@ -55,10 +57,62 @@ public class pnlGraficos extends javax.swing.JPanel {
         detalleDAO = new DetalleVentaDAO();
         detalle = new DetalleVenta();
         crearGraficoVentas();
+        graficoBarras();
                 
         
     }
     
+    public void graficoBarras(){
+        
+        this.listaDetalles=  this.detalleDAO.ConsultarDetalles();
+        // Agrupar las cantidades vendidas por nombre de medicamento.
+        Map<String, Integer> conteoMedicinas = new HashMap<>();
+        for (DetalleVenta detalle : listaDetalles) {
+            String nombreMedicamento = detalle.getNombreMedicamento();
+            conteoMedicinas.put(
+                nombreMedicamento,
+                conteoMedicinas.getOrDefault(nombreMedicamento, 0) + detalle.getCantidad()
+            );
+        }
+
+        // Ordenar las medicinas por cantidad y tomar las 10 más vendidas.
+        Map<String, Integer> topMedicinas = conteoMedicinas.entrySet().stream()
+            .sorted((a, b) -> b.getValue().compareTo(a.getValue()))
+            .limit(10)
+            .collect(Collectors.toMap(
+                Map.Entry::getKey,
+                Map.Entry::getValue,
+                (e1, e2) -> e1,
+                HashMap::new
+            ));
+
+        // Crear el conjunto de datos para el gráfico de barras.
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+        for (Map.Entry<String, Integer> entry : topMedicinas.entrySet()) {
+            dataset.addValue(entry.getValue(), "Cantidad Vendida", entry.getKey());
+        }
+
+        // Crear el gráfico de barras.
+        JFreeChart barChart = ChartFactory.createBarChart(
+            "Top 10 Medicinas Más Vendidas", // Título
+            "Medicinas",                    // Etiqueta eje X
+            "Cantidad Vendida",             // Etiqueta eje Y
+            dataset,                        // Datos
+            PlotOrientation.VERTICAL,       // Orientación del gráfico
+            true,                           // Incluir leyenda
+            true,                           // Incluir tooltips
+            false                           // No incluir URLs
+        );
+
+        // Configuración del panel del gráfico.
+        ChartPanel chartPanel = new ChartPanel(barChart);
+        chartPanel.setPreferredSize(jPanel3.getSize());
+        jPanel3.removeAll();
+        jPanel3.setLayout(new BorderLayout());
+        jPanel3.add(chartPanel, BorderLayout.CENTER);
+        jPanel3.revalidate();
+        jPanel3.repaint();
+    }
     public void crearGraficoVentas() {
         
         this.listaVentas = this.ventaDAO.ConsultarVentas();
