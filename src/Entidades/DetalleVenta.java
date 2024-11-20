@@ -13,6 +13,7 @@ public class DetalleVenta {
     private int idDetalleVenta;
     private int idVenta;
     int idLote;
+    private int idMedicamento;
     private String nombreMedicamento;
     private int Cantidad;
     private double precioVendido;
@@ -21,14 +22,18 @@ public class DetalleVenta {
     public DetalleVenta() {
     }
 
-    public DetalleVenta(int idDetalleVenta, int idVenta, int idLote, String nombreMedicamento, int Cantidad, double precioVendido) {
+    public DetalleVenta(int idDetalleVenta, int idVenta, int idLote, int idMedicamento, String nombreMedicamento, int Cantidad, double precioVendido, double total) {
         this.idDetalleVenta = idDetalleVenta;
         this.idVenta = idVenta;
         this.idLote = idLote;
+        this.idMedicamento = idMedicamento;
         this.nombreMedicamento = nombreMedicamento;
         this.Cantidad = Cantidad;
         this.precioVendido = precioVendido;
+        this.total = total;
     }
+
+    
 
     public DetalleVenta(int idVenta, int idLote, int Cantidad, double precioVendido) {
 
@@ -37,6 +42,14 @@ public class DetalleVenta {
 
         this.Cantidad = Cantidad;
         this.precioVendido = precioVendido;
+    }
+
+    public int getIdMedicamento() {
+        return idMedicamento;
+    }
+
+    public void setIdMedicamento(int idMedicamento) {
+        this.idMedicamento = idMedicamento;
     }
 
     public String getNombreMedicamento() {

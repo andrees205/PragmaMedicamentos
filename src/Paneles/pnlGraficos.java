@@ -31,6 +31,9 @@ public class pnlGraficos extends javax.swing.JPanel {
     private ArrayList<DetalleVenta> listaDetalles;
     private DetalleVenta detalle;
     private DetalleVentaDAO detalleDAO;
+    private Medicamento med;
+    private MedicamentoDAO medDAO;
+    private ArrayList<Medicamento> listaMedicina;
     /**
      * Creates new form pnlGraficos
      */
@@ -43,6 +46,9 @@ public class pnlGraficos extends javax.swing.JPanel {
         listaDetalles = new ArrayList<>();
         detalleDAO = new DetalleVentaDAO();
         detalle = new DetalleVenta();
+        listaMedicina = new ArrayList<>();
+        medDAO = new MedicamentoDAO();
+        med = new Medicamento();
         crearGraficoVentas();
         graficoBarras();
         
@@ -50,12 +56,15 @@ public class pnlGraficos extends javax.swing.JPanel {
     public pnlGraficos(Usuario userSesion) {
         initComponents();
         this.userSesion = userSesion;
-        listaVentas = new ArrayList<>();
+        listaVentas = new ArrayList<>(); 
         ventaDAO = new VentaDAO();
         venta = new Venta();
         listaDetalles = new ArrayList<>();
         detalleDAO = new DetalleVentaDAO();
         detalle = new DetalleVenta();
+        listaMedicina = new ArrayList<>();
+        medDAO = new MedicamentoDAO();
+        med = new Medicamento();
         crearGraficoVentas();
         graficoBarras();
                 
@@ -64,23 +73,32 @@ public class pnlGraficos extends javax.swing.JPanel {
     
     public void graficoBarras(){
         
-        this.listaDetalles=  this.detalleDAO.ConsultarDetalles();
-        // Agrupar las cantidades vendidas por nombre de medicamento.
-        Map<String, Integer> conteoMedicinas = new HashMap<>();
+        // Obtener la lista de detalles de ventas y medicamentos.
+        this.listaDetalles = this.detalleDAO.ConsultarDetalles();
+        this.listaMedicina = this.medDAO.ConsultarMedicamento();
+
+        // Agrupar las cantidades vendidas por idMedicamento.
+        Map<Integer, Integer> conteoMedicinas = new HashMap<>();
         for (DetalleVenta detalle : listaDetalles) {
-            String nombreMedicamento = detalle.getNombreMedicamento();
+            int idMedicamento = detalle.getIdMedicamento();
             conteoMedicinas.put(
-                nombreMedicamento,
-                conteoMedicinas.getOrDefault(nombreMedicamento, 0) + detalle.getCantidad()
+                idMedicamento,
+                conteoMedicinas.getOrDefault(idMedicamento, 0) + detalle.getCantidad()
             );
+        }
+
+        // Crear un mapa de idMedicamento a nombreMedicamento usando la listaMedicina.
+        Map<Integer, String> mapaNombresMedicamentos = new HashMap<>();
+        for (Medicamento medicamento : listaMedicina) {
+            mapaNombresMedicamentos.put(medicamento.getIdMedicamento(), medicamento.getNombre());
         }
 
         // Ordenar las medicinas por cantidad y tomar las 10 más vendidas.
         Map<String, Integer> topMedicinas = conteoMedicinas.entrySet().stream()
-            .sorted((a, b) -> b.getValue().compareTo(a.getValue()))
-            .limit(10)
+            .sorted((a, b) -> b.getValue().compareTo(a.getValue())) // Orden descendente por cantidad.
+            .limit(10) // Limitar a las 10 medicinas más vendidas.
             .collect(Collectors.toMap(
-                Map.Entry::getKey,
+                entry -> mapaNombresMedicamentos.getOrDefault(entry.getKey(), "Desconocido"),
                 Map.Entry::getValue,
                 (e1, e2) -> e1,
                 HashMap::new
@@ -112,7 +130,9 @@ public class pnlGraficos extends javax.swing.JPanel {
         jPanel3.add(chartPanel, BorderLayout.CENTER);
         jPanel3.revalidate();
         jPanel3.repaint();
+       
     }
+    
     public void crearGraficoVentas() {
         
         this.listaVentas = this.ventaDAO.ConsultarVentas();

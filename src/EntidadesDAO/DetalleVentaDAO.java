@@ -38,7 +38,7 @@ public class DetalleVentaDAO {
                 detalle.setIdDetalleVenta(rs.getInt(1));
                 detalle.setIdVenta(rs.getInt(2));
                 detalle.setIdLote(rs.getInt(3));
-                detalle.setNombreMedicamento(rs.getString(4));
+                detalle.setIdMedicamento(rs.getInt(4));
                 detalle.setCantidad(rs.getInt(5));
                 detalle.setPrecioVendido(rs.getDouble(6));
                 
