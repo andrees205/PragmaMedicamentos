@@ -20,6 +20,7 @@ import Vistas.frmAdministrador;
 import Vistas.frmCategoria;
 import Vistas.frmClienteSeleccionar;
 import Vistas.frmInventarioPequeño;
+import Vistas.frmUsuario;
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
@@ -65,6 +66,7 @@ public class frmVenta extends javax.swing.JPanel {
     double totalPagar;
     Cliente clienteSeleccionado;
     frmAdministrador parent;
+    frmUsuario parentUsuario;
     DecimalFormat df = new DecimalFormat("#.00");
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -118,6 +120,34 @@ public class frmVenta extends javax.swing.JPanel {
 
         jDateChooser1.setDate(new Date());
     }
+    
+        public frmVenta(Usuario userFrmPrincipal, frmUsuario parent) {
+        initComponents();
+        this.parentUsuario = parent;
+        this.userSesion = userFrmPrincipal;
+        this.loteSeleccionado = new Lote();
+        listaVentas = new ArrayList<>();
+        listaDetallesVenta = new ArrayList<>();
+        modeloDetalle = (DefaultTableModel) this.tblCarrito.getModel();
+        modeloMaestro = (DefaultTableModel) this.tblVentasMaestro.getModel();
+        modeloMaestroDetalle = (DefaultTableModel) this.tblDetalleVenta.getModel();
+        ventaDAO = new VentaDAO();
+        listaMedicamentos = new ArrayList<>();
+        medDAO = new MedicamentoDAO();
+        this.clienteSeleccionado = new Cliente();
+        CargarTablaVentas();
+        //CargarMedicamentos();
+        loteDAO = new LoteDAO();
+        listaLotes = new ArrayList<>();
+        venta = new Venta();
+        carritoDetalleVenta = new ArrayList<>();
+        detalleVenta = new DetalleVenta();
+        detalleVentaDAO = new DetalleVentaDAO();
+        //CargarLotes();
+        //cargarDetalleVenta();
+
+        jDateChooser1.setDate(new Date());
+    }
 
     private void cargarDetalleVenta() {
         this.carritoDetalleVenta = this.detalleVentaDAO.ConsultarDetalles();
@@ -127,7 +157,13 @@ public class frmVenta extends javax.swing.JPanel {
         this.modeloMaestro.setRowCount(0);  // Limpiar la tabla antes de cargar los nuevos datos
 
         // Obtener las ventas desde la base de datos
-        this.listaVentas = this.ventaDAO.ConsultarVentas();
+        if (this.userSesion.getRol()=="Administrador") {
+            this.listaVentas = this.ventaDAO.ConsultarVentas();
+        }
+        else{
+            this.listaVentas = this.ventaDAO.ConsultarVentasDeUsuario(this.userSesion.getIdusuario());
+        }
+        
 
         // Recorrer la lista de ventas
         for (int i = 0; i < this.listaVentas.size(); i++) {
@@ -149,6 +185,7 @@ public class frmVenta extends javax.swing.JPanel {
             }
         }
     }
+    
 
     /*private void CargarMedicamentos()
     {
@@ -432,7 +469,7 @@ public class frmVenta extends javax.swing.JPanel {
 
             this.ActualizarTotal();
             this.CargarCarrito();
-            this.loteSeleccionado= null;
+            this.loteSeleccionado = null;
             this.txtPrecio.setText("");
             this.txtProducto.setText("");
             this.jSpinner1.setValue(0);
@@ -499,12 +536,23 @@ public class frmVenta extends javax.swing.JPanel {
 
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        //frmInventarioPequeño frmInv = new frmInventarioPequeño();
+    // Comprobamos si 'parent' o 'parentUsuario' están disponibles
+    if (this.parent != null) {
+        // Si 'parent' no es null, utilizamos parent
         frmInventarioPequeño frmInv = new frmInventarioPequeño(this);
         frmInv.setVisible(true);
-        this.parent.getDesktopPanel().add(frmInv);
-        //this.parent.add(frmInv);
+        this.parent.getDesktopPanel().add(frmInv);  // Añadir al panel de 'parent'
         frmInv.moveToFront();
+    } else if (this.parentUsuario != null) {
+        // Si 'parentUsuario' no es null, utilizamos parentUsuario
+        frmInventarioPequeño frmInv = new frmInventarioPequeño(this);
+        frmInv.setVisible(true);
+        this.parentUsuario.getDesktopPanel().add(frmInv);  // Añadir al panel de 'parentUsuario'
+        frmInv.moveToFront();
+    } else {
+        // Si ambos son null, mostramos un mensaje de error
+        JOptionPane.showMessageDialog(null, "Error: No se puede acceder al panel principal.", "Error", JOptionPane.ERROR_MESSAGE);
+    }
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void menuEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuEditarActionPerformed
@@ -563,10 +611,23 @@ public class frmVenta extends javax.swing.JPanel {
     }//GEN-LAST:event_jRadioButton1ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+    // Comprobamos si 'parent' o 'parentUsuario' están disponibles
+    if (this.parent != null) {
+        // Si 'parent' no es null, utilizamos parent
         frmClienteSeleccionar frmCliente = new frmClienteSeleccionar(this);
         frmCliente.setVisible(true);
-        this.parent.getDesktopPanel().add(frmCliente);
+        this.parent.getDesktopPanel().add(frmCliente);  // Añadir al panel de 'parent'
         frmCliente.moveToFront();
+    } else if (this.parentUsuario != null) {
+        // Si 'parentUsuario' no es null, utilizamos parentUsuario
+        frmClienteSeleccionar frmCliente = new frmClienteSeleccionar(this);
+        frmCliente.setVisible(true);
+        this.parentUsuario.getDesktopPanel().add(frmCliente);  // Añadir al panel de 'parentUsuario'
+        frmCliente.moveToFront();
+    } else {
+        // Si ambos son null, mostramos un mensaje de error
+        JOptionPane.showMessageDialog(null, "Error: No se puede acceder al panel principal.", "Error", JOptionPane.ERROR_MESSAGE);
+    }
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -640,13 +701,22 @@ public class frmVenta extends javax.swing.JPanel {
             PdfWriter.getInstance(documento, new FileOutputStream(rutaSeleccionada));
             documento.open();
 
+            // Información de la farmacia (en pequeño)
+            com.itextpdf.text.Font fontInfoFarmacia = new com.itextpdf.text.Font(com.itextpdf.text.Font.FontFamily.HELVETICA, 8, com.itextpdf.text.Font.NORMAL);
+            Paragraph infoFarmacia = new Paragraph("Farmacia PRAGMA Medicamentos\nGiro: Venta de medicina popular\nNRC: 184976-8\nNIT: 1654-145978-135-8\n"
+                    + "11 Calle Pte. y 8a Av. Sur. Frente a Parque Colón\nTeléfono: 78172440", fontInfoFarmacia);
+            infoFarmacia.setAlignment(Element.ALIGN_CENTER);
+            documento.add(infoFarmacia);
+
             // Encabezado del ticket
             com.itextpdf.text.Font fontTitulo = new com.itextpdf.text.Font(com.itextpdf.text.Font.FontFamily.HELVETICA, 16, com.itextpdf.text.Font.BOLD);
-            Paragraph titulo = new Paragraph("TICKET DE VENTA\n", fontTitulo);
+            Paragraph titulo = new Paragraph("\nTICKET DE VENTA", fontTitulo);
             titulo.setAlignment(Element.ALIGN_CENTER);
             documento.add(titulo);
 
-            Paragraph infoVenta = new Paragraph("ID Venta: " + this.venta.getIdVenta() + "\n"
+            // Información de la venta
+            int ultimoIDVenta = this.ventaDAO.ObtenerUltimoIDVenta();
+            Paragraph infoVenta = new Paragraph("ID Venta: " + ultimoIDVenta + "\n"
                     + "Fecha: " + new SimpleDateFormat("yyyy-MM-dd").format(this.venta.getFechaVenta()) + "\n"
                     + "Cliente: " + this.clienteSeleccionado.getNombre() + "\n"
                     + "Atendido por: " + this.userSesion.getNombre() + "\n\n",
@@ -680,6 +750,7 @@ public class frmVenta extends javax.swing.JPanel {
             footer.setAlignment(Element.ALIGN_CENTER);
             documento.add(footer);
 
+            // Confirmación de éxito
             JOptionPane.showMessageDialog(null, "Ticket generado correctamente en: " + rutaSeleccionada.getAbsolutePath());
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Error al generar el ticket: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);

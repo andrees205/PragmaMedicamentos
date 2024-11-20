@@ -11,6 +11,7 @@ import EntidadesDAO.LoteDAO;
 import Vistas.frmAdministrador;
 import Vistas.frmClienteSeleccionar;
 import Vistas.frmMedicamentos;
+import Vistas.frmUsuario;
 import Vistas.frmVerMedicinas;
 import Vistas.frmVerProveedores;
 import java.awt.Component;
@@ -31,6 +32,7 @@ public class frmLotes extends javax.swing.JPanel {
     private Usuario userSesion;
     private SimpleDateFormat formatoFecha = new SimpleDateFormat("yyyy-mm-dd");
     frmAdministrador parent;
+    frmUsuario parentUsuario;
     boolean blnEditar;
     private Component rootPane;
     
@@ -49,6 +51,18 @@ public class frmLotes extends javax.swing.JPanel {
         public frmLotes(Usuario userFrmPrincipal, frmAdministrador parent) {
         initComponents();
         this.parent = parent;
+        this.userSesion = userFrmPrincipal;
+        listaLotes = new ArrayList<>();
+        tablaLotes = (DefaultTableModel) this.jTable1.getModel();
+        loteDAO = new LoteDAO();
+        CargarTablaLotes();
+        this.jDateChooser1.getDateEditor().setEnabled(false);
+        this.blnEditar = false;
+    }
+        
+                public frmLotes(Usuario userFrmPrincipal, frmUsuario parent) {
+        initComponents();
+        this.parentUsuario = parent;
         this.userSesion = userFrmPrincipal;
         listaLotes = new ArrayList<>();
         tablaLotes = (DefaultTableModel) this.jTable1.getModel();
@@ -337,18 +351,43 @@ public class frmLotes extends javax.swing.JPanel {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+    // Comprobamos si 'parent' o 'parentUsuario' están disponibles
+    if (this.parent != null) {
+        // Si 'parent' no es null, utilizamos parent
         frmVerProveedores frm = new frmVerProveedores(this);
         frm.setVisible(true);
         this.parent.getDesktopPanel().add(frm);
         frm.moveToFront();
+    } else if (this.parentUsuario != null) {
+        // Si 'parentUsuario' no es null, utilizamos parentUsuario
+        frmVerProveedores frm = new frmVerProveedores(this);
+        frm.setVisible(true);
+        this.parentUsuario.getDesktopPanel().add(frm);
+        frm.moveToFront();
+    } else {
+        // Si ambos son null, mostramos un mensaje de error
+        JOptionPane.showMessageDialog(null, "Error: No se puede acceder al panel principal.", "Error", JOptionPane.ERROR_MESSAGE);
+    }
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-
+    // Comprobamos si 'parent' o 'parentUsuario' están disponibles
+    if (this.parent != null) {
+        // Si 'parent' no es null, utilizamos parent
         frmVerMedicinas frm = new frmVerMedicinas(this);
         frm.setVisible(true);
         this.parent.getDesktopPanel().add(frm);
         frm.moveToFront();
+    } else if (this.parentUsuario != null) {
+        // Si 'parentUsuario' no es null, utilizamos parentUsuario
+        frmVerMedicinas frm = new frmVerMedicinas(this);
+        frm.setVisible(true);
+        this.parentUsuario.getDesktopPanel().add(frm);
+        frm.moveToFront();
+    } else {
+        // Si ambos son null, mostramos un mensaje de error
+        JOptionPane.showMessageDialog(null, "Error: No se puede acceder al panel principal.", "Error", JOptionPane.ERROR_MESSAGE);
+    }
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void menuEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuEditarActionPerformed

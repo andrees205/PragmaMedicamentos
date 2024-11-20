@@ -163,7 +163,7 @@ public class frmLogin extends javax.swing.JFrame {
                         setVisible(false);
                         break;
                     case "Vendedor":
-                        frmVendedor frm = new frmVendedor(user);
+                        frmUsuario frm = new frmUsuario(user);
                         frm.setVisible(true);
                         frm.setLocationRelativeTo(null);
                         setVisible(false);

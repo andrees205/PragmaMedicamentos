@@ -52,6 +52,34 @@ public class VentaDAO {
 
         return listaVentas;
     }
+        public ArrayList<Venta> ConsultarVentasDeUsuario(int idUsuario) {
+        ArrayList<Venta> listaVentas = new ArrayList<Venta>();
+        String sSQL = "{CALL ObtenerVentasPorUsuario(?)};";
+
+        try {
+            CallableStatement cs = this.CN.getConexion().prepareCall(sSQL);
+            cs.setInt(1, idUsuario);
+            rs = cs.executeQuery();
+            while (rs.next()) {
+                Venta venta = new Venta();
+                
+                venta.setIdVenta(rs.getInt(1));
+                venta.setFechaVenta(rs.getDate(2));
+                venta.setIdUsuario(rs.getInt(3));
+                venta.setNombreUsuario(rs.getString(4));
+                venta.setIdCliente(rs.getInt(5));
+                venta.setNombreCliente(rs.getString(6));
+                venta.setMontoTotal(rs.getDouble(7));
+                
+                listaVentas.add(venta);
+            }
+
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, ex.getMessage(), "¡¡ERROR!!", JOptionPane.ERROR_MESSAGE);
+        }
+
+        return listaVentas;
+    }
     
     public boolean InsertarVenta(Venta venta) {
         String sSQL = "{CALL insertar_venta(?,?,?,?)}";
