@@ -170,7 +170,7 @@ public class frmLogin extends javax.swing.JFrame {
                         break;
                 }
             } catch (Exception e) {
-                JOptionPane.showMessageDialog(null, e.getMessage());
+                JOptionPane.showMessageDialog(rootPane, "El usuario o la contraseña son incorrectos", "ACCESO DENEGADO", JOptionPane.ERROR_MESSAGE);
             }
         } else {
             JOptionPane.showMessageDialog(rootPane, "El usuario o la contraseña son incorrectos", "ACCESO DENEGADO", JOptionPane.ERROR_MESSAGE);
