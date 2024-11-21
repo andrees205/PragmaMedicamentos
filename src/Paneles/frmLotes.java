@@ -193,6 +193,8 @@ public class frmLotes extends javax.swing.JPanel {
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("Límite stock");
         add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(900, 240, 120, 30));
+
+        jSpinner2.setModel(new javax.swing.SpinnerNumberModel(0, 0, null, 1));
         add(jSpinner2, new org.netbeans.lib.awtextra.AbsoluteConstraints(900, 270, 120, -1));
 
         txtEmpleado.setFont(new java.awt.Font("Calibri", 1, 18)); // NOI18N
@@ -203,6 +205,8 @@ public class frmLotes extends javax.swing.JPanel {
         jLabel4.setForeground(new java.awt.Color(255, 255, 255));
         jLabel4.setText("Precio unitario");
         add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(890, 370, 130, 30));
+
+        jSpinner1.setModel(new javax.swing.SpinnerNumberModel(0, 0, null, 1));
         add(jSpinner1, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 270, 110, -1));
 
         jLabel5.setFont(new java.awt.Font("Calibri", 1, 24)); // NOI18N

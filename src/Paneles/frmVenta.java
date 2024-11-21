@@ -336,6 +336,7 @@ public class frmVenta extends javax.swing.JPanel {
         jPanel1.add(jRadioButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(890, 370, -1, -1));
 
         jSpinner1.setFont(new java.awt.Font("Calibri", 1, 18)); // NOI18N
+        jSpinner1.setModel(new javax.swing.SpinnerNumberModel(0, 0, null, 1));
         jPanel1.add(jSpinner1, new org.netbeans.lib.awtextra.AbsoluteConstraints(840, 240, 110, 30));
 
         jLabel9.setFont(new java.awt.Font("Calibri", 1, 24)); // NOI18N
